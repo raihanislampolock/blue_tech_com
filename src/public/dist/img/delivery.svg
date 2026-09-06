@@ -1,0 +1,22 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="100" cy="100" r="90" fill="#f8f9fa" stroke="#2c3e50" stroke-width="2"/>
+  
+  <!-- Delivery Truck Icon -->
+  <path d="M40 70h80v60H40z" fill="#2c3e50" />
+  <path d="M120 85h30l15 15v30h-45z" fill="#3498db" />
+  
+  <!-- Speed Lines -->
+  <line x1="25" y1="85" x2="35" y2="85" stroke="#e74c3c" stroke-width="4" stroke-linecap="round" />
+  <line x1="20" y1="100" x2="35" y2="100" stroke="#e74c3c" stroke-width="4" stroke-linecap="round" />
+  <line x1="25" y1="115" x2="35" y2="115" stroke="#e74c3c" stroke-width="4" stroke-linecap="round" />
+  
+  <!-- Wheels -->
+  <circle cx="65" cy="135" r="12" fill="#2c3e50" />
+  <circle cx="135" cy="135" r="12" fill="#2c3e50" />
+  <circle cx="65" cy="135" r="5" fill="#ecf0f1" />
+  <circle cx="135" cy="135" r="5" fill="#ecf0f1" />
+
+  <!-- Text -->
+  <text x="100" y="175" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="bold" fill="#2c3e50" text-anchor="middle">RMS DELIVERY</text>
+</svg>

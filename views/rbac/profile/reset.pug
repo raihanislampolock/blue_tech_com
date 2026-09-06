@@ -1,0 +1,20 @@
+#resetPasswordModal.modal.fade
+  .modal-dialog
+    .modal-content
+      form#reset-password-form(method='POST', action='#')
+        .modal-header
+          button.close(type='button', data-dismiss='modal') &times;
+          h5.modal-title Reset Password
+        .modal-body
+          // Hidden input to store the user ID
+          input(type='hidden', id='resetUserId')
+
+          .form-group
+            input.form-control(type='password', id='newPassword', required)
+            label(for='newPassword') New Password
+          .form-group
+            input.form-control(type='password', id='cPassword', required)
+            label(for='cPassword') Confirm New Password
+        .modal-footer
+          button.btn.btn-primary(type='submit') Update Password
+          button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel

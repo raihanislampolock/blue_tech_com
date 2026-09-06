@@ -1,0 +1,30 @@
+{
+    "host": "http://localhost",
+    "port": 3005,
+    "smtp": {
+        "from": "",
+        "host": "",
+        "port": 587,
+        "secure": false,
+        "auth": {
+            "user": "",
+            "pass": "NOrePly#%2022"
+        }
+    },
+    "postgres": {
+        "dbUser" : "postgres",
+        "dbHost" : "localhost",
+        "dbName" : "rms_tech_solutions_db",
+        "dbPassword" : "secret",
+        "dbPort" : "5432"
+    },
+    "mongoUrl": "mongodb://localhost:27017/patient_report",
+    "cookieSecret": "P>twUC2.9mNurJN%fW(!esGwua:!e(Pu8bHfTXW grck3g9/J@*W3MuEB,FE#/=m",
+    "sessionSecret": "P>twUC2.9mVurJN%fW(!esGwua:!e(Pu8bHfTXW grck3g9/J@*W3MuEB,FE#/=m",
+    "authSecret": "TFqA$uc4hu5VV(NS*vF=f3$vaCsw6/3U/w%9yu)Py,#&w)kG2(pAgAP9@)3,uVqt",
+    "jwtTokenExpireIn": "30d",
+    "authSalt": "*vF=f3$waCsw6/3U/w%9yu)Py,#&w)kG2(mAgAP9@)3",
+    "apiBaseUrl": "http://10.1.1.170:8000",
+    "smsApiBaseUrl": "http://ept.praavahealth.com/API/sms",
+    "smsApiKey": "62468a38dd665bb104ac4c6dd510922d"
+}

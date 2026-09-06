@@ -1,0 +1,434 @@
+{
+    "en": {
+        "navber": {
+            "dashboard": "Dashboard",
+            "tripManagement": "Trip Management",
+            "vehicleManagement": "Vehicle",
+            "driverManagement": "Driver",
+            "report": "Report",
+            "userManagement": "Users",
+            "account": "Account"
+        },
+        "common": {
+            "button": {
+                "edit": "EDIT",
+                "delete": "DELETE",
+                "update": "UPDATE",
+                "return": "RETURN",
+                "cancel": "CANCEL",
+                "deleteAnyway": "Delete Anyway"
+            },
+            "table": {
+                "action": "Action"
+            },
+            "link": {
+                "details": "Details",
+                "edit": "Edit"
+            }
+        },
+        "loginPage": {
+            "title": "Log In",
+            "subTitle": "Please input email & password for login",
+            "email": "Email Address",
+            "password": "Password",
+            "forgotPassword": "Forgot Password?",
+            "remember": "Remember me next time",
+            "signupNow": "Create New Institute"
+        },
+        
+        "dashboard": {
+            "title": "Admin Dashboard",
+            "subTitle": "Quick access to recent active and upcoming trip event.",
+            "activeCohorts": "Active Trip",
+            "upcomingCohorts": "Upcoming Trip"
+        },
+
+        "account": {
+            "title": "User Account Control",
+            "subTitle": "Quick access to user account control.",
+            "changePassword": "Change Password",
+            "logOut": "Logout"
+        },
+
+        "user": {
+            "index": {
+                "title": "Manage Users",
+                "subTitle": "Access control is important, you can add new user or update someone's roles here.",
+                "name": "Name",
+                "email": "Email",
+                "designation": "Designation",
+                "department": "Department",
+                "unit": "Unit",
+                "role": "Role",
+                "addNewUser": "Add New User"
+            },
+            "add": {
+                "title": "Add New User",
+                "subTitle": "Let's setup a new user. They will receive an email with their password.",
+                "name": "Name",
+                "email": "Email",
+                "designation": "Designation",
+                "department": "Department",
+                "unit": "Unit",
+                "chooseUserRole": "Choose User Role",
+                "addUser": "Add User"
+            },
+            "details": {
+                "title": "User Details",
+                "subTitle": "You can edit and delete user information here.",
+                "name": "Name",
+                "email": "Email",
+                "designation": "Designation",
+                "department": "Department",
+                "unit": "Unit",
+                "role": "Role",
+                "createdAt": "Created at",
+                "status": "Status",
+                "active": "Active",
+                "deactivate": "Deactivate",
+                "userNotFound": "User not found, it might be deleted already."
+            },
+            "delete": {
+                "title": "Delete User",
+                "subTitle": "Cleaning up! it also removes account data from the system.",
+                "deleteMgs1": "Are you sure you want to delete",
+                "deleteMgs2": "permanently? Adding them back won't restore their data."
+            },
+            "update": {
+                "title": "Update User Information",
+                "subTitle": "You can change user's name or their role but can't edit email address.",
+                "name": "Name",
+                "email": "Email",
+                "designation": "Designation",
+                "department": "Department",
+                "unit": "Unit",
+                "chooseUserRole": "Choose User Role"
+            }
+        },
+
+        "driver": {
+            "index": {
+                "title": "Manage Drivers",
+                "subTitle": "You can add new driver or update driver info here.",
+                "name": "Driver's Name",
+                "mobile": "Mobile",
+                "unit": "Business Unit",
+                "addNewDriver": "Add New Driver"
+            },
+            "add": {
+                "title": "Add New Driver",
+                "subTitle": "Let's setup a new driver.",
+                "name": "Driver's Name",
+                "mobile": "Mobile",
+                "unit": "Business Unit",
+                "address": "Address",
+                "addDriver": "Add Driver"
+            },
+            "details": {
+                "title": "Driver Details",
+                "subTitle": "You can edit and delete driver information here.",
+                "name": "Name",
+                "mobile": "Mobile",
+                "unit": "Business Unit",
+                "address": "Address",
+                "createdAt": "Created at",
+                "status": "Status",
+                "active": "Active",
+                "deactivate": "Deactivate",
+                "driverNotFound": "Driver not found, it might be deleted already."
+            },
+            "delete": {
+                "title": "Delete Driver",
+                "subTitle": "Cleaning up! it also removes driver data from the system.",
+                "deleteMgs1": "Are you sure you want to delete",
+                "deleteMgs2": "permanently? Adding them back won't restore their data."
+            },
+            "update": {
+                "title": "Update Driver Information",
+                "subTitle": "You can change driver's name, mobile, unit & address.",
+                "name": "Name",
+                "mobile": "Mobile",
+                "unit": "Business Unit",
+                "address": "Address",
+                "activeStatus": "Status"
+            }
+        },
+
+        "vehicle": {
+            "index": {
+                "title": "Manage Vehicles",
+                "subTitle": "You can add new vehicle or update vehicle info here.",
+                "regNo": "Reg No",
+                "brand": "Brand",
+                "vehicleModel": "Model",
+                "regYear": "Reg Year",
+                "trackerId": "Tracker Id",
+                "cardId": "Card Id",
+                "isActive": "Status",
+                "addNewVehicle": "Add New Vehicle"
+            },
+            "add": {
+                "title": "Add New Vehicle",
+                "subTitle": "Let's setup a new vehicle.",
+                "regNo": "Reg No",
+                "brand": "Brand",
+                "vehicleModel": "Model",
+                "regYear": "Reg Year",
+                "modelYear": "Model Year",
+                "trackerId": "Tracker Id",
+                "cardId": "Card Id",
+                "isActive": "Status",
+                "addVehicle": "Add Vehicle"
+            },
+            "details": {
+                "title": "Vehicle Details",
+                "subTitle": "You can edit and delete vehicle information here.",
+                "regNo": "Reg No",
+                "brand": "Brand",
+                "vehicleModel": "Model",
+                "regYear": "Reg Year",
+                "modelYear": "Model Year",
+                "trackerId": "Tracker Id",
+                "cardId": "Card Id",
+                "status": "Status",
+                "createdAt": "Created at",
+                "active": "Active",
+                "deactivate": "Deactivate",
+                "driverNotFound": "Driver not found, it might be deleted already."
+            },
+            "delete": {
+                "title": "Delete Vehicle",
+                "subTitle": "Cleaning up! it also removes trip data from the system.",
+                "deleteMgs1": "Are you sure you want to delete",
+                "deleteMgs2": "permanently? Adding them back won't restore their data."
+            },
+            "update": {
+                "title": "Update Vehicle Information",
+                "subTitle": "You can change vehicle's all information.",
+                "regNo": "Reg No",
+                "brand": "Brand",
+                "vehicleModel": "Model",
+                "regYear": "Reg Year",
+                "modelYear": "Model Year",
+                "trackerId": "Tracker Id",
+                "cardId": "Card Id",
+                "isActive": "Status",
+                "activeStatus": "Status"
+            }
+        },
+
+        "trip": {
+            "index": {
+                "title": "Manage Trips",
+                "subTitle": "You can create new trip or update existing trip here.",
+                "tripNo": "Trip No",
+                "vehicle": "Vehicle",
+                "driver": "Driver",
+                "userDept": "User Department",
+                "users": "Users",
+                "purpose": "Purpose",
+                "destination": "Destination",
+                "startTime": "Start Time",
+                "endTime": "End Time",
+                "startKm": "Start KM",
+                "endKm": "End KM",
+                "addNewTrip": "Create New Trip"
+            },
+            "add": {
+                "title": "Create New Trip",
+                "subTitle": "Let's start a new trip.",
+                "vehicle": "Select Vehicle",
+                "driver": "Select Driver",
+                "userDept": "User Department",
+                "users": "Select Users",
+                "purpose": "Purpose",
+                "destination": "Destination",
+                "startTime": "Start Time",
+                "endTime": "End Time",
+                "startKm": "Start KM",
+                "endKm": "End KM",
+                "addTrip": "Add Trip"
+            },
+            "details": {
+                "title": "Trip Details",
+                "subTitle": "You can edit and delete trip information here.",
+                
+                "tripNo": "Trip No",
+                "vehicle": "Vehicle",
+                "driver": "Driver",
+                "userDept": "User Department",
+                "users": "Users",
+                "purpose": "Purpose",
+                "destination": "Destination",
+                "tripDate": "Trip Date",
+                "startTime": "Start Time",
+                "endTime": "End Time",
+                "tripDuration": "Trip Duration",
+                "startKm": "Start KM",
+                "endKm": "End KM",
+                "totalRun": "Total Run",
+                "tripNotFound": "trip not found, it might be deleted already."
+            },
+            "delete": {
+                "title": "Delete trip",
+                "subTitle": "Cleaning up! it also removes trip data from the system.",
+                "deleteMgs1": "Are you sure you want to delete trip no ",
+                "deleteMgs2": "permanently? Adding them back won't restore their data."
+            },
+            "update": {
+                "title": "Update Trip Information",
+                "subTitle": "You can change trip information here.",
+                "name": "Name",
+                "mobile": "Mobile",
+                "unit": "Business Unit",
+                "address": "Address",
+                "activeStatus": "Status"
+            }
+        },
+
+
+        "password": {
+            "change": {
+                "title": "Change Password",
+                "subTitle": "It's a good idea to change your password often.",
+                "newPassword": "New Password",
+                "confirmPassword": "Confirm Password",
+                "change": "Change"
+            }
+        },
+
+
+        "report": {
+            "trip": {
+                "index": {
+                    "title": "Trip Report",
+                    "subTitle": "You can generate trip report here.",
+                    "fromDate": "From Date",
+                    "toDate": "To Date",
+                    "generateReport": "Generate Report"
+                },
+                "report": {
+                    "title": "Trip Report",
+                    "subTitle": "You can print & export report here.",
+                    "print": "Print",
+                    "exportToExcel": "Export To Excel"
+                }
+            }
+            
+        }
+    },
+
+
+
+
+
+
+
+
+
+
+
+    "bn": {
+        "navber": {
+            "dashboard": "ড্যাশবোর্ড",
+            "tripManagement": "ট্রিপ ম্যানেজমেন্ট",
+            "vehicleManagement": "ভেহিকল",
+            "driverManagement": "ড্রাইভার",
+            "report": "রিপোর্ট",
+            "userManagement": "ইউসার",
+            "account": "অ্যাকাউন্ট"
+        },
+        "common": {
+            "button": {
+                "edit": "সম্পাদনা করুন",
+                "delete": "মুছে ফেলুন",
+                "update": "হালনাগাদ করুন",
+                "return": "ফিরে আসুন",
+                "cancel": "বাতিল করুন",
+                "deleteAnyway": "যাইহোক মুছুন"
+            },
+            "table": {
+                "action": "অ্যাকশন"
+            },
+            "link": {
+                "details": "বিস্তারিত",
+                "edit": "সম্পাদনা করুন"
+            }
+        },
+        "loginPage": {
+            "title": "লগইন করুন",
+            "subTitle": "আপনি যে পৃষ্ঠাটিতে অ্যাক্সেসের চেষ্টা করছেন সেটি আপনার লগ ইন করতে হবে।",
+            "email": "ইমেল ঠিকানা",
+            "password": "পাসওয়ার্ড",
+            "forgotPassword": "পাসওয়ার্ড ভুলে গেছেন?",
+            "remember": "পরের বার আমাকে মনে রাখুন",
+            "signupNow": "এখন সাইন আপ করুন?"
+        },
+        
+        "dashboard": {
+            "title": "অ্যাডমিন ড্যাশবোর্ড",
+            "subTitle": "সাম্প্রতিক সক্রিয় এবং আসন্ন সংঘের দ্রুত অ্যাক্সেস।",
+            "activeCohorts": "অ্যাক্টিভ কোহোর্টস",
+            "upcomingCohorts": "আসন্ন কোহোর্টস"
+        },
+        "account": {
+            "title": "User Account Control",
+            "subTitle": "Quick access to user account control.",
+            "changePassword": "Change Password",
+            "logOut": "Logout"
+        },
+
+        "user": {
+            "index": {
+                "title": "ব্যবহারকারীদের ম্যানেজ করুন",
+                "subTitle": "অ্যাক্সেস নিয়ন্ত্রণ গুরুত্বপূর্ণ, আপনি এখানে নতুন ব্যবহারকারী যুক্ত করতে বা কারও ভূমিকা আপডেট করতে পারেন।",
+                "name": "নাম",
+                "email": "ইমেইল",
+                "role": "ভূমিকা",
+                "addNewUser": "নতুন ব্যবহারকারী যুক্ত করুন"
+            },
+            "add": {
+                "title": "নতুন ব্যবহারকারী যুক্ত করুন",
+                "subTitle": "একটি নতুন ব্যবহারকারী সেটআপ করা যাক। তারা তাদের পাসওয়ার্ড সহ একটি ইমেল পাবেন।",
+                "name": "নাম",
+                "email": "ইমেইল",
+                "chooseUserRole": "ব্যবহারকারীর ভূমিকা পছন্দ করুন",
+                "addUser": "ব্যবহারকারী যুক্ত করুন"
+            },
+            "details": {
+                "title": "ব্যবহারকারীর বৃত্যান্ত",
+                "subTitle": "আপনি এখানে ব্যবহারকারী তথ্য সম্পাদনা করতে এবং মুছতে পারেন।",
+                "name": "নাম",
+                "email": "ইমেইল",
+                "role": "ভূমিকা",
+                "createdAt": "নির্মিত",
+                "status": "অবস্থা",
+                "active": "সক্রিয়",
+                "deactivate": "নিষ্ক্রিয়",
+                "userNotFound": "ব্যবহারকারী পাওয়া যায় নি, এটি ইতিমধ্যে মুছে ফেলা হতে পারে।"
+            },
+            "delete": {
+                "title": "ব্যবহারকারী মুছুন",
+                "subTitle": "ক্লিনিং আপ! এটি সিস্টেম থেকে অ্যাকাউন্ট ডেটা অপসারণ করে।",
+                "deleteMgs1": "আপনি কি স্থায়িভাবে",
+                "deleteMgs2": "মুছে ফেলতে চান? তাদের আবার যুক্ত করা তাদের ডেটা পুনরুদ্ধার করবে না।"
+            },
+            "update": {
+                "title": "ব্যবহারকারীর তথ্য আপডেট করুন",
+                "subTitle": "আপনি ব্যবহারকারীর নাম বা তাদের ভূমিকা পরিবর্তন করতে পারেন তবে ইমেল ঠিকানা সম্পাদনা করতে পারবেন না।",
+                "name": "নাম",
+                "email": "ইমেইল",
+                "chooseUserRole": "ব্যবহারকারীর ভূমিকা পছন্দ করুন"
+            }
+        },
+        "password": {
+            "change": {
+                "title": "পাসওয়ার্ড পরিবর্তন করুন",
+                "subTitle": "আপনার পাসওয়ার্ড প্রায়শই পরিবর্তন করা ভাল ধারণা।",
+                "newPassword": "নতুন পাসওয়ার্ড",
+                "confirmPassword": "পাসওয়ার্ড নিশ্চিত করুন",
+                "change": "পরিবর্তন করুন"
+            }
+        }
+    }
+}

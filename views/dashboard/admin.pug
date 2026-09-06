@@ -1,0 +1,136 @@
+extends ../layout
+
+block style
+  style.
+    /* Subtle Tech Grid Background */
+    section.content {
+      background-image: 
+        radial-gradient(#3c8dbc1a 1px, transparent 1px), 
+        radial-gradient(#3c8dbc1a 1px, transparent 1px);
+      background-size: 20px 20px;
+      background-position: 0 0, 10px 10px;
+      min-height: 100vh;
+    }
+
+    .neon-box {
+      background: rgba(255, 255, 255, 0.9) !important;
+      backdrop-filter: blur(5px); /* Modern Glassmorphism */
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 12px !important;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease !important;
+    }
+
+    .neon-box:hover {
+      transform: translateY(-5px) scale(1.01);
+      box-shadow: 0 15px 35px rgba(60, 141, 188, 0.2) !important;
+    }
+
+    .info-box-icon {
+      transition: all 0.4s ease;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .neon-box:hover .info-box-icon {
+      filter: brightness(1.2);
+    }
+    
+    /* Clean text containment overrides */
+    .info-box-content {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+include ../partials/dashboard-selector
+
+block content
+  section.content-header
+    h1
+      | SuperAdmin Dashboard
+    ol.breadcrumb
+      li
+        a(href='/dashboard')
+          img(
+            src='/dist/img/blue-tech-logo.jpeg', 
+            alt='Blue Tech Solutions Logo', 
+            style='width: 20px; height: 20px; margin-right: 8px; vertical-align: middle; display: inline-block;'
+          )
+          | Dashboard
+
+  section.content
+    +dashboardSelector(user.roleName)
+
+    .row
+      .col-md-12
+        .box.box-parrot(style="background: transparent; border: none; box-shadow: none;")
+          .box-header(style="padding-bottom: 20px;")
+            h3.box-title(style="font-weight: 700; color: #2c3e50; letter-spacing: 1px;") 
+              i.fa.fa-rocket(style="margin-right: 10px; color: #3c8dbc;")
+              | BLUE TECH COMMAND CENTER
+
+    .row
+      //- Row 1: Item Modules
+      .col-lg-4.col-md-6.col-sm-6.col-xs-12
+        a(href='/bluetech/bluetech-items' style='text-decoration:none;')
+          .info-box.neon-box
+            span.info-box-icon(style="background: linear-gradient(135deg, #2c3e50 0%, #000000 100%);")
+              img(src='/dist/img/list-logo.svg' style='width: 40px; filter: invert(1);')
+            .info-box-content
+              span.info-box-text(style="color: #2c3e50; font-size: 16px; font-weight: 700;") Blue Tech Items
+              span.info-box-number(style="font-size: 12px; font-weight: 400; color: #7f8c8d;") Items Details
+              .progress
+                .progress-bar(style='width: 100%; background: #3c8dbc;')
+
+      .col-lg-4.col-md-6.col-sm-6.col-xs-12
+        a(href='/bluetech/bluetech-suppliers' style='text-decoration:none;')
+          .info-box.neon-box
+            span.info-box-icon(style="background: linear-gradient(135deg, #2c3e50 0%, #000000 100%);")
+              img(src='/dist/img/list-logo.svg' style='width: 40px; filter: invert(1);')
+            .info-box-content
+              span.info-box-text(style="color: #2c3e50; font-size: 16px; font-weight: 700;") Blue Tech Suppliers
+              span.info-box-number(style="font-size: 12px; font-weight: 400; color: #7f8c8d;") Suppliers Details
+              .progress
+                .progress-bar(style='width: 100%; background: #3c8dbc;')
+
+      .col-lg-4.col-md-6.col-sm-6.col-xs-12
+        a(href='/bluetech/bluetech-paymentmethod' style='text-decoration:none;')
+          .info-box.neon-box
+            span.info-box-icon(style="background: linear-gradient(135deg, #2c3e50 0%, #000000 100%);")
+              img(src='/dist/img/list-logo.svg' style='width: 40px; filter: invert(1);')
+            .info-box-content
+              span.info-box-text(style="color: #2c3e50; font-size: 16px; font-weight: 700;") Blue Tech Payment Methods
+              span.info-box-number(style="font-size: 12px; font-weight: 400; color: #7f8c8d;") Types of Payment
+              .progress
+                .progress-bar(style='width: 100%; background: #3c8dbc;')  
+
+    .row
+      .col-md-12
+        .box.box-parrot
+          .box-header
+            h3.box-title Quick Link Button for Billing Management      
+
+      .col-lg-4.col-md-6.col-sm-6.col-xs-12
+        a(href='/bluetech/bluetech-purchase' style='text-decoration:none;')
+          .info-box.neon-box
+            span.info-box-icon(style="background: linear-gradient(135deg, #2c3e50 0%, #000000 100%);")
+              img(src='/dist/img/delivery.svg' style='width: 40px; filter: invert(1);')
+            .info-box-content
+              span.info-box-text(style="color: #2c3e50; font-size: 16px; font-weight: 700;") Blue Tech Purchase Tool
+              span.info-box-number(style="font-size: 12px; font-weight: 400; color: #7f8c8d;") Billing List
+              .progress
+                .progress-bar(style='width: 100%; background: #00c0ef;')
+
+      //- .col-lg-4.col-md-6.col-sm-6.col-xs-12
+      //-   a(href='/rms/website.admin/customers' style='text-decoration:none;')
+      //-     .info-box.neon-box
+      //-       span.info-box-icon(style="background: linear-gradient(135deg, #2c3e50 0%, #000000 100%);")
+      //-         img(src='/dist/img/invocie.svg' style='width: 40px; filter: invert(1);')
+      //-       .info-box-content
+      //-         span.info-box-text(style="color: #2c3e50; font-size: 16px; font-weight: 700;") Website
+      //-         span.info-box-number(style="font-size: 12px; font-weight: 400; color: #7f8c8d;") Coustomers
+      //-         .progress
+      //-           .progress-bar(style='width: 100%; background: #dd4b39;')                               

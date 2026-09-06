@@ -1,0 +1,1046 @@
+extends ../../layout
+
+block style
+  link(rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css")
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css')
+  link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css')
+  style.
+    /* === Modern Layout & Card Styling === */
+    .modern-card {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      border: 1px solid #edf2f7;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
+    .modern-toolbar {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid #edf2f7;
+      background-color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .toolbar-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* === Modern Inputs & Selects === */
+    .modern-input-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+      color: #4a5568;
+    }
+
+    .modern-control {
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      background-color: #fcfcfc;
+      outline: none;
+      color: #2d3748;
+    }
+
+    .modern-control:focus {
+      border-color: #580db4;
+      box-shadow: 0 0 0 3px rgba(88, 13, 180, 0.1);
+      background-color: #fff;
+    }
+
+    /* === Modern Buttons === */
+    .btn-modern {
+      padding: 0.5rem 1.25rem;
+      font-weight: 500;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .btn-modern-primary {
+      background-color: #580db4;
+      color: white;
+      box-shadow: 0 2px 4px rgba(88, 13, 180, 0.2);
+    }
+
+    .btn-modern-primary:hover {
+      background-color: #480a96;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px rgba(88, 13, 180, 0.3);
+      color: white;
+    }
+
+    .btn-modern-info {
+      background-color: #0ea5e9;
+      color: white;
+      box-shadow: 0 2px 4px rgba(14, 165, 233, 0.2);
+    }
+
+    .btn-modern-info:hover {
+      background-color: #0284c7;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px rgba(14, 165, 233, 0.3);
+      color: white;
+    }
+
+    .btn-modern-warning {
+      background-color: #f59e0b;
+      color: white;
+      box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
+    }
+
+    .btn-modern-warning:hover {
+      background-color: #d97706;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px rgba(245, 158, 11, 0.3);
+      color: white;
+    }
+
+    .btn-modern-icon {
+      padding: 0.5rem 0.75rem;
+    }
+
+    /* === Modern Table Styling === */
+    .modern-table-container {
+      padding: 0;
+      max-height: 60vh;
+      overflow-y: auto;
+      overflow-x: auto;
+      position: relative;
+    }
+
+    .table.modern-table {
+      margin-bottom: 0;
+      border-collapse: collapse !important;
+      width: 100%;
+    }
+
+    .modern-table thead th {
+      position: sticky;
+      top: 0;
+      background-color: #580db4;
+      color: white;
+      font-weight: 500;
+      padding: 1rem 1.5rem;
+      border: none;
+      z-index: 10;
+      white-space: nowrap;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .modern-table thead th a {
+      color: white;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .modern-table tbody td {
+      padding: 1rem 1.5rem;
+      vertical-align: middle;
+      border-bottom: 1px solid #edf2f7;
+      color: #2d3748;
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    .modern-table tbody tr.main-row {
+      background-color: #ffffff;
+      transition: all 0.2s;
+    }
+
+    .modern-table tbody tr.main-row:hover {
+      background-color: #fbf8ff;
+    }
+
+    /* Status System Badges */
+    .badge {
+      padding: 0.45rem 0.8rem !important;
+      border-radius: 8px !important;
+      font-weight: 600 !important;
+      font-size: 0.8rem !important;
+      letter-spacing: 0.3px;
+      display: inline-block;
+      border: none;
+    }
+    .badge-success { background-color: #d1fae5 !important; color: #065f46 !important; }
+    .badge-order { background-color: #d1fae5 !important; color: #07097d !important; }
+    .badge-warning { background-color: #fef3c7 !important; color: #580db4 !important; }
+    .badge-pending { background-color: #fef3c7 !important; color: #692b05 !important; }
+    .badge-danger { background-color: #fee2e2 !important; color: #991b1b !important; }
+
+    /* Action Icons in Table */
+    .action-icon {
+      color: #718096;
+      background: #edf2f7;
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: all 0.2s;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+
+    .action-icon:hover {
+      background: #580db4;
+      color: white;
+      transform: scale(1.05);
+    }
+
+    .action-icon.pdf-icon:hover { background: #e53e3e; }
+    .action-icon.email-icon:hover { background: #3182ce; }
+    
+    /* View Items Button */
+    .btn-view-items {
+      background-color: #ebf4ff;
+      color: #3182ce;
+      border: none;
+      border-radius: 6px;
+      padding: 0.4rem 0.75rem;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-view-items:hover {
+      background-color: #3182ce;
+      color: white;
+    }
+
+    /* === Footer & Pagination === */
+    .modern-footer {
+      padding: 1.25rem 1.5rem;
+      background-color: #f8f9fa;
+      border-top: 1px solid #edf2f7;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .modern-footer .title-filter {
+      color: #718096;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .pagination {
+      margin: 0;
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    .pagination li a, .pagination li span {
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 0.4rem 0.75rem;
+      color: #4a5568;
+      background: #fff;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .pagination li.active a {
+      background-color: #580db4;
+      border-color: #580db4;
+      color: white;
+      box-shadow: 0 2px 4px rgba(88, 13, 180, 0.2);
+    }
+
+    .pagination li a:hover:not(.active) {
+      background-color: #edf2f7;
+      color: #580db4;
+    }
+
+    .breadcrumb {
+      background: transparent;
+      padding: 0;
+    }
+
+    .selected-row {
+      background-color: rgba(88, 13, 180, 0.05) !important;
+      border-left: 3px solid #580db4;
+    }
+    
+    /* Child Table UI */
+    .child-table-wrapper {
+      padding: 1rem 1.5rem 1.5rem 3rem !important;
+      background-color: #f8fafc;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    .child-table {
+      width: 100%;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border: 1px solid #edf2f7;
+    }
+    .child-table th {
+      background-color: #edf2f7 !important;
+      color: #4a5568 !important;
+      font-size: 0.85rem;
+      padding: 0.75rem 1rem !important;
+      position: static !important;
+      text-align: center;
+    }
+    .child-table td {
+      background-color: #ffffff;
+      padding: 0.75rem 1rem !important;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+
+block content
+  section.content-header.mb-4
+    div(style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;")
+      h1(style="margin: 0; font-weight: 600; color: #2d3748;") RMS Purchase Dashboard
+      ol.breadcrumb(style="margin: 0;")
+        li
+          a(href='/dashboard' style="color: #580db4; font-weight: 500; text-decoration: none;")
+            i.fa.fa-home.mr-1
+            | Dashboard
+        li
+          span(style="color: #718096; margin: 0 0.5rem;")
+          span(style="color: #4a5568; font-weight: 500;") RMS TecH Solutions
+        li
+          span(style="color: #718096; margin: 0 0.5rem;")
+          a(href='/rms/rms-purchase' style="color: #718096; text-decoration: none;") Purchase Dashboard
+        
+  section.content
+    .row
+      .col-xs-12
+        .modern-card
+          //- Toolbar Area
+          .modern-toolbar
+            .toolbar-group
+              .modern-input-group
+                span Search:
+                input.modern-control#search(type='text', placeholder='Search Name, Purchase ID...', name='search' autocomplete='off' style='width: 250px;')
+                button.btn-modern.btn-modern-primary.btn-modern-icon#searchBtn(type='button')
+                  i.fa.fa-search
+              
+              button.btn-modern.btn-modern-primary(type='button' data-toggle='modal' data-target='#add-edit-purchase-modal') 
+                i.fa.fa-plus
+                | Direct Purchase
+
+              button.btn-modern.btn-modern-primary.btn-modern-icon.btn-download(type='button' title="Download Export") 
+                i.fa.fa-download  
+                | Download Purchase  
+                
+            .toolbar-group
+              .modern-input-group
+                span Show:
+                select.modern-control#limitSelect(style='width: 80px;')
+                  option 10
+                  option 25
+                  option 50
+                  option 100
+
+          //- Table Area
+          .modern-table-container
+            table.table.modern-table#purchaseTable
+              thead
+                tr
+                  th Edit
+                  th Download Inventory PDF 
+                  th View Inventory PDF
+                  th Purchase Number
+                  th Supplier Name
+                  th IMEI Number
+                  th Quantity
+                  th Total Price
+                  th Payment Method
+                  th Purchase Notes
+                  th Items
+                  th Created By
+                  th Updated By
+                  th Created Date
+                  th Updated Date
+              tbody#purchaseTableBody
+                tr
+                  td.text-center(colspan='15' style="padding: 3rem;") 
+                    span(style="color: #a0aec0; font-size: 1.1rem;") No data captured. Apply parameters or lookups above.
+
+          //- Footer Area
+          .modern-footer
+            span.title-filter#title-filter Showing no entries
+            ul.pagination#paginationContainer
+
+  // INCLUDE MODAL REGISTRY LINES
+  include ./create               
+
+block script
+  script(type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js")
+  script(type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js")
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js")
+  
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      const purchaseModal = $('#add-edit-purchase-modal');
+      ['#supplierName', '#paymentMethod', '#itemSelect'].forEach(function (selector) {
+        const field = $(selector);
+        if (field.length && field.hasClass('select2-hidden-accessible')) {
+          field.select2('destroy');
+        }
+        if (field.length) {
+          field.select2({
+            width: '100%',
+            dropdownParent: purchaseModal,
+            allowClear: true
+          });
+        }
+      });
+
+      const tableBody = document.getElementById('purchaseTableBody');
+      const paginationContainer = document.getElementById('paginationContainer');
+      let search = document.getElementById('search');
+      const searchBtn = document.getElementById('searchBtn');
+      const limitSelect = document.getElementById('limitSelect');
+      const exportExcelBtn = document.querySelector('.btn-download');
+
+      if (exportExcelBtn) {
+          exportExcelBtn.addEventListener('click', function () {
+          
+              const searchVal = document.getElementById('search').value || '';
+      
+              const params = new URLSearchParams();
+      
+              if (searchVal.trim()) {
+                  params.append('search', searchVal.trim());
+              }
+      
+              window.location.href =
+                  `/api/bluetech/bluetech-purchase/export/excel?${params.toString()}`;
+          });
+      }
+
+      let currentPage = 1;
+      let currentSearch = '';
+      let limit = limitSelect.value;
+      const selectedRows = new Set();
+
+      async function fetchPurchase(page = 1, search = '', limit = 10) {
+        tableBody.innerHTML = `<tr><td colspan="15" class="text-center" style="padding: 3rem;"><i class="fa fa-spinner fa-spin" style="font-size: 32px; color: #580db4;"></i></td></tr>`;
+        try {
+          const response = await fetch(`/api/bluetech/bluetech-purchase/all?page=${page}&search=${search}&limit=${limit}`);
+          const data = await response.json();
+
+          if (data?.data?.length > 0) {
+            const groupedArray = [];
+            const groupMap = {};
+
+            data.data.forEach(row => {
+              if (!groupMap[row.id]) {
+                groupMap[row.id] = {
+                  id: row.id,
+                  files: row.files,
+                  purchaseNumber: row.purchaseNumber,
+                  supplierName: row.supplierName,
+                  imeiNumber: row.imeiNumber,
+                  qty: row.qty,
+                  purchasesPrice: row.purchasesPrice,
+                  paymentMethod: row.paymentMethod,
+                  notes: row.notes,
+                  createdBy: row.createdBy,
+                  updatedBy: row.updatedBy,
+                  createdAt: row.createdAt,
+                  updatedAt: row.updatedAt,
+                  items: []
+                };
+                groupedArray.push(groupMap[row.id]);
+              }
+
+              groupMap[row.id].items.push({
+                itemName: row.itemName,
+                itemType: row.itemType,
+                itemConfigurations: row.itemConfigurations,
+                unitPrice: row.unitPrice,
+                quantity: row.quantity,
+                totalPrice: row.totalPrice,
+                itemNotes: row.itemNotes
+              });
+            });
+
+            // Pipeline Sorting (Newest First)
+            groupedArray.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+            // Render Rows
+            tableBody.innerHTML = groupedArray.map(c => {
+              const totalQty = c.items.reduce((sum, i) => sum + (Number(i.quantity) || 0), 0);
+              const totalUnite = c.items.reduce((sum, i) => sum + (Number(i.unitPrice) || 0), 0);
+              const totalBuy = c.items.reduce((sum, i) => sum + (Number(i.totalPrice) || 0), 0);
+              const format = (num) => Number(num || 0).toLocaleString();
+
+              return `
+              <tr class="main-row" data-id="${c.id}">
+                <td>
+                  <a href="#" class="action-icon editPurchase" data-purchase-id="${c.id}" data-toggle="modal" data-target="#add-edit-purchase-modal" title="Modify Purchase Properties">
+                    <i class="fa fa-edit"></i>
+                  </a>
+                </td>
+                <td>
+                  <a href="/api/bluetech/bluetech-purchase/generate-pdf/${c.id}" class="action-icon pdf-icon" target="_blank" title="Download System Ledger Package PDF">
+                    <i class="fa fa-download fa-lg"></i>
+                  </a>
+                </td>
+                <td>
+                  <a href="/api/bluetech/bluetech-purchase/view-pdf/${c.id}" class="action-icon pdf-icon" target="_blank" title="Review Document Vector Stream">
+                    <i class="fa fa-eye fa-lg"></i>
+                  </a>
+                </td>
+                <td style="font-weight: 600; color: #580db4;">${c.purchaseNumber ?? '-'}</td>
+                <td>${c.supplierName ?? '-'}</td>
+                <td>${c.imeiNumber ?? '-'}</td>
+                <td>${format(c.qty)}</td>
+                <td style="font-weight: 600; color: #065f46;">${format(c.purchasesPrice)} BDT</td>
+                <td>${c.paymentMethod ?? '-'}</td>
+                <td>${c.notes ?? ''}</td>
+                <td>
+                  <button class="btn-view-items toggleItems" data-id="${c.id}">
+                    <i class="fa fa-list-ul mr-1"></i> Lines (${c.items.length})
+                  </button>
+                </td>
+
+                <td>${c.createdBy ?? 'System'}</td>
+                <td>${c.updatedBy ?? '-'}</td>
+                <td>${c.createdAt ? new Date(c.createdAt).toLocaleDateString() : '-'}</td>
+                <td>${c.updatedAt ? new Date(c.updatedAt).toLocaleDateString() : '-'}</td>
+              </tr>
+
+              <tr id="items-${c.id}" style="display:none; background-color: transparent;">
+                <td colspan="15" class="child-table-wrapper">
+                  <table class="child-table">
+                    <thead>
+                      <tr>
+                        <th>Item</th>
+                        <th>Notes</th>
+                        <th>Type</th>
+                        <th>Spec</th>
+                        <th>Qty</th>
+                        <th>Unit Price</th>
+                        <th>Total Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${c.items.map(i => `
+                        <tr>
+                          <td style="font-weight: 500;">${i.itemName ?? '-'}</td>
+                          <td>${i.itemNotes ?? '-'}</td>
+                          <td><code style="color: #ed4014;">${i.itemType ?? '-'}</code></td>
+                          <td style="font-weight: 700;">${i.itemConfigurations ?? '0'}</td>
+                          <td style="font-weight: 700;">${format(i.quantity)}</td>
+                          <td style="font-weight: 700; color: #065f46;">${format(i.unitPrice)}</td>
+                          <td style="color: #991b1b;">${format(i.totalPrice)}</td>
+                        </tr>
+                      `).join('')}
+                      <tr style="background:#f1f5f9;">
+                        <td colspan="4" style="text-align:right; font-weight: 700; color: #2d3748;">GRAND TOTAL:</td>
+                        <td style="font-weight: 700; color: #2d3748;">${totalQty} Units</td>
+                        <td style="font-weight: 700; color: #065f46;">${totalUnite} BDT</td>
+                        <td style="font-weight: 700; color: #991b1b;">${totalBuy} BDT</td>
+                        <td colspan="3"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+              `;
+            }).join('');
+
+            selectedRows.forEach((id) => {
+              const row = tableBody.querySelector(`[data-id="${id}"]`);
+              if (row) row.classList.add('selected-row');
+            });
+
+            const totalRecords = data.total;
+            const startRecord = (currentPage - 1) * limit + 1;
+            const endRecord = Math.min(currentPage * limit, totalRecords);
+
+            document.querySelector('#title-filter').textContent = `Showing ${startRecord} to ${endRecord} of ${totalRecords} records assigned`;
+
+          } else {
+            tableBody.innerHTML = `<tr><td colspan="15" class="text-center" style="padding: 3rem; color: #a0aec0;">No data records extracted matching this criteria query scope.</td></tr>`;
+            document.querySelector('#title-filter').textContent = 'No entries matching filters';
+            return;
+          }
+
+          renderPagination(Math.ceil(data.total / limit), page);
+
+        } catch (error) {
+          console.error('Core Exception in purchase parsing framework:', error);
+          tableBody.innerHTML = `<tr><td colspan="15" class="text-center" style="padding: 3rem; color: #e53e3e;"><i class="fa fa-exclamation-triangle"></i> Execution Error pipeline mapping failed.</td></tr>`;
+          document.querySelector('#title-filter').textContent = 'Error loading entries';
+        }
+      }
+
+      function renderPagination(totalPages, currentPage) {
+        paginationContainer.innerHTML = "";
+        if (!totalPages || totalPages <= 0) return;
+
+        const maxVisiblePages = 5;
+
+        const createPageLink = (page, isActive = false) => {
+          const pageItem = document.createElement("li");
+          if (isActive) pageItem.classList.add("active");
+          pageItem.innerHTML = `<a href="#" class="pagination-link" data-page="${page}">${page}</a>`;
+          paginationContainer.appendChild(pageItem);
+        };
+
+        if (currentPage > 1) {
+          const prevItem = document.createElement("li");
+          prevItem.innerHTML = `<a href="#" class="pagination-link" data-page="${currentPage - 1}"><i class="fa fa-chevron-left" style="font-size: 0.8em; pointer-events:none;"></i></a>`;
+          paginationContainer.appendChild(prevItem);
+        }
+
+        if (totalPages <= maxVisiblePages) {
+          for (let i = 1; i <= totalPages; i++) {
+            createPageLink(i, i === currentPage);
+          }
+        } else {
+          createPageLink(1, currentPage === 1);
+          let rangeStart = Math.max(2, currentPage - Math.floor(maxVisiblePages / 2));
+          const rangeEnd = Math.min(totalPages - 1, rangeStart + maxVisiblePages - 3);
+
+          if (rangeEnd === totalPages - 1) {
+            rangeStart = Math.max(2, rangeEnd - maxVisiblePages + 3);
+          }
+
+          if (rangeStart > 2) {
+            paginationContainer.innerHTML += `<li><span style="pointer-events:none;">...</span></li>`;
+          }
+
+          for (let i = rangeStart; i <= rangeEnd; i++) {
+            createPageLink(i, i === currentPage);
+          }
+
+          if (rangeEnd < totalPages - 1) {
+            paginationContainer.innerHTML += `<li><span style="pointer-events:none;">...</span></li>`;
+          }
+
+          if (totalPages > 1) {
+            createPageLink(totalPages, currentPage === totalPages);
+          }
+        }
+
+        if (currentPage < totalPages) {
+          const nextItem = document.createElement("li");
+          nextItem.innerHTML = `<a href="#" class="pagination-link" data-page="${currentPage + 1}"><i class="fa fa-chevron-right" style="font-size: 0.8em; pointer-events:none;"></i></a>`;
+          paginationContainer.appendChild(nextItem);
+        }
+      }
+
+      function updatePage(page) {
+        let currentSearch = search.value;
+        currentPage = page;
+        fetchPurchase(currentPage, currentSearch, limit);
+      }
+
+      paginationContainer.addEventListener('click', function(event) {
+        if (event.target.classList.contains('pagination-link')) {
+          event.preventDefault();
+          const page = parseInt(event.target.getAttribute('data-page'), 10);
+          if (!isNaN(page)) {
+            updatePage(page);
+          }
+        }
+      });
+
+      search.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          searchBtn.click();
+        }
+      });
+
+      searchBtn.addEventListener('click', () => {
+        selectedRows.clear();
+        currentSearch = search.value;
+        fetchPurchase(1, currentSearch, limit);
+      });
+      
+      limitSelect.addEventListener('change', () => {
+        limit = limitSelect.value;
+        currentSearch = search.value;
+        currentPage = 1;
+        fetchPurchase(currentPage, currentSearch, limit);
+      });
+
+      fetchPurchase(currentPage, search.value, limit);
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        let cart = [];
+        let editMode = false;
+        let editId = null;
+
+        const purchaseGrandTotal = document.getElementById('purchaseGrandTotal');
+
+        function updateGrandTotal() {
+          if (!purchaseGrandTotal) return;
+          
+          // Calculate total sum using array reduce
+          const totalSum = cart.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
+          
+          // Format and update text node natively
+          purchaseGrandTotal.textContent = '' + totalSum.toLocaleString('en-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+          });
+        }
+
+        document.addEventListener('click', function (e) {
+          if (!e.target.classList.contains('sendPurchaseEmail')) return;
+
+          e.preventDefault();
+
+          const id = Number(e.target.getAttribute('data-purchase-id'));
+          const email = e.target.getAttribute('data-supplier-email');
+          const companyName = e.target.getAttribute('data-supplier-name');
+
+          if (!id || !email) {
+              swal("Error", "Email not found for this purchase", "error");
+              return;
+          }
+
+          // Confirm before sending
+          swal({
+              title: "Send Purchase?",
+              text: `Send purchase to ${email}?`,
+              icon: "question",
+              buttons: {
+                  cancel: "Cancel",
+                  confirm: {
+                      text: "Send",
+                      value: true
+                  }
+              }
+          }).then((willSend) => {
+              if (!willSend) return;
+
+          // Show loading state
+          const originalClass = e.target.className;
+          e.target.className = 'fa fa-spinner fa-spin fa-2x';
+          e.target.style.cursor = 'not-allowed';
+
+          // Send email via API
+            swal("Unavailable", "Email sending is not enabled for BlueTech purchases", "info");
+          });
+        });
+
+        const itemSelect = document.getElementById('itemSelect');
+        const unitPrice = document.getElementById('unitPrice');
+        const quantity = document.getElementById('quantity');
+        const itemDescription = document.getElementById('itemDescription');
+
+        const purchaseNumber = document.getElementById('purchaseNumber');
+        const supplierName = document.getElementById('supplierName');
+        const imeiNumber = document.getElementById('imeiNumber');
+        const qty = document.getElementById('qty');
+        const purchasesPrice = document.getElementById('purchasesPrice');
+        const advancePayment = document.getElementById('advancePayment');
+        const duePayment = document.getElementById('duePayment');
+        const paymentMethod = document.getElementById('paymentMethod');
+        const notes = document.getElementById('notes');
+        const addPurchaseBtn = document.querySelector("[data-target='#add-edit-purchase-modal']");
+
+        async function generatePurchaseNumber() {
+            try {
+                const supplierCode = document.getElementById('supplierName').value.trim() || 'GEN';
+                const res = await fetch(`/api/bluetech/bluetech-purchase/generate-number?supplierCode=${encodeURIComponent(supplierCode)}`);
+                const result = await res.json();
+                if (result?.status && result.purchaseNumber) {
+                    purchaseNumber.value = result.purchaseNumber;
+                }
+            } catch (err) {
+                console.error('Purchase number generation failed:', err);
+            }
+        }
+
+        addPurchaseBtn?.addEventListener('click', function () {
+            editMode = false;
+            editId = null;
+            cart = [];
+            renderCart();
+            purchaseNumber.value = '';
+            supplierName.value = '';
+            $(supplierName).trigger('change');
+            imeiNumber.value = '';
+            qty.value = '';
+            purchasesPrice.value = '';
+            advancePayment.value = '';
+            duePayment.value = '';
+            paymentMethod.value = '';
+            $(paymentMethod).trigger('change');
+            notes.value = '';
+            generatePurchaseNumber();
+        });
+
+        // ========================
+        // EDIT CLICK
+        // ========================
+        document.addEventListener('click', function (e) {
+            const btn = e.target.closest('[data-purchase-id]');
+            if (!btn) return;
+
+            e.preventDefault();
+
+            const id = Number(btn.dataset.purchaseId);
+            if (!id || isNaN(id)) return;
+
+            loadPurchase(id);
+        });
+
+        // ========================
+        // TOGGLE ITEMS
+        // ========================
+        document.addEventListener('click', function (e) {
+            const btn = e.target.closest('.toggleItems');
+            if (!btn) return;
+
+            const row = document.getElementById(`items-${btn.dataset.id}`);
+            if (!row) return;
+
+            row.style.display = row.style.display === 'table-row' ? 'none' : 'table-row';
+        });
+
+        // ========================
+        // ITEM CHANGE
+        // ========================
+        itemSelect?.addEventListener('change', function () {
+            const opt = this.options[this.selectedIndex];
+            if (!opt?.value) return;
+
+            unitPrice.value = opt.dataset.price || '';
+        });
+
+        // ========================
+        // ADD ITEM
+        // ========================
+        document.getElementById('addItem').addEventListener('click', function () {
+        
+            const opt = itemSelect.options[itemSelect.selectedIndex];
+            const itemId = itemSelect.value;
+            const description = itemDescription.value.trim();
+
+            if (!itemId) {
+                swal("Warning", "Select item", "warning");
+                return;
+            }
+
+            if (!quantity.value || quantity.value <= 0) {
+                swal("Warning", "Enter quantity", "warning");
+                return;
+            }
+
+            if (cart.find(x => x.itemId == itemId)) {
+                swal("Warning", "Item already added", "warning");
+                return;
+            }
+
+            cart.push({
+                itemId,
+                itemName: opt.dataset.name || opt.text,
+                description: description || '',
+                quantity: Number(quantity.value),
+                unitPrice: Number(unitPrice.value) || 0
+            });
+
+            renderCart();
+
+            itemSelect.value = '';
+            $(itemSelect).trigger('change');
+            unitPrice.value = '';
+            quantity.value = '';
+            itemDescription.value = '';
+        });
+
+        // ========================
+        // REMOVE ITEM
+        // ========================
+        document.addEventListener('click', function (e) {
+            const btn = e.target.closest('.removeItem');
+            if (!btn) return;
+
+            cart.splice(btn.dataset.index, 1);
+            renderCart();
+        });
+
+        // ========================
+        // RENDER CART
+        // ========================
+        function renderCart() {
+            const tbody = document.querySelector('#itemTable tbody');
+            tbody.innerHTML = '';
+
+            if (!cart.length) {
+                tbody.innerHTML = `
+                    <tr class="no-data-row">
+                        <td class="text-center" colspan="6" style="padding: 2.5rem; color: #a0aec0; font-size: 0.95rem;">
+                            <i class="fa fa-folder-open mr-2" style="font-size: 1.2rem; vertical-align: middle; color: #cbd5e0;"></i>
+                            No entries added to payload registry yet.
+                        </td>
+                    </tr>`;
+                
+                // FIXED: Must recalculate to clear the total back to $0.00 before exiting early!
+                updateGrandTotal(); 
+                return;
+            }
+
+            cart.forEach((item, i) => {
+                const total = item.quantity * item.unitPrice;
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="padding: 0.85rem 1.25rem; font-size: 0.95rem; color: #2d3748;">${item.itemName}</td>
+                        <td style="padding: 0.85rem 1.25rem; font-size: 0.95rem; color: #4a5568;">${item.description || ''}</td>
+                        <td style="padding: 0.85rem 1.25rem; font-size: 0.95rem; text-align: center; color: #2d3748;">${item.quantity}</td>
+                        <td style="padding: 0.85rem 1.25rem; font-size: 0.95rem; text-align: right; color: #2d3748;">${item.unitPrice.toFixed(2)}</td>
+                        <td style="padding: 0.85rem 1.25rem; font-size: 0.95rem; text-align: right; font-weight: 600; color: #2d3748;">${total.toFixed(2)}</td>
+                        <td style="padding: 0.85rem 1.25rem; text-align: center;">
+                            <button type="button" class="btn btn-sm btn-outline-danger removeItem" data-index="${i}" style="border-radius: 6px; padding: 0.25rem 0.5rem;">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            // Recalculates total values perfectly when matching item arrays are altered
+            updateGrandTotal(); 
+        }
+
+        // ========================
+        // LOAD PURCHASE (EDIT)
+        // ========================
+        async function loadPurchase(id) {
+        
+            try {
+                const res = await fetch(`/api/bluetech/bluetech-purchase/edit/${id}`);
+                const result = await res.json();
+
+                if (!result.status) return;
+
+                const p = result.data;
+
+                editMode = true;
+                editId = id;
+
+                purchaseNumber.value = p.purchaseNumber || '';
+                supplierName.value = p.supplierName || '';
+                $(supplierName).trigger('change');
+                imeiNumber.value = p.imeiNumber || '';
+                qty.value = p.qty || '';
+                purchasesPrice.value = p.purchasesPrice || '';
+                advancePayment.value = p.advancePayment || '';
+                duePayment.value = p.duePayment || '';
+                paymentMethod.value = p.paymentMethod || '';
+                $(paymentMethod).trigger('change');
+                notes.value = p.notes || '';
+
+                cart = (p.items || []).map(i => ({
+                    itemId: i.itemId,
+                    itemName: i.itemName,
+                    description: i.description || i.itemNotes || '',
+                    quantity: Number(i.quantity) || 0,
+                    unitPrice: Number(i.unitPrice) || 0
+                }));
+
+                renderCart();
+
+            } catch (err) {
+                console.error("Load error:", err);
+            }
+        }
+
+        // ========================
+        // SAVE / UPDATE PURCHASE
+        // ========================
+        document.getElementById('savePurchase').addEventListener('click', async function () {
+        
+            if (!cart.length) {
+            swal("Warning", "No items added", "warning");
+            return;
+        }
+
+            const formData = new FormData();
+            formData.append('purchaseNumber', purchaseNumber.value);
+            formData.append('supplierName', supplierName.value);
+            formData.append('imeiNumber', imeiNumber.value);
+            formData.append('qty', qty.value);
+            formData.append('purchasesPrice', purchasesPrice.value);
+            formData.append('advancePayment', advancePayment.value);
+            formData.append('duePayment', duePayment.value);
+            formData.append('paymentMethod', paymentMethod.value);
+            formData.append('notes', notes.value);
+            formData.append('items', JSON.stringify(cart));
+
+            const baseUrl = `${window.location.protocol}//${window.location.host}`;
+            let url = `${baseUrl}/api/bluetech/bluetech-purchase/create`;
+            let method = 'POST';
+
+            if (editMode) {
+                url = `${baseUrl}/api/bluetech/bluetech-purchase/update/${editId}`;
+                method = 'PUT';
+            }
+
+            console.log('Saving purchase to', url);
+
+            try {
+                const res = await fetch(url, {
+                    method,
+                    body: formData
+                });
+
+                console.log('Save response', res.status, res.headers.get('content-type'));
+                const result = await res.json();
+
+                if (result.status) {
+                    swal({
+                        title: editMode ? "Updated Purchase Successfully" : "Created Purchase Successfully",
+                        text: result.message || "",
+                        icon: "success",
+                        button: "OK"
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                } else {
+                    swal("Error", result.message || "Failed to save purchase", "error");
+                }
+
+            } catch (err) {
+                console.error(err);
+                swal("Error", "Request failed", "error");
+            }
+        });
+
+        // ========================
+        // AUTO EDIT (URL ID)
+        // ========================
+        const id = window.location.pathname.split('/').pop();
+        if (!isNaN(id)) loadPurchase(id);
+
+    });

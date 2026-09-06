@@ -1,0 +1,597 @@
+extends ../../layout
+block style
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css')
+  link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css')
+  style.
+    .selected-row {
+      background-color: #580db4 !important;
+      color: white !important;
+    }
+
+    .form-group {
+      position: relative;
+      margin-bottom: 7px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 1rem 1rem 0.3rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background: none;
+        font-size: 1rem;
+        outline: none;
+        transition: border-color 0.3s, box-shadow 0.3s, padding-top 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        border-color: #580db4;
+        box-shadow: 0 0 4px rgba(138, 32, 97, 0.6);
+    }
+
+    .form-group label {
+        position: absolute;
+        top: 0.7rem;
+        left: 1rem;
+        transform: translateY(0);
+        font-size: 1rem;
+        color: #aaa;
+        pointer-events: none;
+        transition: all 0.3s;
+        background-color: white;
+        padding: 0 5px;
+    }
+
+    .form-group input:focus + label,
+    .form-group input:not(:placeholder-shown) + label,
+    .form-group textarea:focus + label,
+    .form-group textarea:not(:placeholder-shown) + label {
+        top: -0.6rem; /* Move the label to the top padding */
+        font-size: 0.8rem;
+        color: #580db4;
+        padding: 0 5px; /* Keeps label inside */
+    }
+
+    .form-group-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .form-check {
+        margin-top: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .form-check-input {
+        width: 2rem;
+        height: 2rem;
+        margin: 0;
+        cursor: pointer;
+        accent-color: #580db4;
+    }
+
+    .form-check-label {
+        font-size: 1rem;
+        color: #555;
+        cursor: pointer;
+        margin-left: 0.1rem;
+        margin-top: 0.5rem;
+    }
+
+    #add-edit-appointment-modal .modal-dialog {
+        max-width: 80%;
+        width: auto;
+    }
+
+    #show-appointment-modal .modal-dialog {
+        max-width: 90%;
+        width: auto;
+    }
+
+    .btn-group .btn-small {
+        padding: 2px 8px;
+        font-size: 12px;
+        line-height: 1.5;
+        border-radius: 3px;
+        background-color: #580db4;
+        color: white;
+        border: none;
+    }
+    .btn-group .btn-small:hover,
+    .btn-group .btn-small:focus {
+        background-color: #701A4E;
+    }
+    .btn-group .dropdown-menu {
+        font-size: 12px;
+        min-width: 100px;
+    }
+    .caret {
+        margin-left: 2px;
+    }
+
+    /* Ensure the container has limited height and overflow */
+    .table-responsive {
+      max-height: 400px; /* Adjust height as needed */
+      overflow-y: auto;
+      position: relative;
+    }
+
+    /* Fix the table header */
+    .table-responsive table thead {
+      position: sticky;
+      top: 0;
+      background-color: #fff; /* Match table background */
+      z-index: 2;
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1); /* Optional shadow for better visibility */
+    }
+
+    #tableHead {
+      background-color: #580db4;
+      color: white;
+    }
+
+    .green {
+      background-color: #00a65a !important;
+    }
+    .cancelled {
+      background-color: #dd4b39 !important;
+    }
+
+
+    /* Reset modal styles */
+    #multi-appointment-modal .modal {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1050;
+        display: none;
+        outline: 0;
+        overflow: hidden;
+    }
+
+    /* Prevent body scrolling */
+    body.modal-open {
+        overflow: hidden;
+        padding-right: 0 !important;
+    }
+
+    /* Modal dialog styles */
+    #multi-appointment-modal .modal-dialog {
+        position: relative;
+        width: auto;
+        margin: 0;
+        max-width: 1000px;
+        height: 100%;
+        display: flex;
+        align-items: stretch;
+    }
+
+    /* Modal content styles */
+    #multi-appointment-modal .modal-content {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100vh;
+        background-color: #fff;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        border-radius: 0;
+        outline: 0;
+    }
+
+    /* Modal header styles - Fixed to have title on left and close button on right */
+    #multi-appointment-modal .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px;
+        flex-direction: row; /* Ensure correct direction */
+    }
+
+     #multi-appointment-modal .modal-header .modal-title {
+        margin: 0;
+        line-height: 1.5;
+        order: 0; /* Ensure title is first */
+    }
+
+    #multi-appointment-modal .modal-header .close {
+        order: 1; /* Ensure close button is last */
+        padding: 1rem;
+        margin: -1rem -1rem -1rem auto;
+    }
+
+    /* Modal body styles */
+    #multi-appointment-modal .modal-body {
+        position: relative;
+        flex: 1 1 auto;
+        padding: 15px;
+    }
+
+    /* Scrollable area styles */
+    #multi-appointment-modal .scrollable-area {
+        height: calc(100vh - 130px); /* Adjust based on header and footer height */
+        overflow-y: scroll !important; /* Force scrollbar to always show */
+        overflow-x: hidden;
+    }
+
+    /* Modal footer styles */
+    #multi-appointment-modal .modal-footer {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 15px;
+    }
+
+    /* Custom scrollbar styles */
+    #multi-appointment-modal .scrollable-area::-webkit-scrollbar {
+        width: 6px;
+        display: block;
+    }
+
+    #multi-appointment-modal .scrollable-area::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    #multi-appointment-modal .scrollable-area::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+    }
+
+    #multi-appointment-modal .scrollable-area::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+block content
+  section.content-header
+    h1
+      | Permission&nbsp;&nbsp; 
+      button.btn.btn-sm.btn-primary.btn-add(type='submit' style='margin-left:10px' data-toggle='modal' data-target='#add-edit-permission-modal') 
+        span.fa.fa-plus
+
+    ol.breadcrumb
+      li
+        a(href='/dashboard')
+          strong(style="color: #580db4") Dashboard 
+      li
+        a(href='/permission')
+          strong(style="color: #580db4") Permission
+  section.content
+    .row
+      .col-md-12.col-xs-12
+        .box.box-parrot
+          .box-header.with-border
+            .pull-left
+              span.title-filter(style='display:flex;align-items:center;') Search:
+                input.form-control.input-sm(type='text' placeholder='Enter search criteria' name='search' autocomplete='off' style='margin-left:10px' id='search')
+                button.btn.btn-sm.btn-primary.btn-filter(type='submit' style='margin-left:3px' id='searchBtn') 
+                  span.fa.fa-filter
+            .pull-right
+              span.title-filter(style='display:flex;align-items:center') Show:
+                select.form-control.input-filter.input-sm(id='limitSelect')
+                  option 10
+                  option 25
+                  option 50
+                  option 100
+
+            .box-body 
+              .table.table-responsive
+                table.table.table-bordered.table-striped#permissionTable
+                  thead
+                    tr
+                      th 
+                        a(href='#') Permission Id &nbsp;
+                          <i class="fa fa-sort-alpha-asc"></i>
+                      th 
+                        a(href='#') Permission Name
+                      th 
+                        a(href='#') Slug
+                      th 
+                        a(href='#') Is Active
+                      th 
+                        a(href='#') Create Date
+                      th 
+                        a(href='#') Updated Date              
+                      th
+                        a(href='#') Actions
+                  tbody#permissionTableBody
+                    tr 
+                      td.text-center(colspan='7') No data to display. Use the search filters above to load data.
+
+          .box-footer.clearfix
+            .pull-left
+              span.title-filter#title-filter(style='display:flex;align-items:center;') Showing no entries
+            ul.pagination.pagination-sm.no-margin.pull-right#paginationContainer
+  include ./create
+
+block script
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      const tableBody = document.getElementById('permissionTableBody');
+      if (!tableBody) {
+        console.error("Element with id 'permissionTableBody' not found.");
+        return;
+      }
+      const paginationContainer = document.getElementById('paginationContainer');
+      const searchStr = document.getElementById('search');
+      const searchBtn = document.getElementById('searchBtn');
+      const limitSelect = document.getElementById('limitSelect');
+
+      let currentPage = 1;
+      let currentSearch = '';
+      let limit = limitSelect.value;
+
+      async function fetchPermission(page = 1, search = '', limit = 10) {
+        tableBody.innerHTML = `<tr><td colspan="7" class="text-center"><i class="fa fa-spinner fa-spin" style="font-size: 24px; color: #580db4;"></i></td></tr>`;
+        try {
+          const response = await fetch(`/api/permissions/all?page=${page}&search=${search}&limit=${limit}`);
+          const data = await response.json();
+
+          if (data?.data?.length > 0) {
+            tableBody.innerHTML = data.data.map(permission => {
+            return `
+              <tr style='cursor:pointer' class="table-row">
+                <td>${permission.permissionId}</td>
+                <td>${permission.name}</td>
+                <td>${permission.slug}</td>
+                <td>
+                  ${permission.isActive 
+                    ? '<i class="bi bi-check-circle-fill text-success"></i>' 
+                    : '<i class="bi bi-x-circle-fill text-danger"></i>'}
+                </td>
+                <td>${permission.createdAt}</td>
+                <td>${permission.updatedAt}</td>
+                <td>
+                  <a href="" id='editPermission' class="fa fa-edit" data-permission-id="${permission.permissionId}" style="font-size: 1em;" data-toggle='modal' data-target='#add-edit-permission-modal'></a>
+                </td>
+              </tr>
+          `;
+          }).join('');
+
+          const totalRecords = data.totalRecords;
+          const startRecord = (currentPage - 1) * limit + 1;
+          const endRecord = Math.min(currentPage * limit, totalRecords);
+
+          document.querySelector('#title-filter').textContent = `Showing ${startRecord} to ${endRecord} of ${totalRecords} entries`;
+
+          } else {
+            tableBody.innerHTML = `<tr><td colspan="7" class="text-center">No data found</td></tr>`;
+            document.querySelector('#title-filter').textContent = 'No entries to display';
+            return;
+          }
+
+          // Generate pagination buttons
+          const totalPages = Math.ceil(data.totalRecords / limit);
+          renderPagination(totalPages, currentPage);
+
+        } catch (error) {
+          console.error('Error fetching reports:', error);
+          tableBody.innerHTML = `<tr><td colspan="7" class="text-center">Error loading data</td></tr>`;
+          document.querySelector('#title-filter').textContent = 'Error loading entries';
+        }
+      }
+
+      function renderPagination(totalPages, currentPage) {
+        paginationContainer.innerHTML = ""
+
+        const maxVisiblePages = 5
+        const firstPages = 2
+        const lastPages = 2
+
+        // Helper function to create pagination link
+        const createPageLink = (page, isActive = false) => {
+          const pageItem = document.createElement("li")
+          if (isActive) pageItem.classList.add("active")
+          pageItem.innerHTML = `<a href="#" class="pagination-link" data-page="${page}">${page}</a>`
+          paginationContainer.appendChild(pageItem)
+        }
+
+        // Show "Previous" button if not on first page
+        if (currentPage > 1) {
+          const prevItem = document.createElement("li")
+          prevItem.innerHTML = `<a href="#" class="pagination-link" data-page="${currentPage - 1}">« Previous</a>`
+          paginationContainer.appendChild(prevItem)
+        }
+
+        // For small number of pages, show all pages without ellipsis
+        if (totalPages <= maxVisiblePages) {
+          for (let i = 1; i <= totalPages; i++) {
+            createPageLink(i, i === currentPage)
+          }
+        } else {
+          // Show first page
+          createPageLink(1, currentPage === 1)
+
+          // Calculate range of pages to show around current page
+          let rangeStart = Math.max(2, currentPage - Math.floor(maxVisiblePages / 2))
+          const rangeEnd = Math.min(totalPages - 1, rangeStart + maxVisiblePages - 3)
+
+          // Adjust range if current page is near the end
+          if (rangeEnd === totalPages - 1) {
+            rangeStart = Math.max(2, rangeEnd - maxVisiblePages + 3)
+          }
+
+          // Show ellipsis after first page if needed
+          if (rangeStart > 2) {
+            paginationContainer.innerHTML += `<li><span>...</span></li>`
+          }
+
+          // Show pages in range
+          for (let i = rangeStart; i <= rangeEnd; i++) {
+            createPageLink(i, i === currentPage)
+          }
+
+          // Show ellipsis before last page if needed
+          if (rangeEnd < totalPages - 1) {
+            paginationContainer.innerHTML += `<li><span>...</span></li>`
+          }
+
+          // Show last page if not already shown
+          if (totalPages > 1) {
+            createPageLink(totalPages, currentPage === totalPages)
+          }
+        }
+
+        // Show "Next" button if not on last page
+        if (currentPage < totalPages) {
+          const nextItem = document.createElement("li")
+          nextItem.innerHTML = `<a href="#" class="pagination-link" data-page="${currentPage + 1}">Next »</a>`
+          paginationContainer.appendChild(nextItem)
+        }
+      }
+
+        // Update page and fetch data
+      function updatePage(page) {
+        currentSearch = searchStr.value;
+        currentPage = page;
+        fetchPermission(currentPage, currentSearch, limit);
+      }
+
+      // Event listener for pagination links
+      paginationContainer.addEventListener('click', function(event) {
+        if (event.target.classList.contains('pagination-link')) {
+          event.preventDefault();
+          const page = parseInt(event.target.getAttribute('data-page'), 10);
+          if (!isNaN(page)) {
+            updatePage(page);
+          }
+        }
+      });
+
+
+      // Search and limit event listeners
+      searchBtn.addEventListener('click', () => {
+        currentSearch = searchStr.value;
+        fetchPermission(1, currentSearch, limit);
+      });
+      limitSelect.addEventListener('change', () => {
+        limit = limitSelect.value;
+        currentPage = 1;
+        fetchPermission(currentPage, currentSearch, limit);
+      });
+
+      fetchPermission(currentPage, currentSearch, limit);
+    });
+
+    $(document).on('click', '.btn-add', function () {
+      $('#permission-form')[0].reset();
+      $('#permission-form').removeAttr('data-permission-id');
+      $('#permission-form input, #permission-form textarea').val('');
+    });
+
+    $('#permission-form').on('submit', function (e) {
+      e.preventDefault();
+      const permissionId = $(this).attr('data-permission-id');
+
+      if (permissionId) {
+        updatePermission(permissionId);
+      } else {
+        createPermission();
+      }
+    });
+
+    function updatePermission(permissionId) {
+      const data = {
+        name: $('#name').val(),
+        slug: $('#slug').val(),
+        isActive: $('#isActive').is(':checked')
+      };
+    
+      $.ajax({
+        url: `/api/permissions/update/${permissionId}`,
+        type: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function (response) {
+          if (response.status) {
+            swal({
+              title: response.message,
+              icon: "success",
+              closeOnClickOutside: false,
+              button: 'OK'
+            }).then(() => {
+              window.location.reload(); // Reload page on success
+            });
+          } else {
+            swal("Error", response.message || "Failed to update permission record", "error");
+          }
+        }
+      });
+    }
+
+    $(document).on('click', '#editPermission', function () {
+      const permissionId = $(this).attr('data-permission-id');
+      loadPermissionForEdit(permissionId);
+    });
+
+    function loadPermissionForEdit(permissionId) {
+      $.ajax({
+        url: `/api/permissions/edit/${permissionId}`,
+        type: 'GET',
+        success: function (response) {
+          if (response.status) {
+            $('#permission-form').attr('data-permission-id', response.data.permissionId);
+            $('#name').val(response.data.name);
+            $('#slug').val(response.data.slug);
+            $('#isActive').prop('checked', response.data.isActive === true);
+
+            $('#add-edit-permission-modal.modal-title').text('Update Permission');
+            $('#button-add-edit-permission').text('Update');
+          } else {
+            swal("Error", response.message || "Failed to load coupon", "error");
+          }
+        }
+      });
+    }
+
+    function createPermission(permissionId) {
+      const data = {
+        name: $('#name').val(),
+        slug: $('#slug').val(),
+        isActive: $('#isActive').is(':checked')
+      };
+    
+      $.ajax({
+        url: `/permission`,
+        type: 'Post',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function (response) {
+          if (response.status) {
+            swal({
+              title: response.message,
+              icon: "success",
+              closeOnClickOutside: false,
+              button: 'OK'
+            }).then(() => {
+              window.location.reload(); // Reload page on success
+            });
+          } else {
+            swal("Error", response.message || "Failed to Create Permission record", "error");
+          }
+        }
+      });
+    }
+
+    function generateSlug(name) {
+      return name
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-');    
+    }
+
+
+    $(document).on('keyup blur', '#name', function () {
+      const nameValue = $(this).val();
+      const slugValue = generateSlug(nameValue);
+      $('#slug').val(slugValue);
+    });

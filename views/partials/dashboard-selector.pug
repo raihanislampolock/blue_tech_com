@@ -1,0 +1,6 @@
+//- Dashboard Selector Component
+//- Renders switcher chips for every dashboard the current role can access.
+//- To support more dashboards later, extend the mapping below.
+mixin dashboardSelector(userRole)
+  - var dashboards = [{ key: 'admin', name: 'SuperAdmin', icon: 'fa-tachometer', path: '/dashboard' }]
+

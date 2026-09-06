@@ -1,0 +1,58 @@
+version: "3.8"
+
+services:
+  postgres-db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: localhost
+      POSTGRES_DB: rms_tech_solutions_db
+      POSTGRES_PASSWORD: 9568
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  internal-service:
+    build:
+      context: .
+    environment:
+      NODE_ENV: production
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 9568
+      POSTGRES_DB: rms_tech_solutions_db
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./public:/usr/src/app/public
+    depends_on:
+      - internal-service
+    networks:
+      - app-network
+
+volumes:
+  db-data:
+
+networks:
+  app-network:

@@ -1,0 +1,31 @@
+#add-edit-role-modal.modal.fade
+    .modal-dialog.modal-sm
+        .modal-content
+          form#role-form(role='form', action='#', method='POST')
+            .modal-header
+                button.close(type='button', data-dismiss='modal', aria-label='Close')
+                    span(aria-hidden='true') &times;
+                h5.modal-title Role
+            .modal-body
+                .row
+                    .col-md-12
+                        .form-group
+                            input.input-sm.form-control(type='text', id='name', name='name', placeholder=' ', required)
+                            label.control-label(for='name') Role Name
+
+                .row
+                    .col-md-12
+                        .form-group
+                            textarea.form-control(rows='3', id='description', name='description', placeholder=' ', required)
+                            label.control-label(for='description') Role Description
+                        .form-check(style="margin-top: 1rem;")
+                            input.form-check-input(type='checkbox', id='status', name='status')
+                            label.form-check-label(for='checkbox1') Is Active
+            .modal-footer
+                div.pull-left
+                    button.btn.btn-primary#button-create-role(type='submit')
+                        span.fa.fa-save
+                        |  &nbsp;Save
+                    button.btn.btn-default(type='button', data-dismiss='modal')
+                        span.fa.fa-times-circle
+                        |  &nbsp;Cancel

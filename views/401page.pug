@@ -1,0 +1,70 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    title Blue Tech Solutions
+    meta(content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no', name='viewport')
+    link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/bower_components/font-awesome/css/font-awesome.min.css')
+    link(rel='stylesheet', href='/dist/css/AdminLTE.min.css')
+    link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic')
+    style.
+      body, html {
+        height: 100%;
+        background-color: #d4d6da;
+      }
+      .error-container {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background-color: #d4d6da;
+      }
+      .error-content {
+        background-color: #fff;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      }
+      .error-logo {
+        margin-bottom: 20px;
+      }
+      .error-logo img {
+        width: 70px;
+      }
+      .error-code {
+        font-size: 8em;
+        color: #3a1f08;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+      .error-message {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+        color: #333;
+      }
+      .error-description {
+        font-size: 1.2em;
+        color: #555;
+      }
+      .btn-primary {
+        background-color: #3a1f08;
+        border-color: #3a1f08;
+        padding: 10px 30px;
+        margin-top: 20px;
+      }
+  body
+    .error-container
+      .error-content
+        .error-logo
+          a(href='/')
+            img(src='/dist/img/blue-tech-logo.jpeg', alt='Blue Tech Solutions')
+        .error-code 401
+        .error-message Oops! Unauthorized. Please contact with your Administrator.
+        .error-description The page you are looking for does not exist.
+        a(href='javascript:window.history.back();', class='btn btn-primary') Go Back
+
+    script(src='/bower_components/jquery/dist/jquery.min.js')
+    script(src='/bower_components/bootstrap/dist/js/bootstrap.min.js')

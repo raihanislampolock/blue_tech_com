@@ -1,0 +1,140 @@
+#add-edit-suppliers-modal.modal.fade(data-backdrop='static', data-keyboard='false')
+  .modal-dialog.modal-dialog-centered.modal-xl
+    .modal-content(style="border-radius: 16px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: hidden;")
+      
+      // === Custom Modal UI Styles ===
+      style.
+        .modal-modern-header {
+          background-color: #fff;
+          border-bottom: 1px solid #edf2f7;
+          padding: 1.25rem 1.75rem;
+        }
+        .modal-modern-title {
+          font-weight: 600;
+          color: #2d3748;
+          margin: 0;
+        }
+        .modal-modern-body {
+          padding: 2rem 1.75rem;
+          background-color: #ffffff;
+        }
+        .section-divider-title {
+          font-size: 1rem;
+          font-weight: 600;
+          color: #580db4;
+          letter-spacing: 0.3px;
+          border-bottom: 2px solid rgba(88, 13, 180, 0.08);
+          padding-bottom: 0.5rem;
+        }
+        
+        /* Floating Labels Layout Reset */
+        .modern-form-group {
+          position: relative;
+          margin-bottom: 1.5rem;
+        }
+        .modern-form-group .form-control {
+          border: 1px solid #cbd5e0;
+          border-radius: 8px;
+          padding: 0.6rem 1rem;
+          font-size: 0.95rem;
+          transition: all 0.2s;
+          background-color: #fcfcfc;
+          color: #2d3748;
+          height: auto;
+          box-shadow: none;
+        }
+        .modern-form-group .form-control:focus {
+          border-color: #580db4;
+          box-shadow: 0 0 0 3px rgba(88, 13, 180, 0.1);
+          background-color: #fff;
+        }
+        .modern-form-group textarea.form-control {
+          min-height: 110px;
+          resize: vertical;
+        }
+        .modern-form-group label.floating-lbl {
+          font-weight: 500;
+          color: #718096;
+          font-size: 0.9rem;
+          margin-bottom: 0.4rem;
+          display: inline-block;
+        }
+
+        /* File Upload Area Wrapper */
+        .upload-card-wrapper {
+          background-color: #f8fafc;
+          border: 1px dashed #cbd5e0;
+          border-radius: 10px;
+          padding: 1.25rem;
+          transition: all 0.2s;
+        }
+        .upload-card-wrapper:hover {
+          border-color: #580db4;
+          background-color: #fbf8ff;
+        }
+        .info-badge-note {
+          background-color: #fee2e2;
+          color: #991b1b;
+          font-size: 0.8rem;
+          font-weight: 600;
+          padding: 0.4rem 0.75rem;
+          border-radius: 6px;
+          display: inline-flex;
+          align-suppliers: center;
+          gap: 0.35rem;
+        }
+
+        /* Footer buttons styling */
+        .modal-modern-footer {
+          background-color: #f8f9fa;
+          border-top: 1px solid #edf2f7;
+          padding: 1.25rem 1.75rem;
+        }
+
+      form#suppliers-form(role='form', action='#', method='POST', enctype='multipart/form-data')
+        
+        //- Modal Header Block
+        .modal-header.modal-modern-header
+          h5.modal-title.modal-modern-title BlueTech Supplier Information
+          button.close(type='button', data-dismiss='modal', aria-label='Close' style="outline: none; font-size: 1.5rem;")
+            span(aria-hidden='true') &times;
+
+        //- Modal Body Scroll Engine Area
+        .modal-body.modal-modern-body.scrollable-area(style='max-height: 72vh; overflow-y: auto;')
+          
+          h5.mb-4.section-divider-title
+            i.fa.fa-cubes.mr-2
+            | Suppliers Details
+            
+          .row                
+            .col-md-4
+              .modern-form-group
+                label.floating-lbl(for='supplierName') Supplier Name
+                input.form-control(type='text', id='supplierName', name='supplierName', placeholder='Enter supplier name')
+              
+              .modern-form-group
+                label.floating-lbl(for='supplierEmail') Supplier Email
+                input.form-control(type='email', id='supplierEmail', name='supplierEmail', placeholder='Enter supplier email')
+                
+            .col-md-4
+              .modern-form-group
+                label.floating-lbl(for='supplierNumber') Supplier Number
+                input.form-control(type='text', id='supplierNumber', name='supplierNumber', placeholder='Enter supplier number')
+              
+              .modern-form-group
+                label.floating-lbl(for='supplierAddress') Supplier Address
+                input.form-control(type='text', id='supplierAddress', name='supplierAddress', placeholder='Enter supplier address')
+
+            .col-md-4    
+              .modern-form-group
+                label.floating-lbl(for='note') Note
+                textarea.form-control#note(name='note', placeholder='Provide comprehensive note or performance logs...')
+
+        //- Modal Actions Footer Control Line
+        .modal-footer.modal-modern-footer
+          button.btn-modern.btn-modern-primary#button-add-edit-suppliers(type='submit')
+            i.fa.fa-save
+            | Create
+          button.btn-modern(type='button', data-dismiss='modal' style="background-color: #e2e8f0; color: #4a5568; box-shadow: none;")
+            i.fa.fa-times-circle
+            | Cancel

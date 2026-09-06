@@ -1,0 +1,242 @@
+header.main-header
+  style.
+    /* === Modern Transparent/Blur Header Navbar === */
+    .main-header {
+      background-color: #111827 !important; /* Deep charcoal dark to match the sidebar */
+      border-bottom: 1px solid #1f2937 !important;
+      position: relative;
+    }
+
+    /* Brand Logo Area */
+    .main-header .logo {
+      background-color: #111827 !important;
+      color: #ffffff !important;
+      font-family: inherit;
+      height: 50px;
+      line-height: 50px;
+      border-right: 1px solid #1f2937 !important;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0 15px !important;
+      transition: all 0.3s;
+    }
+    
+    .main-header .logo:hover {
+      background-color: rgba(88, 13, 180, 0.05) !important;
+    }
+
+    .main-header .logo b {
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      font-size: 14px;
+      margin-left: 8px;
+    }
+
+    /* Dynamic Menu Control Button */
+    .main-header .navbar {
+      background-color: transparent !important;
+      margin-left: 230px; /* Adjusts dynamically with framework */
+      min-height: 50px;
+    }
+
+    .main-header .sidebar-toggle {
+      color: #9ca3af !important;
+      padding: 15px 20px !important;
+      line-height: 20px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .main-header .sidebar-toggle:hover {
+      background-color: #1f2937 !important;
+      color: #ffffff !important;
+    }
+
+    /* Custom Modern Hamburger Lines */
+    .main-header .sidebar-toggle .icon-bar {
+      background-color: currentColor !important;
+      width: 18px;
+      height: 2px;
+      border-radius: 1px;
+      display: block;
+      transition: all 0.2s;
+    }
+
+    /* Right Custom Profile Nav Area */
+    .navbar-custom-menu .navbar-nav > li > a {
+      color: #9ca3af !important;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px !important;
+      transition: all 0.2s;
+    }
+
+    .navbar-custom-menu .navbar-nav > li > a:hover,
+    .navbar-custom-menu .navbar-nav > .open > a {
+      background-color: #1f2937 !important;
+      color: #ffffff !important;
+    }
+
+    .navbar-custom-menu .user-image {
+      width: 28px !important;
+      height: 28px !important;
+      border-radius: 50% !important;
+      margin-right: 10px !important;
+      margin-top: 0 !important;
+      border: 1.5px solid #580db4;
+      object-fit: cover;
+    }
+
+    /* === Upgraded Profile Dropdown Menu Card === */
+    .navbar-custom-menu .dropdown-menu {
+      background: #1f2937 !important; /* Dark container background */
+      border: 1px solid #374151 !important;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4) !important;
+      margin-top: 4px !important;
+    }
+
+    /* Top Gradient Header Area inside Dropdown */
+    .navbar-custom-menu .user-header {
+      background: linear-gradient(135deg, #580db4, #1e1b4b) !important; /* Matches your core theme */
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .navbar-custom-menu .user-header p {
+      font-size: 15px !important;
+      letter-spacing: 0.2px;
+    }
+
+    .navbar-custom-menu .user-header small {
+      color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    /* Central Quick Action Links (Roles/Permissions) */
+    .navbar-custom-menu .user-body {
+      background: #111827 !important;
+      border-bottom: 1px solid #374151 !important;
+      padding: 12px 0 !important;
+    }
+
+    .navbar-custom-menu .user-body a {
+      color: #9ca3af !important;
+      font-weight: 500;
+      padding: 6px 0;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .navbar-custom-menu .user-body a:hover {
+      background: rgba(255, 255, 255, 0.03) !important;
+      color: #ffffff !important;
+    }
+
+    /* Dropdown Action Buttons Footer Bar */
+    .navbar-custom-menu .user-footer {
+      background: #1f2937 !important;
+      border-top: none !important;
+      padding: 12px 16px !important;
+    }
+
+    /* Sleek Modern Buttons */
+    .navbar-custom-menu .user-footer .btn {
+      border-radius: 6px !important;
+      font-weight: 500;
+      padding: 6px 14px !important;
+      font-size: 12px !important;
+      transition: all 0.2s;
+      border: none !important;
+    }
+
+    .navbar-custom-menu .user-footer .btn-default {
+      background: #374151 !important;
+      color: #f3f4f6 !important;
+    }
+
+    .navbar-custom-menu .user-footer .btn-default:hover {
+      background: #4b5563 !important;
+      color: #ffffff !important;
+    }
+
+    .navbar-custom-menu .user-footer .btn-danger {
+      background: #ef4444 !important;
+      color: #ffffff !important;
+    }
+
+    .navbar-custom-menu .user-footer .btn-danger:hover {
+      background: #dc2626 !important;
+      box-shadow: 0 0 12px rgba(239, 68, 68, 0.3);
+    }
+
+  //- Logo Banner Group
+  a.logo(href='/dashboard')
+    span.logo-mini
+      b BT
+    span.logo-lg
+      img.logo-image-lg(
+        src='/dist/img/blue-tech-logo.jpeg', 
+        width='32', 
+        alt='Business Logo', 
+        style="vertical-align: middle; margin-right: 2px;"
+      )
+      b Blue Tech
+
+  //- Horizontal Main Navbar Strip
+  nav.navbar.navbar-static-top
+    a.sidebar-toggle(href='#', data-toggle='push-menu', role='button')
+      span.sr-only Toggle navigation
+      
+    .navbar-custom-menu
+      ul.nav.navbar-nav
+        li.dropdown.user.user-menu
+          a.dropdown-toggle(href='#', data-toggle='dropdown')
+            img.user-image(
+              src= user.files ? `/${user.files}` : '/dist/img/blue-tech-logo.jpeg',
+              alt='User Image'
+            )
+            span.hidden-xs #{user.username || 'User'}
+
+          ul.dropdown-menu(style="border-radius:12px; overflow:hidden; padding:0; width:270px;")
+            
+            // USER HEADER CARD
+            li.user-header(style="padding:22px 20px; text-align:center; color:#fff;")
+              img(
+                src= user.files ? `/${user.files}` : '/dist/img/blue-tech-logo.jpeg',
+                style="width:68px; height:68px; border-radius:50%; object-fit:cover; border:2px solid rgba(255,255,255,0.4); box-shadow: 0 4px 10px rgba(0,0,0,0.15);"
+              )
+              p(style="margin-top:12px; font-weight:600; margin-bottom: 2px;")
+                | #{user.username || 'User'}
+              small(style="display:block; opacity: 0.85; font-size: 11px; margin-bottom: 1px;")
+                | Employee ID: #{user.empId}
+              small(style="display:block; font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;")
+                | #{user.roleName}
+
+            // MIDDLE INTERACTIVE LINKS BODY
+            li.user-body
+              if (user.roleName || '').toLowerCase() === 'superadmin'
+                .row(style="margin:0;")
+                  .col-xs-4(style="padding: 0 5px;")
+                    a(href='/signup', style="font-size:12px; display:block; text-align:center;") Users
+                  .col-xs-4(style="padding: 0 5px;")
+                    a(href='/roles', style="font-size:12px; display:block; text-align:center;") Roles
+                  .col-xs-4(style="padding: 0 5px;")
+                    a(href='/permission', style="font-size:12px; display:block; text-align:center;") Rights
+              else
+                div(style="text-align:center; padding: 4px 0;")
+                  span.label(
+                    style="background:rgba(88, 13, 180, 0.15); border: 1px solid rgba(88, 13, 180, 0.3); padding:5px 14px; border-radius:20px; color:#a78bfa; font-size:11px; font-weight: 500;"
+                  ) #{user.roleName}
+
+            // FOOTER CARD ACTIONS
+            li.user-footer
+              a.btn.btn-default.btn-sm(href='/profile')
+                i.fa.fa-user(style="margin-right: 5px;")
+                | Profile
+              a.btn.btn-danger.btn-sm(href='/logout')
+                i.fa.fa-sign-out(style="margin-right: 5px;")
+                | Logout

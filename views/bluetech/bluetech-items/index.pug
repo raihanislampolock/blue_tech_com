@@ -1,0 +1,627 @@
+extends ../../layout
+
+block style
+  link(rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css")
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css')
+  link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css')
+  style.
+    /* === Modern Layout & Card Styling === */
+    .modern-card {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      border: 1px solid #edf2f7;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
+    .modern-toolbar {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid #edf2f7;
+      background-color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .toolbar-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* === Modern Inputs & Selects === */
+    .modern-input-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+      color: #4a5568;
+    }
+
+    .modern-control {
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      background-color: #fcfcfc;
+      outline: none;
+      color: #2d3748;
+    }
+
+    .modern-control:focus {
+      border-color: #580db4;
+      box-shadow: 0 0 0 3px rgba(88, 13, 180, 0.1);
+      background-color: #fff;
+    }
+
+    /* === Modern Buttons === */
+    .btn-modern {
+      padding: 0.5rem 1.25rem;
+      font-weight: 500;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .btn-modern-primary {
+      background-color: #580db4;
+      color: white;
+      box-shadow: 0 2px 4px rgba(88, 13, 180, 0.2);
+    }
+
+    .btn-modern-primary:hover {
+      background-color: #480a96;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px rgba(88, 13, 180, 0.3);
+      color: white;
+    }
+
+    .btn-modern-icon {
+      padding: 0.5rem 0.75rem;
+    }
+
+    /* === Modern Table Styling === */
+    .modern-table-container {
+      padding: 0;
+      max-height: 60vh;
+      overflow-y: auto;
+      overflow-x: auto;
+      position: relative;
+    }
+
+    .table.modern-table {
+      margin-bottom: 0;
+      border-collapse: collapse !important;
+      width: 100%;
+    }
+
+    .modern-table thead th {
+      position: sticky;
+      top: 0;
+      background-color: #580db4;
+      color: white;
+      font-weight: 500;
+      padding: 1rem 1.5rem;
+      border: none;
+      z-index: 10;
+      white-space: nowrap;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .modern-table tbody td {
+      padding: 1rem 1.5rem;
+      vertical-align: middle;
+      border-bottom: 1px solid #edf2f7;
+      color: #2d3748;
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    .modern-table tbody tr.main-row {
+      background-color: #ffffff;
+      transition: all 0.2s;
+    }
+
+    .modern-table tbody tr.main-row:hover {
+      background-color: #fbf8ff;
+    }
+
+    /* Action Icons in Table */
+    .action-icon {
+      color: #718096;
+      background: #edf2f7;
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: all 0.2s;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+
+    .action-icon:hover {
+      background: #580db4;
+      color: white;
+      transform: scale(1.05);
+    }
+
+    /* === Footer & Pagination === */
+    .modern-footer {
+      padding: 1.25rem 1.5rem;
+      background-color: #f8f9fa;
+      border-top: 1px solid #edf2f7;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .modern-footer .title-filter {
+      color: #718096;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .pagination {
+      margin: 0;
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    .pagination li a, .pagination li span {
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 0.4rem 0.75rem;
+      color: #4a5568;
+      background: #fff;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .pagination li.active a {
+      background-color: #580db4;
+      border-color: #580db4;
+      color: white;
+      box-shadow: 0 2px 4px rgba(88, 13, 180, 0.2);
+    }
+
+    .pagination li a:hover:not(.active) {
+      background-color: #edf2f7;
+      color: #580db4;
+    }
+
+    .breadcrumb {
+      background: transparent;
+      padding: 0;
+    }
+
+block content
+  section.content-header.mb-4
+    div(style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;")
+      h1(style="margin: 0; font-weight: 600; color: #2d3748;") BlueTech Items Dashboard
+      ol.breadcrumb(style="margin: 0;")
+        li
+          a(href='/dashboard' style="color: #580db4; font-weight: 500; text-decoration: none;")
+            i.fa.fa-home.mr-1
+            | Dashboard
+        li
+          span(style="color: #4a5568; font-weight: 500;") BlueTech Solutions
+        li
+          span(style="color: #4a5568; font-weight: 500;") BlueTech Items  
+        li
+          a(href='/bluetech/bluetech-items' style="color: #580db4; text-decoration: none;") Items Dashboard
+        
+  section.content
+    .row
+      .col-xs-12
+        .modern-card
+          //- Toolbar Area
+          .modern-toolbar
+            .toolbar-group
+              .modern-input-group
+                span Search:
+                input.modern-control#search(type='text', placeholder='Search Items...', name='search' autocomplete='off' style='width: 250px;')
+                button.btn-modern.btn-modern-primary.btn-modern-icon#searchBtn(type='button')
+                  i.fa.fa-search
+              
+              button.btn-modern.btn-modern-primary.btn-add-items(type='button' data-toggle='modal' data-target='#add-edit-items-modal') 
+                i.fa.fa-plus
+                | Add New Item
+
+              button.btn-modern.btn-modern-primary.btn-modern-icon.btn-download(type='button' title="Download Export") 
+                i.fa.fa-download  
+                | Download Items
+                
+            .toolbar-group
+              .modern-input-group
+                span Show:
+                select.modern-control#limitSelect(style='width: 80px;')
+                  option 10
+                  option 25
+                  option 50
+                  option 100
+
+          //- Table Area
+          .modern-table-container
+            table.table.modern-table#itemsTable
+              thead
+                tr
+                  th Action
+                  th Item Type
+                  th Item Name
+                  th Manufacture Origin
+                  th IMEI Number
+                  th Item Price
+                  th Configuration Specifications
+                  th Created By
+                  th Updated By
+                  th Created Date
+                  th Updated Date
+              tbody#itemsTableBody
+                tr
+                  td.text-center(colspan='12' style="padding: 3rem;") 
+                    span(style="color: #a0aec0; font-size: 1.1rem;") No data captured. Apply parameters or lookups above.
+
+          //- Footer Area
+          .modern-footer
+            span.title-filter#title-filter Showing no entries
+            ul.pagination#paginationContainer
+
+  // INCLUDE MODAL REGISTRY LINES
+  include ./create                
+
+block script
+  script(type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js")
+  script(type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js")
+  
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      const tableBody = document.getElementById('itemsTableBody');
+      const paginationContainer = document.getElementById('paginationContainer');
+      let search = document.getElementById('search');
+      const searchBtn = document.getElementById('searchBtn');
+      const limitSelect = document.getElementById('limitSelect');
+      const exportExcelBtn = document.querySelector('.btn-download');
+
+      if (exportExcelBtn) {
+          exportExcelBtn.addEventListener('click', function () {
+          
+              const searchVal = document.getElementById('search').value || '';
+      
+              const params = new URLSearchParams();
+      
+              if (searchVal.trim()) {
+                  params.append('search', searchVal.trim());
+              }
+      
+              window.location.href =
+                  `/api/bluetech/bluetech-items/export/excel?${params.toString()}`;
+          });
+      }
+
+      let currentPage = 1;
+      let currentSearch = '';
+      let limit = limitSelect.value;
+
+      async function fetchItems(page = 1, search = '', limit = 10) {
+        tableBody.innerHTML = `<tr><td colspan="12" class="text-center" style="padding: 3rem;"><i class="fa fa-spinner fa-spin" style="font-size: 32px; color: #580db4;"></i></td></tr>`;
+        try {
+          const response = await fetch(`/api/bluetech/bluetech-items/all?page=${page}&search=${search}&limit=${limit}`);
+          const data = await response.json();
+
+          if (data?.data?.length > 0) {
+            // Render Rows
+            tableBody.innerHTML = data.data.map(item => {
+              const format = (num) => Number(num || 0).toLocaleString();
+
+              // Setup File Element Preview
+              let fileMarkup = `<small class="text-muted">None</small>`;
+              if (item.files) {
+                fileMarkup = `<img src="/${item.files}" style="width:42px; height:42px; object-fit:cover; border-radius:6px; border:1px solid #edf2f7;" />`;
+              }
+
+              return `
+              <tr class="main-row" data-id="${item.id}">
+                <td>
+                  <a href="#" class="action-icon edit-item-btn" data-items-id="${item.id}" title="Modify Item Properties">
+                    <i class="fa fa-edit"></i>
+                  </a>
+                </td>
+                <td style="font-weight: 500;">${item.itemType ?? '-'}</td>
+                <td style="color: #580db4; font-weight: 600;">${item.itemName ?? '-'}</td>
+                <td>${item.manufactureOrigin ?? '-'}</td>
+                <td><code style="color: #ed4014;">${item.imeiNumber ?? '-'}</code></td>
+                <td style="font-weight: 700; color: #065f46;">${item.itemPrice ? format(item.itemPrice) + ' BDT' : '-'}</td>
+                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.itemConfigurations ?? '-'}</td>
+                <td>${item.createdBy ?? 'System'}</td>
+                <td>${item.updatedBy ?? '-'}</td>
+                <td>${item.created_at ? new Date(item.created_at).toLocaleDateString() : '-'}</td>
+                <td>${item.updated_at ? new Date(item.updated_at).toLocaleDateString() : '-'}</td>
+              </tr>
+              `;
+            }).join('');
+
+            const totalRecords = data.total;
+            const startRecord = (currentPage - 1) * limit + 1;
+            const endRecord = Math.min(currentPage * limit, totalRecords);
+
+            document.querySelector('#title-filter').textContent = `Showing ${startRecord} to ${endRecord} of ${totalRecords} records assigned`;
+
+          } else {
+            tableBody.innerHTML = `<tr><td colspan="12" class="text-center" style="padding: 3rem; color: #a0aec0;">No data records extracted matching this criteria query scope.</td></tr>`;
+            document.querySelector('#title-filter').textContent = 'No entries matching filters';
+            return;
+          }
+
+          renderPagination(Math.ceil(data.total / limit), page);
+
+        } catch (error) {
+          console.error('Core Exception in item parsing framework:', error);
+          tableBody.innerHTML = `<tr><td colspan="12" class="text-center" style="padding: 3rem; color: #e53e3e;"><i class="fa fa-exclamation-triangle"></i> Execution Error pipeline mapping failed.</td></tr>`;
+          document.querySelector('#title-filter').textContent = 'Error loading entries';
+        }
+      }
+
+      function renderPagination(totalPages, currentPage) {
+        paginationContainer.innerHTML = "";
+        if (!totalPages || totalPages <= 0) return;
+
+        const maxVisiblePages = 5;
+
+        const createPageLink = (page, isActive = false) => {
+          const pageItem = document.createElement("li");
+          if (isActive) pageItem.classList.add("active");
+          pageItem.innerHTML = `<a href="#" class="pagination-link" data-page="${page}">${page}</a>`;
+          paginationContainer.appendChild(pageItem);
+        };
+
+        if (currentPage > 1) {
+          const prevItem = document.createElement("li");
+          prevItem.innerHTML = `<a href="#" class="pagination-link" data-page="${currentPage - 1}"><i class="fa fa-chevron-left" style="font-size: 0.8em; pointer-events:none;"></i></a>`;
+          paginationContainer.appendChild(prevItem);
+        }
+
+        if (totalPages <= maxVisiblePages) {
+          for (let i = 1; i <= totalPages; i++) {
+            createPageLink(i, i === currentPage);
+          }
+        } else {
+          createPageLink(1, currentPage === 1);
+          let rangeStart = Math.max(2, currentPage - Math.floor(maxVisiblePages / 2));
+          const rangeEnd = Math.min(totalPages - 1, rangeStart + maxVisiblePages - 3);
+
+          if (rangeEnd === totalPages - 1) {
+            rangeStart = Math.max(2, rangeEnd - maxVisiblePages + 3);
+          }
+
+          if (rangeStart > 2) {
+            paginationContainer.innerHTML += `<li><span style="pointer-events:none;">...</span></li>`;
+          }
+
+          for (let i = rangeStart; i <= rangeEnd; i++) {
+            createPageLink(i, i === currentPage);
+          }
+
+          if (rangeEnd < totalPages - 1) {
+            paginationContainer.innerHTML += `<li><span style="pointer-events:none;">...</span></li>`;
+          }
+
+          if (totalPages > 1) {
+            createPageLink(totalPages, currentPage === totalPages);
+          }
+        }
+
+        if (currentPage < totalPages) {
+          const nextItem = document.createElement("li");
+          nextItem.innerHTML = `<a href="#" class="pagination-link" data-page="${currentPage + 1}"><i class="fa fa-chevron-right" style="font-size: 0.8em; pointer-events:none;"></i></a>`;
+          paginationContainer.appendChild(nextItem);
+        }
+      }
+
+      function updatePage(page) {
+        let currentSearch = search.value;
+        currentPage = page;
+        fetchItems(currentPage, currentSearch, limit);
+      }
+
+      paginationContainer.addEventListener('click', function(event) {
+        if (event.target.classList.contains('pagination-link')) {
+          event.preventDefault();
+          const page = parseInt(event.target.getAttribute('data-page'), 10);
+          if (!isNaN(page)) {
+            updatePage(page);
+          }
+        }
+      });
+
+      search.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          searchBtn.click();
+        }
+      });
+
+      searchBtn.addEventListener('click', () => {
+        currentSearch = search.value;
+        fetchItems(1, currentSearch, limit);
+      });
+      
+      limitSelect.addEventListener('change', () => {
+        limit = limitSelect.value;
+        currentSearch = search.value;
+        currentPage = 1;
+        fetchItems(currentPage, currentSearch, limit);
+      });
+
+      fetchItems(currentPage, search.value, limit);
+    });
+
+    // Reset items form
+    $(document).on('click', '.btn-add-items', function () {
+      $('#items-form')[0].reset();
+      $('#items-form').removeAttr('data-items-id');
+      $('#items-form input, #items-form textarea').val('');
+      $('#add-edit-items-modal .modal-title').text('Add Items');
+      $('#button-add-edit-items').text('Create');
+    });
+
+    // Handle items form submission
+    $('#items-form').on('submit', function (e) {
+        e.preventDefault();
+
+        const id = $(this).attr('data-items-id');
+
+        const itemName = $('#itemName').val().trim();
+
+        if (!itemName) {
+            swal("Validation Error", "Item name is required", "error");
+            return;
+        }
+
+        const data = {
+            itemType: $('#itemType').val(),
+            itemName: itemName,
+            manufactureOrigin: $('#manufactureOrigin').val(),
+            imeiNumber: $('#imeiNumber').val(),
+            itemPrice: $('#itemPrice').val(),
+            itemConfigurations: $('#itemConfigurations').val(),
+            imeiNumber: $('#imeiNumber').val()
+        };
+
+        console.log("Sending item data:", data);
+
+        if (id) {
+            updateItems(id, data);
+        } else {
+            createItems(data);
+        }
+    });
+
+    function createItems(data) {
+        $.ajax({
+            url: '/bluetech/bluetech-items/create',
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            success: function (response) {
+
+                console.log("Create response:", response);
+
+                if (response.status) {
+                    swal({
+                        title: response.message,
+                        icon: "success",
+                        button: "OK"
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                } else {
+                    swal(
+                        "Error",
+                        response.message || "Failed to create item",
+                        "error"
+                    );
+                }
+            },
+            error: function (xhr) {
+
+                console.error("Create Item Error");
+                console.error("Status:", xhr.status);
+                console.error("Response:", xhr.responseText);
+
+                swal(
+                    "Error",
+                    xhr.responseJSON?.message || "Something went wrong",
+                    "error"
+                );
+            }
+        });
+    }
+
+   // Update Items
+    function updateItems(id, data) {
+        $.ajax({
+            url: `/api/bluetech/bluetech-items/update/${id}`,
+            type: 'PUT',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+    
+            success: function (response) {
+                if (response.status) {
+                    swal({
+                        title: response.message,
+                        icon: "success",
+                        button: "OK"
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                } else {
+                    swal(
+                        "Error",
+                        response.message || "Failed to update items",
+                        "error"
+                    );
+                }
+            },
+    
+            error: function (xhr) {
+                console.error("Update Item Error:", xhr.responseText);
+    
+                swal(
+                    "Error",
+                    xhr.responseJSON?.message || "Something went wrong",
+                    "error"
+                );
+            }
+        });
+    }
+
+    // Load Items for Editing
+    $(document).on('click', '.edit-item-btn', function () {
+      const id = $(this).attr('data-items-id');
+      loadItemsForEdit(id);
+    });
+
+    function loadItemsForEdit(id) {
+      $.ajax({
+        url: `/api/bluetech/bluetech-items/edit/${id}`,
+        type: 'GET',
+        success: function (response) {
+          if (response.status && response.data) {
+            const items = response.data;
+            $('#items-form').attr('data-items-id', id);
+            $('#itemType').val(items.itemType);
+            $('#itemName').val(items.itemName);
+            $('#manufactureOrigin').val(items.manufactureOrigin);
+            $('#itemPrice').val(items.itemPrice);
+            $('#itemConfigurations').val(items.itemConfigurations);
+            $('#imeiNumber').val(items.imeiNumber);
+
+            $('#add-edit-items-modal .modal-title').text('Update Items');
+            $('#button-add-edit-items').text('Update');
+            $('#add-edit-items-modal').modal('show');
+          } else {
+            swal("Error", response.message || "Failed to load items data", "error");
+          }
+        },
+        error: function (xhr) {
+          swal("Error", xhr.responseJSON?.message || "Something went wrong", "error");
+        }
+      });
+    }
+

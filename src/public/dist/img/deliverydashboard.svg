@@ -1,0 +1,22 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer Ring (Gauge) -->
+  <path d="M40 140 A 70 70 0 1 1 160 140" fill="none" stroke="#bdc3c7" stroke-width="12" stroke-linecap="round"/>
+  
+  <!-- Active Progress (Blue) -->
+  <path d="M40 140 A 70 70 0 0 1 135 48" fill="none" stroke="#3498db" stroke-width="12" stroke-linecap="round"/>
+  
+  <!-- Dashboard Center Pin/Needle Base -->
+  <circle cx="100" cy="110" r="10" fill="#2c3e50"/>
+  
+  <!-- Location Pin (The "Needle") -->
+  <path d="M100 45 L115 80 L85 80 Z" fill="#e74c3c"/>
+  <circle cx="100" cy="65" r="4" fill="#ffffff"/>
+
+  <!-- Bar Chart Elements (Representing Data) -->
+  <rect x="75" y="115" width="12" height="25" rx="2" fill="#2c3e50" />
+  <rect x="94" y="100" width="12" height="40" rx="2" fill="#2c3e50" />
+  <rect x="113" y="108" width="12" height="32" rx="2" fill="#2c3e50" />
+
+  <!-- Text -->
+  <text x="100" y="180" font-family="Arial, Sans-Serif" font-size="18" font-weight="bold" fill="#2c3e50" text-anchor="middle">DELIVERY DASHBOARD</text>
+</svg>

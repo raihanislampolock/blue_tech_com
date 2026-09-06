@@ -1,0 +1,161 @@
+#add-edit-purchase-modal.modal.fade(data-backdrop='static', data-keyboard='false')
+  .modal-dialog.modal-dialog-centered.modal-xl
+    .modal-content(style="border-radius: 16px; border: none; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); overflow: hidden;")
+      form#purchase-form(role='form', method='POST', enctype='multipart/form-data')
+
+        // ===== MODERN HEADER =====
+        .modal-header(style="background-color: #580db4; padding: 1.25rem 1.75rem; border-bottom: none;")
+          h5.modal-title(style="color: #ffffff; font-weight: 600; font-size: 1.25rem; display: inline-flex; align-items: center; gap: 0.5rem;")
+            i.fa.fa-shopping-cart
+            | RMS Purchase Management
+          button.close(type='button', data-dismiss='modal', style="color: #ffffff; opacity: 0.8; transition: all 0.2s; outline: none;")
+            span(style="font-size: 1.5rem;") &times;
+
+        // ===== MODERN BODY =====
+        .modal-body.scrollable-area(style='max-height: 75vh; overflow-y: auto; padding: 2rem 1.75rem; background-color: #f8fafc;')
+
+          // ===== SECTION 1: BASIC INFO =====
+          .section-block(style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border: 1px solid #edf2f7; margin-bottom: 1.75rem; box-shadow: 0 2px 12px rgba(0,0,0,0.01);")
+            h6.mb-3(style="font-weight: 600; color: #580db4; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 0.5rem;")
+              i.fa.fa-file-alt
+              | Purchase Information
+            
+            .row
+              .col-md-3
+                .form-group
+                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Purchase Number
+                  input.form-control.modern-control(type='text', id='purchaseNumber', readonly, placeholder='Auto generated', style="background-color: #f7fafc; color: #a0aec0; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.95rem;")
+
+              .col-md-3
+                .form-group
+                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Supplier Name
+                  select.form-control.modern-control.select2(id='supplierName', data-placeholder='Search supplier name', style="width: 100%; border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.95rem; height: auto; outline: none; transition: all 0.2s; background-color: #fff;")
+                    option(value='' selected disabled) Choose supplier
+                    if suppliers && suppliers.length > 0
+                      each supplier in suppliers
+                        option(value=supplier.label) #{supplier.label}
+
+              .col-md-3
+                .form-group
+                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") IMEI Number
+                  input.form-control.modern-control(type='text', id='imeiNumber', placeholder='Enter IMEI Number', style="border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.95rem; outline: none; transition: all 0.2s;")
+
+              .col-md-3
+                .form-group
+                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Quantity
+                  input.form-control.modern-control(type='number', id='qty', min='0', placeholder='Total quantity', style="border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.95rem; outline: none; transition: all 0.2s;")
+
+            .row.mt-2
+              .col-md-4
+                .form-group
+                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Total Purchase Price
+                  input.form-control.modern-control(type='number', id='purchasesPrice', min='0', step='0.01', placeholder='0.00', style='border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 1rem;')
+
+              .col-md-4
+                .form-group
+                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Advance Payment
+                  input.form-control.modern-control(type='number', id='advancePayment', min='0', step='0.01', placeholder='0.00', style='border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 1rem;')
+
+              .col-md-4
+                .form-group
+                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Due Payment
+                  input.form-control.modern-control(type='number', id='duePayment', min='0', step='0.01', placeholder='0.00', style='border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 1rem;')
+
+            .row.mt-2
+              .col-md-4
+                .form-group
+                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Payment Method
+                  select.form-control.modern-control.select2(id='paymentMethod', data-placeholder='Search payment method', style='width: 100%; border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 0.75rem;')
+                    option(value='' selected disabled) Choose payment method
+                    if paymentMethods && paymentMethods.length > 0
+                      each method in paymentMethods
+                        option(value=method.label) #{method.label}
+
+              .col-md-8
+                .form-group
+                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Notes / Instructions
+                  textarea.form-control.modern-control(id='notes', name='notes', placeholder='Enter purchase notes...', rows='2', style='border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 1rem;')
+
+          // ===== SECTION 2: ITEM SELECTION TOOLBAR =====
+          .section-block(style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border: 1px solid #edf2f7; margin-bottom: 1.75rem; box-shadow: 0 2px 12px rgba(0,0,0,0.01);")
+            h6.mb-3(style="font-weight: 600; color: #580db4; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 0.5rem;")
+              i.fa.fa-tasks
+              | Item Assignment Selection
+            
+            .row.align-items-end
+              .col-md-4
+                .form-group.mb-md-0
+                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Select Catalog Item
+                  select.form-control.modern-control.select2(id='itemSelect', data-placeholder='Search catalog item name', style="width: 100%; border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.95rem; height: auto; background-color: #fff;")
+                    option(value='' disabled selected) Choose item from catalog...
+                    if items && items.length > 0
+                      each item in items
+                        option(
+                          value=item.id,
+                          data-price=item.itemPrice,
+                          data-name=item.itemName
+                        ) #{item.itemName}
+
+              .col-md-2
+                .form-group.mb-md-0
+                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Unit Price
+                  .input-group
+                    .input-group-prepend
+                      span.input-group-text()
+                    input.form-control.modern-control(type='number', id='unitPrice', readonly, style="background-color: #f7fafc; color: #2d3748; border: 1px solid #cbd5e0; border-radius: 0 8px 8px 0; padding: 0.5rem 0.75rem; font-size: 0.95rem; font-weight: 600;")
+
+              .col-md-2
+                .form-group.mb-md-0
+                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Quantity
+                  input.form-control.modern-control(type='number', id='quantity', placeholder='Qty', min='1', style="border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.95rem;")
+
+              .col-md-3
+                .form-group.mb-md-0
+                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Line Custom Description
+                  input.form-control.modern-control(type='text', id='itemDescription', placeholder='Specifications or modifications...', style="border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.95rem;")
+
+              .row.mt-2.justify-content-center
+              .col-md-11.col-12
+                button.btn(
+                  type='button',
+                  id='addItem',
+                  style='background-color: #580db4; color: white; border-radius: 8px; padding: 0.85rem 1.5rem; font-weight: 600; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; border: none; width: 100%; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(88, 13, 180, 0.2); cursor: pointer;',
+                  onmouseover="this.style.backgroundColor='#480a96'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 16px rgba(88, 13, 180, 0.3)'",
+                  onmouseout="this.style.backgroundColor='#580db4'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(88, 13, 180, 0.2)'"
+                )
+                  i.fa.fa-plus(style='font-size: 1.1rem;')
+                  span Add
+
+          // ===== SECTION 3: ITEM DATA TABLE =====
+          .section-block(style="background: #ffffff; border-radius: 12px; border: 1px solid #edf2f7; box-shadow: 0 2px 12px rgba(0,0,0,0.01); overflow: hidden;")
+            .table-responsive(style="max-height: 35vh; overflow-y: auto;")
+              table.table.modern-table#itemTable(style="margin-bottom: 0; border-collapse: collapse; width: 100%;")
+                thead
+                  tr
+                    th(style="background-color: #580db4; color: white; font-weight: 500; padding: 0.85rem 1.25rem; border: none; font-size: 0.9rem;") Item Name
+                    th(style="background-color: #580db4; color: white; font-weight: 500; padding: 0.85rem 1.25rem; border: none; font-size: 0.9rem;") Description
+                    th(style="background-color: #580db4; color: white; font-weight: 500; padding: 0.85rem 1.25rem; border: none; font-size: 0.9rem; text-align: center;") Quantity
+                    th(style="background-color: #580db4; color: white; font-weight: 500; padding: 0.85rem 1.25rem; border: none; font-size: 0.9rem; text-align: right;") Unit Price
+                    th(style="background-color: #580db4; color: white; font-weight: 500; padding: 0.85rem 1.25rem; border: none; font-size: 0.9rem; text-align: right;") Total Cost
+                    th(style="background-color: #580db4; color: white; font-weight: 500; padding: 0.85rem 1.25rem; border: none; font-size: 0.9rem; text-align: center; width: 80px;") Action
+                tbody
+                  tr.no-data-row
+                    td.text-center(colspan='6' style="padding: 2.5rem; color: #a0aec0; font-size: 0.95rem;")
+                      i.fa.fa-folder-open.mr-2(style="font-size: 1.2rem; vertical-align: middle; color: #cbd5e0;")
+                      | No entries added to payload registry yet.
+
+        // ===== MODERN FOOTER =====
+        .modal-footer(style="background-color: #ffffff; padding: 1.25rem 1.75rem; border-top: 1px solid #edf2f7; display: flex; justify-content: space-between; align-items: center;")
+          // Total Sum Indicator Box
+          .total-summary-display(style="font-size: 1rem; font-weight: 600; color: #2d3748; display: flex; align-items: center; gap: 0.5rem;")
+            span(style="color: #718096; font-weight: 500; font-size: 0.95rem;") Estimated Net Value:
+            span#purchaseGrandTotal(style="color: #38a169; font-size: 1.15rem; font-weight: 700;") 0.00
+
+          .btn-group-wrapper(style="display: flex; gap: 0.75rem;")
+            button.btn(type='button', id='savePurchase', style="background-color: #38a169; color: white; border-radius: 8px; padding: 0.5rem 1.5rem; font-weight: 500; font-size: 0.95rem; border: none; box-shadow: 0 2px 4px rgba(56, 161, 105, 0.2); transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem;")
+              i.fa.fa-save
+              | Save Purchase Order
+
+            button.btn(type='button', data-dismiss='modal', style="background-color: #ffffff; color: #4a5568; border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 1.25rem; font-weight: 500; font-size: 0.95rem; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem;")
+              i.fa.fa-times
+              | Cancel

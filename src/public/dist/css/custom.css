@@ -1,0 +1,18 @@
+/* Allow long sidebar menu text to wrap */
+.sidebar-menu li > a {
+  display: flex !important;         /* keep icon + text in one row */
+  align-items: flex-start !important; /* align icon with top of wrapped text */
+  white-space: normal !important;   /* allow multiple lines */
+  overflow: visible !important;     /* no clipping */
+  text-overflow: unset !important;  /* remove ellipsis */
+  height: auto !important;          /* grow height for wrapping */
+  line-height: 1.4 !important;      /* better readability */
+}
+
+/* Ensure the text block wraps properly */
+.sidebar-menu li > a span {
+  flex: 1;                          /* let span take remaining width */
+  white-space: normal !important;
+  word-break: break-word !important;
+  display: inline-block !important;
+}

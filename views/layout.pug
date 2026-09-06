@@ -1,0 +1,323 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    title Blue Tech Solutions
+    meta(content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no', name='viewport')
+    link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/bower_components/font-awesome/css/font-awesome.min.css')
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css')
+    link(rel='stylesheet', href='/bower_components/Ionicons/css/ionicons.min.css')
+    link(rel='stylesheet', href='/bower_components/bootstrap-daterangepicker/daterangepicker.css')
+    link(rel='stylesheet', href='/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css')
+    link(rel='stylesheet', href='/plugins/iCheck/all.css')
+    link(rel='stylesheet', href='/bower_components/select2/dist/css/select2.min.css')
+    link(rel='stylesheet', href='/dist/css/AdminLTE.min.css')
+    link(rel='stylesheet', href='/dist/css/skins/_all-skins.min.css')
+    link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic')
+    style. 
+       input[type="checkbox"] {
+       accent-color: #580db4;
+      }
+      .pagination > .active > a, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover {
+        z-index: 3;
+        color: #fff;
+        cursor: default;
+        background-color: #580db4 !important;
+        border-color: #580db4 !important;
+      }
+      .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+        padding: 5px;
+        line-height: 1.42857143;
+        vertical-align: top;
+        border-top: 1px solid #ddd;
+      }
+      .btn-primary.focus, .btn-primary:focus {
+        color: #fff;
+        background-color: #580db4 !important;
+        border-color: #580db4 !important;
+      }
+      a.fa-eye, .fa-envelope, .fa-edit, .fa-info-circle {
+        background-color: #580db4;
+        padding: 8px;
+        border-radius: 4px; /* Slightly rounded corners */
+        color: white;
+        width: 18px; /* Ensures the button is small and square */
+        height: 18px; /* Ensures the button is small and square */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1em;
+      }
+      .input-sm {
+        height: 30px;
+        padding: 5px 10px;
+        font-size: 11px;
+        line-height: 1.5;
+      }
+    block style
+
+  body.hold-transition.skin-blue.fixed.sidebar-mini
+    .wrapper
+      include partials/header
+      include partials/sidebar
+      .content-wrapper
+        block content
+      footer.main-footer
+        .pull-right.hidden-xs
+          b Version
+          |  1.0
+        strong
+          | Copyright &copy; 2026
+          a(href='https://www.youtube.com/@raihanpolock944/' target='_blank') Blue Tech Solutions
+          | .
+        |  All rights reserved.
+      aside.control-sidebar.control-sidebar-dark
+        ul.nav.nav-tabs.nav-justified.control-sidebar-tabs
+          li
+            a(href='#control-sidebar-home-tab', data-toggle='tab')
+              i.fa.fa-home
+          li
+            a(href='#control-sidebar-settings-tab', data-toggle='tab')
+              i.fa.fa-gears
+        .tab-content
+          #control-sidebar-home-tab.tab-pane
+            h3.control-sidebar-heading Recent Activity
+            ul.control-sidebar-menu
+              li
+                a(href='javascript:void(0)')
+                  i.menu-icon.fa.fa-birthday-cake.bg-red
+                  .menu-info
+                    h4.control-sidebar-subheading Langdon&apos;s Birthday
+                    p Will be 23 on Feb
+              li
+                a(href='javascript:void(0)')
+                  i.menu-icon.fa.fa-user.bg-yellow
+                  .menu-info
+                    h4.control-sidebar-subheading Frodo Updated His Profile
+                    p New phone +1(800)555-1234
+              li
+                a(href='javascript:void(0)')
+                  i.menu-icon.fa.fa-envelope-o.bg-light-blue
+                  .menu-info
+                    h4.control-sidebar-subheading Nora Joined Mailing List
+                    p raihan@example.com
+              li
+                a(href='javascript:void(0)')
+                  i.menu-icon.fa.fa-file-code-o.bg-green
+                  .menu-info
+                    h4.control-sidebar-subheading Cron Job 254 Executed
+                    p Execution time 5 seconds
+            // /.control-sidebar-menu
+            h3.control-sidebar-heading Tasks Progress
+            ul.control-sidebar-menu
+              li
+                a(href='javascript:void(0)')
+                  h4.control-sidebar-subheading
+                    | Custom Template Design
+                    span.label.label-danger.pull-right 70%
+                  .progress.progress-xxs
+                    .progress-bar.progress-bar-danger(style='width: 70%')
+              li
+                a(href='javascript:void(0)')
+                  h4.control-sidebar-subheading
+                    | Update Resume
+                    span.label.label-success.pull-right 95%
+                  .progress.progress-xxs
+                    .progress-bar.progress-bar-success(style='width: 95%')
+              li
+                a(href='javascript:void(0)')
+                  h4.control-sidebar-subheading
+                    | Laravel Integration
+                    span.label.label-warning.pull-right 50%
+                  .progress.progress-xxs
+                    .progress-bar.progress-bar-warning(style='width: 50%')
+              li
+                a(href='javascript:void(0)')
+                  h4.control-sidebar-subheading
+                    | Back End Framework
+                    span.label.label-primary.pull-right 68%
+                  .progress.progress-xxs
+                    .progress-bar.progress-bar-primary(style='width: 68%')
+          #control-sidebar-stats-tab.tab-pane Stats Tab Content
+          #control-sidebar-settings-tab.tab-pane
+            form(method='post')
+              h3.control-sidebar-heading General Settings
+              .form-group
+                label.control-sidebar-subheading
+                  | Report panel usage
+                  input.pull-right(type='checkbox', checked='')
+                p
+                  | Some information about this general settings option
+              .form-group
+                label.control-sidebar-subheading
+                  | Allow mail redirect
+                  input.pull-right(type='checkbox', checked='')
+                p
+                  | Other sets of options are available
+              .form-group
+                label.control-sidebar-subheading
+                  | Expose author name in posts
+                  input.pull-right(type='checkbox', checked='')
+                p
+                  | Allow the user to show his name in blog posts
+              h3.control-sidebar-heading Chat Settings
+              .form-group
+                label.control-sidebar-subheading
+                  | Show me as online
+                  input.pull-right(type='checkbox', checked='')
+              .form-group
+                label.control-sidebar-subheading
+                  | Turn off notifications
+                  input.pull-right(type='checkbox')
+              .form-group
+                label.control-sidebar-subheading
+                  | Delete chat history
+                  a.text-red.pull-right(href='javascript:void(0)')
+                    i.fa.fa-trash-o
+      .control-sidebar-bg
+    script(src='/bower_components/jquery/dist/jquery.min.js')
+    script(src='/bower_components/bootstrap/dist/js/bootstrap.min.js')
+    script(src='/bower_components/select2/dist/js/select2.full.min.js')
+    script(src='/bower_components/moment/min/moment.min.js')
+    script(src='/bower_components/bootstrap-daterangepicker/daterangepicker.js')
+    script(src='/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')
+    //- script(src='/bower_components/datatables.net/js/jquery.dataTables.min.js')
+    //- script(src='/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js')
+    script(src='/bower_components/chart.js/Chart.js')
+    script(src='/bower_components/jquery-slimscroll/jquery.slimscroll.min.js')
+    script(src='/bower_components/fastclick/lib/fastclick.js')
+    script(src='/dist/js/adminlte.min.js')
+    script(src='/dist/js/demo.js')
+    script(type="text/javascript" src='/dist/js/sweetalert.js')
+    script(src='/plugins/iCheck/icheck.min.js')
+    script.
+      $(function(){
+        $('.select2').select2();
+        $('.dateOfBirth').datepicker({
+          format: 'yyyy-mm-dd',
+          autoclose: true
+        });
+        //- $('.sampleCollectionDateTime').daterangepicker({ timePicker: true, timePickerIncrement: 15, locale: { format: 'MM/DD/YYYY hh:mm A' }})
+        $('.sampleCollectionDateTime').daterangepicker({
+          timePicker: true,
+          timePickerIncrement: 15,
+          locale: {
+            format: 'MM/DD/YYYY hh:mm A'
+          },
+          // Optional: initialize within the desired hour
+          startDate: moment().hour(10).minute(0),
+          endDate: moment().hour(10).minute(15),
+        }, function(start, end) {
+          // Callback when range is chosen — you can validate here
+          //- if (start.hour() < 10 || start.hour() >= 11) {
+          //-   alert("Please select a time between 10:00 AM and 11:00 AM.");
+          //-   $('.sampleCollectionDateTime').data('daterangepicker').setStartDate(moment().hour(10).minute(0));
+          //-   $('.sampleCollectionDateTime').data('daterangepicker').setEndDate(moment().hour(10).minute(15));
+          //- }
+        });
+
+        $(document).ready(function() {
+          // Sidebar search
+          $('#sidebarSearch').on('keyup', function() {
+            const query = $(this).val().toLowerCase();
+      
+            $('#sidebarMenu > li').each(function() {
+              const li = $(this);
+              let match = false;
+      
+              li.find('a').each(function() {
+                if ($(this).text().toLowerCase().indexOf(query) !== -1) {
+                  match = true;
+                  return false; // break
+                }
+              });
+      
+              if (match) {
+                li.show();
+                li.parents('li').show(); // show parent tree if child matches
+              } else {
+                li.hide();
+              }
+            });
+          });
+      
+          // Keep your existing JS here, e.g., tooltip init
+          $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+        });
+
+
+        // Calendar (single month, no range)
+        //- $('#sampleCollectionDate').daterangepicker({
+        //-     singleDatePicker: true,
+        //-     showDropdowns: true,
+        //-     locale: {
+        //-         format: 'MM/DD/YYYY'
+        //-     }
+        //- });
+
+        // Time Picker for Start Time
+        //- $('#startTime').daterangepicker({
+        //-     singleDatePicker: true,
+        //-     timePicker: true,
+        //-     timePicker24Hour: false,
+        //-     timePickerIncrement: 15,
+        //-     locale: {
+        //-         format: 'hh:mm A'
+        //-     }
+        //- }).on('show.daterangepicker', function (ev, picker) {
+        //-     picker.container.find('.calendar-table').hide(); // Hide calendar for time picker
+        //- });
+
+        //- // Time Picker for End Time
+        //- $('#endTime').daterangepicker({
+        //-     singleDatePicker: true,
+        //-     timePicker: true,
+        //-     timePicker24Hour: false,
+        //-     timePickerIncrement: 15,
+        //-     locale: {
+        //-         format: 'hh:mm A'
+        //-     }
+        //- }).on('show.daterangepicker', function (ev, picker) {
+        //-     picker.container.find('.calendar-table').hide(); // Hide calendar for time picker
+        //- });
+        
+
+
+
+        //Flat red color scheme for iCheck
+        $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+          checkboxClass: 'icheckbox_flat-green',
+          radioClass   : 'iradio_flat-green'
+        });
+        //Date picker
+        $('#datepicker1').datepicker({
+           autoclose: true
+        })
+        $('#datepicker2').datepicker({
+           autoclose: true
+        })
+      }) 
+      $(document).ready(function() {
+         $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+      });
+
+      $('#daterange-btn').daterangepicker(
+      {
+        ranges   : {
+          'Today'       : [moment(), moment()],
+          'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+          'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
+          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+          'This Month'  : [moment().startOf('month'), moment().endOf('month')],
+          'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        },
+        startDate: moment().subtract(29, 'days'),
+        endDate  : moment()
+      },
+      function (start, end) {
+        $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+      }
+     )
+    block script

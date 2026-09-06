@@ -1,0 +1,56 @@
+#add-edit-permission-modal.modal.fade
+    .modal-dialog.modal-sm
+        .modal-content
+          form#permission-form(role='form', action='#', method='POST')
+            .modal-header
+                button.close(type='button', data-dismiss='modal', aria-label='Close')
+                    span(aria-hidden='true') &times;
+                h5.modal-title Permission
+            .modal-body
+                .row
+                    .col-md-12
+                        .form-group
+                            input.input-sm.form-control(type='text', id='name', name='name', placeholder=' ', required)
+                            label.control-label(for='name') Permission Name
+                        .form-group
+                            textarea.form-control(rows='3', id='slug', name='slug', placeholder=' ', readonly required)
+                            label.control-label(for='slug') Slug
+                        .form-check(style="margin-top: 1rem;")
+                            input.form-check-input(type='checkbox', id='isActive', value='true' name='isActive', checked)
+                            label.form-check-label(for='isActive') Is Active
+                    
+            .modal-footer
+                div.pull-left
+                    button.btn.btn-primary#button-create-permission(type='submit', data-loading-text='Loading...')
+                        span.fa.fa-save
+                        |  &nbsp;Save
+                    button.btn.btn-default(type='button', data-dismiss='modal')
+                        span.fa.fa-times-circle
+                        |  &nbsp;Cancel        
+
+//- #add-edit-permission-modal.modal.fade
+//-     .modal-dialog.modal-sm
+//-         .modal-content
+//-           form#permission-form(role='form', action='#', method='POST')
+//-             .modal-header
+//-                 button.close(type='button', data-dismiss='modal', aria-label='Close')
+//-                     span(aria-hidden='true') &times;
+//-                 h5.modal-title Permission
+//-             .modal-body
+//-                 .row
+//-                     .col-md-12
+//-                         .form-group
+//-                                 select.form-control.select2(style='width: 100%;' name='name' id='name' data-placeholder='Permission Name')
+//-                                     option(value='' disabled selected)='Permission Name'
+//-                         .form-group
+//-                                 select.form-control.select2(style='width: 100%;' name='slug' id='slug' data-placeholder='slug')
+//-                                     option(value='' disabled selected)='slug'
+                    
+//-             .modal-footer
+//-                 div.pull-left
+//-                     button.btn.btn-primary#button-create-permission(type='submit', data-loading-text='Loading...')
+//-                         span.fa.fa-save
+//-                         |  &nbsp;Save
+//-                     button.btn.btn-default(type='button', data-dismiss='modal')
+//-                         span.fa.fa-times-circle
+//-                         |  &nbsp;Cancel                                                                           

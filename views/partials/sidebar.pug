@@ -1,0 +1,356 @@
+aside.main-sidebar
+  style.
+    @media (min-width: 768px) {
+      body.sidebar-mini.sidebar-collapse .main-sidebar {
+        -webkit-transform: translate(0, 0) !important;
+        -ms-transform: translate(0, 0) !important;
+        transform: translate(0, 0) !important;
+        width: 60px !important;
+      }
+      body.sidebar-mini.sidebar-collapse .content-wrapper,
+      body.sidebar-mini.sidebar-collapse .main-footer,
+      body.sidebar-mini.sidebar-collapse .main-header .navbar {
+        margin-left: 60px !important;
+      }
+      body.sidebar-mini.sidebar-collapse .main-sidebar .user-panel .info,
+      body.sidebar-mini.sidebar-collapse .main-sidebar .sidebar-form,
+      body.sidebar-mini.sidebar-collapse .main-sidebar .sidebar-menu > li > a > span,
+      body.sidebar-mini.sidebar-collapse .main-sidebar .sidebar-menu > li > .treeview-menu {
+        display: none !important;
+        justify-content: center !important;
+      }
+      body.sidebar-mini.sidebar-collapse .sidebar-menu > li > a img {
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+        display: block !important;
+      }
+      body.sidebar-mini.sidebar-collapse .sidebar-menu > li > a {
+        padding: 12px 0 !important;
+        justify-content: center !important;
+        display: flex !important;
+        text-align: center;
+      }
+      body.sidebar-mini.sidebar-collapse .main-header .logo {
+        width: 60px !important;
+        padding: 0 !important;
+      }
+      body.sidebar-mini.sidebar-collapse .main-header .logo .logo-lg {
+        display: none !important;
+      }
+      body.sidebar-mini.sidebar-collapse .main-header .logo .logo-mini {
+        display: block !important;
+        margin: 0 !important;
+      }
+
+      .main-sidebar {
+        background-color: #111827 !important; /* Deep modern charcoal dark */
+        border-right: 1px solid #1f2937;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+    }
+
+    /* === User Profile Panel === */
+    .user-panel {
+      display: flex;
+      align-items: center;
+      gap: 0.00rem;
+      padding: 0.75rem !important;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      margin-bottom: 1.25rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .user-panel .image {
+      padding: 0 !important;
+      margin: 0 !important;
+      display: flex;
+      align-items: center;
+    }
+
+    .user-panel .image img {
+      border: 2px solid #580db4;
+      box-shadow: 0 0 10px rgba(88, 13, 180, 0.2);
+      display: block;
+    }
+
+    .user-panel .info {
+      display: block;
+      padding: 0 !important;
+    }
+
+    .user-panel .info p {
+      font-weight: 600 !important;
+      color: #f9fafb !important;
+      margin-bottom: 2px !important;
+      font-size: 0.9rem;
+    }
+
+    .user-panel .info small {
+      color: #9ca3af !important;
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .user-panel .info a {
+      font-size: 0.75rem;
+      color: #10b981 !important; /* Premium emerald online text */
+      text-decoration: none;
+    }
+
+    /* === Collapsed State Overrides (Media Query Secured) === */
+    @media (min-width: 768px) {
+      /* When body has .sidebar-collapse, target the user panel directly */
+      body.sidebar-mini.sidebar-collapse .main-sidebar .user-panel {
+        justify-content: center !important;
+        padding: 0.75rem 0 !important;
+        gap: 0 !important;
+      }
+
+      /* Completely clear out text layout rendering safely to keep alignment centered */
+      body.sidebar-mini.sidebar-collapse .main-sidebar .user-panel .info {
+        display: none !important;
+      }
+
+      /* Snaps the image wrapper node dead-center within the 60px sidebar zone */
+      body.sidebar-mini.sidebar-collapse .main-sidebar .user-panel .image {
+        margin: 0 auto !important;
+        justify-content: center !important;
+      }
+    }
+
+    /* === Modern Sidebar Search === */
+    .sidebar-form {
+      border: none !important;
+      margin: 0 0 1.5rem 0 !important;
+      background: #1f2937 !important;
+      border-radius: 8px !important;
+      overflow: hidden;
+      padding: 2px 6px !important;
+      transition: all 0.2s;
+      border: 1px solid transparent !important;
+    }
+    
+    .sidebar-form:focus-within {
+      border-color: #580db4 !important;
+      box-shadow: 0 0 0 3px rgba(88, 13, 180, 0.15);
+      background: #111827 !important;
+    }
+
+    .sidebar-form .form-control {
+      background: transparent !important;
+      color: #f3f4f6 !important;
+      border: none !important;
+      font-size: 0.85rem;
+      height: 35px;
+    }
+    
+    .sidebar-form .form-control::placeholder {
+      color: #6b7280;
+    }
+
+    .sidebar-form .btn {
+      background: transparent !important;
+      color: #9ca3af !important;
+      border: none !important;
+      height: 35px;
+    }
+
+    /* === Navigation Menu Layout === */
+    .sidebar-menu {
+      padding: 0 !important;
+      margin: 0 !important;
+      list-style: none;
+    }
+
+    .sidebar-menu > li {
+      margin-bottom: 0.25rem;
+    }
+
+    .sidebar-menu > li > a {
+      font-size: 13px !important; 
+      font-weight: 500;
+      color: #9ca3af !important;
+      padding: 0.75rem 1rem !important;
+      border-radius: 8px;
+      display: flex !important;
+      align-items: center;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      white-space: normal !important;
+      word-wrap: break-word !important;
+    }
+
+    .sidebar-menu > li > a:hover {
+      background: rgba(88, 13, 180, 0.08) !important;
+      color: #ffffff !important;
+    }
+    
+    .sidebar-menu > li > a img {
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    .sidebar-menu > li > a:hover img,
+    .sidebar-menu li.treeview.menu-open > a img {
+      transform: scale(1.05);
+      filter: drop-shadow(0 0 4px rgba(88, 13, 180, 0.6));
+    }
+
+    /* Active States */
+    .sidebar-menu > li.active > a {
+      background: #580db4 !important;
+      color: #ffffff !important;
+      box-shadow: 0 4px 12px rgba(88, 13, 180, 0.25);
+    }
+
+    /* === Treeview & Dropdown Menus === */
+    .treeview-menu {
+      background: rgba(0, 0, 0, 0.15) !important;
+      padding-left: 1rem !important;
+      margin: 0.25rem 0 !important;
+      border-left: 2px solid rgba(88, 13, 180, 0.2);
+      list-style: none;
+    }
+
+    .treeview-menu li a {
+      font-size: 12.5px !important;
+      color: #9ca3af !important;
+      padding: 0.6rem 0.75rem !important;
+      display: flex !important;
+      align-items: center;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .treeview-menu li a:hover {
+      color: #ffffff !important;
+      background: rgba(255, 255, 255, 0.03) !important;
+      padding-left: 1rem !important; /* Interactive nudge animation */
+    }
+
+    /* Caret Indicator Alignment */
+    .pull-right-container {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+    }
+    
+    .pull-right-container i {
+      transition: transform 0.2s ease;
+    }
+    
+    .menu-open > a .pull-right-container i {
+      transform: rotate(-90deg); /* Modern directional collapse spin */
+    }
+
+  section.sidebar
+    //- Profile UI Container
+    .user-panel
+      .pull-left.image
+        img(
+          src= user.files ? `/${user.files}` : '/dist/img/blue-tech-logo.jpeg',
+          alt='User Image',
+          style="width:42px; height:42px; border-radius:50%; object-fit:cover;"
+        )
+      .pull-left.info
+        p #{user.username}
+        small #{user.role}
+        a(href='#')
+          i.fa.fa-circle.text-success.mr-1(style="font-size: 9px;")
+          | Online
+
+    //- Global Input Search Field
+    form.sidebar-form(action='#', method='get')
+      .input-group
+        input.form-control(type='text', name='q', placeholder='Search menus...', id='sidebarSearch')
+        span.input-group-btn
+          button#search-btn.btn.btn-flat(type='submit', name='search')
+            i.fa.fa-search
+ 
+    //- Dynamic Navigation Map Target
+    ul#sidebarMenu.sidebar-menu(data-widget='tree')
+      li(class=(activeMenu === 'dashboard' ? 'active' : ''))
+        a(href='/dashboard')
+          img(
+            src='/dist/img/blue-tech-logo.jpeg', 
+            alt='RMS Logo', 
+            style='width: 18px; height: 18px; margin-right: 10px; vertical-align: middle;'
+          )
+          span Dashboard
+          
+      - var userRole = (user.roleName || '').toLowerCase().trim()      
+      if userRole === 'superadmin'
+        li.treeview
+          a(href='#')
+            img(src='/dist/img/main-logo.svg' style='width:14px; margin-right:10px;')
+            span Blue Tech
+            span.pull-right-container
+              i.fa.fa-angle-left.pull-right
+          ul.treeview-menu
+            li.treeview
+              a(href='#')
+                img(src='/dist/img/items-logo.svg' style='width:14px; margin-right:8px;')
+                span Blue Tech Items
+                span.pull-right-container
+                  i.fa.fa-angle-left.pull-right
+              ul.treeview-menu
+                li
+                  a(href='/bluetech/bluetech-items')
+                    img(src='/dist/img/list-logo.svg' style='width:12px; margin-right:8px;')
+                    | Item List Dashboard
+
+            li.treeview
+              a(href='#')
+                img(src='/dist/img/items-logo.svg' style='width:14px; margin-right:8px;')
+                span Blue Tech Supplier
+                span.pull-right-container
+                  i.fa.fa-angle-left.pull-right
+              ul.treeview-menu
+                li
+                  a(href='/bluetech/bluetech-suppliers')
+                    img(src='/dist/img/list-logo.svg' style='width:12px; margin-right:8px;')
+                    | Supplier List Dashboard  
+
+            li.treeview
+              a(href='#')
+                img(src='/dist/img/items-logo.svg' style='width:14px; margin-right:8px;')
+                span Blue Tech Payment Method
+                span.pull-right-container
+                  i.fa.fa-angle-left.pull-right
+              ul.treeview-menu
+                li
+                  a(href='/bluetech/bluetech-paymentmethod')
+                    img(src='/dist/img/list-logo.svg' style='width:12px; margin-right:8px;')
+                    | Payment Method List Dashboard
+
+            li.treeview
+              a(href='#')
+                img(src='/dist/img/items-logo.svg' style='width:14px; margin-right:8px;')
+                span Blue Tech Purchase Tool
+                span.pull-right-container
+                  i.fa.fa-angle-left.pull-right
+              ul.treeview-menu
+                li
+                  a(href='/bluetech/bluetech-purchase')
+                    img(src='/dist/img/list-logo.svg' style='width:12px; margin-right:8px;')
+                    | Purchase List Dashboard                    
+                    
+           
+
+
+script.
+  document.addEventListener("DOMContentLoaded", function() {
+    // Force body to have collapse classes on page load
+    document.body.classList.add('sidebar-mini', 'sidebar-collapse');
+    
+    // If AdminLTE's window plugin tries to expand it, this stops it
+    if (window.jQuery && $.AdminLTE && $.AdminLTE.pushMenu) {
+      // Ensures the framework reads the layout state as collapsed
+      $('body').addClass('sidebar-collapse');
+    }
+  });

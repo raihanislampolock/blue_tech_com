@@ -1,0 +1,342 @@
+extends ../../layout
+
+block style
+  style.
+    /* Theme color variables and overrides */
+    #tableHead {
+      background-color: #580db4 !important;
+      color: #ffffff !important;
+    }
+    #tableHead th a {
+      color: #ffffff !important;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    #tableHead th a:hover {
+      color: #e0ccff !important;
+    }
+
+    /* Elegant, smooth card & filters */
+    .box.box-parrot {
+      border-top: 3px solid #580db4;
+      border-radius: 6px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      background: #ffffff;
+    }
+    .filter-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .search-input-group {
+      display: flex;
+      border: 1px solid #dcd6e8;
+      border-radius: 4px;
+      overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .search-input-group:focus-within {
+      border-color: #580db4;
+      box-shadow: 0 0 0 3px rgba(88, 13, 180, 0.15);
+    }
+    .search-input-group input {
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+    }
+    .search-input-group button {
+      background: #ffffff;
+      border: none;
+      color: #580db4;
+      padding: 0 12px;
+      transition: background 0.2s;
+    }
+    .search-input-group button:hover {
+      background: #f4effc;
+    }
+
+    /* Polished modern tables */
+    .table-responsive {
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .table th {
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+      padding: 12px 8px !important;
+    }
+    .table td {
+      vertical-align: middle !important;
+      padding: 12px 8px !important;
+      color: #333333;
+    }
+
+    /* Soft, readable modern stock badges */
+    .stock-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-align: center;
+      min-width: 90px;
+    }
+    .stock-ok {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+    .stock-low {
+      background-color: #fff3e0;
+      color: #ef6c00;
+    }
+    .stock-critical {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+
+    /* Typography & breadcrumbs refinement */
+    .breadcrumb li strong, .breadcrumb li a strong {
+      color: #580db4 !important;
+    }
+    .page-title {
+      color: #1a0830;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    
+    /* === Modern Buttons === */
+    .btn-modern {
+      padding: 0.5rem 1.25rem;
+      font-weight: 500;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .btn-modern-primary {
+      background-color: #580db4;
+      color: white;
+      box-shadow: 0 2px 4px rgba(88, 13, 180, 0.2);
+    }
+
+    .btn-modern-primary:hover {
+      background-color: #480a96;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px rgba(88, 13, 180, 0.3);
+      color: white;
+    }
+
+    .btn-modern-info {
+      background-color: #0ea5e9;
+      color: white;
+      box-shadow: 0 2px 4px rgba(14, 165, 233, 0.2);
+    }
+
+    .btn-modern-info:hover {
+      background-color: #0284c7;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px rgba(14, 165, 233, 0.3);
+      color: white;
+    }
+
+    .btn-modern-warning {
+      background-color: #f59e0b;
+      color: white;
+      box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
+    }
+
+    .btn-modern-warning:hover {
+      background-color: #d97706;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px rgba(245, 158, 11, 0.3);
+      color: white;
+    }
+
+    .btn-modern-icon {
+      padding: 0.5rem 0.75rem;
+    }
+
+block content
+  section.content-header
+    h1.page-title.mb-3
+      | Blue Tech Stock & Inventory Dashboard
+
+    ol.breadcrumb
+      li
+        a(href='/dashboard')
+          strong Dashboard 
+      li
+        strong Blue Tech Solutions
+      li
+        strong Stock
+      li
+        a(href='/bluetech/bluetech-stock')
+          strong Stock Dashboard
+        
+  section.content
+    .row
+      .col-md-12.col-xs-12
+         .box.box-parrot
+            .box-header.with-border(style="padding: 15px;")
+                .pull-left
+                  .filter-container
+                    span.font-weight-bold(style='color: #4a5568; font-size: 0.9rem;') Search:
+                    .search-input-group
+                      input.form-control.input-sm(type='text', placeholder='Item Name, Type...', name='search' autocomplete='off' id='search' style='width: 220px;')
+                      button(type='submit' id='searchBtn')
+                        span.fa.fa-search
+
+                    button.btn-modern.btn-modern-primary.btn-modern-icon.btn-download(type='button' title="Download Export") 
+                      i.fa.fa-download  
+                      | Download Stock    
+                .pull-right
+                  .filter-container
+                    span.font-weight-bold(style='color: #4a5568; font-size: 0.9rem;') Show:
+                    select.form-control.input-sm(id='limitSelect' style='border-radius: 4px; border-color: #dcd6e8; width: 70px;')
+                        option 10
+                        option 25
+                        option 50
+                        option 100                                
+            .box-body(style="padding: 0;")
+                .table.table-responsive.no-margin
+                    table.table.table-striped.table-hover(style="margin-bottom: 0;")
+                        thead#tableHead
+                            tr
+                                th Item Name
+                                th Item Type            
+                                th.text-center On Hand Qty
+                                th.text-center Reserved Qty
+                                th.text-center Available Qty
+                                th.text-right Last Purchase Price
+                                th Last Purchase Date
+                                th Status           
+                        tbody#stockTableBody
+                            tr
+                                td.text-center(colspan='8' style="padding: 30px !important; color: #718096;") No data to display. Use the search filters above to load data.
+
+            .box-footer.clearfix(style="background: #faf9fc; padding: 15px;")
+                .pull-left(style="padding-top: 5px;")
+                    span#title-filter(style='color: #718096; font-size: 0.9rem; font-weight: 500;') Showing no entries
+                ul.pagination.pagination-sm.no-margin.pull-right#paginationContainer
+
+block script
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      const tableBody = document.getElementById('stockTableBody');
+      const paginationContainer = document.getElementById('paginationContainer');
+      let search = document.getElementById('search');
+      const searchBtn = document.getElementById('searchBtn');
+      const limitSelect = document.getElementById('limitSelect');
+      const exportExcelBtn = document.querySelector('.btn-download');
+
+      if (exportExcelBtn) {
+        exportExcelBtn.addEventListener('click', function () {
+        
+            const searchVal = document.getElementById('search').value || '';
+    
+            const params = new URLSearchParams();
+    
+            if (searchVal.trim()) {
+                params.append('search', searchVal.trim());
+            }
+    
+            window.location.href =
+                `/api/bluetech/bluetech-stock/export/excel?${params.toString()}`;
+        });
+      }
+
+
+      let currentPage = 1;
+      let currentSearch = '';
+      let limit = limitSelect.value;
+
+      function getStockStatus(available) {
+        if (available >= 50) {
+          return { class: 'stock-ok', text: 'Good Stock' };
+        } else if (available >= 10) {
+          return { class: 'stock-low', text: 'Low Stock' };
+        } else {
+          return { class: 'stock-critical', text: 'Critical' };
+        }
+      }
+
+      async function fetchStock(page = 1, search = '', limit = 10) {
+        tableBody.innerHTML = `<tr><td colspan="8" class="text-center" style="padding: 40px;"><i class="fa fa-spinner fa-spin" style="font-size: 28px; color: #580db4;"></i></td></tr>`;
+        try {
+          const response = await fetch(`/api/bluetech/bluetech-stock/all?page=${page}&search=${search}&limit=${limit}`);
+          const data = await response.json();
+
+          if (data?.data?.length > 0) {
+            tableBody.innerHTML = data.data.map((stock, index) => {
+              const status = getStockStatus(stock.availableQuantity);
+              return `
+                <tr>
+                  <td style="font-weight: 600; color: #1a0830;">${stock.itemName || '-'}</td>
+                  <td><span class="label label-default" style="background-color: #f0ecf7; color: #580db4; font-weight: 500; font-size: 0.8rem; border-radius: 3px; padding: 3px 6px;">${stock.itemType || '-'}</span></td>
+                  <td class="text-center" style="font-size: 0.95rem; color: #2d3748;"><strong>${stock.onHandQuantity || 0}</strong></td>
+                  <td class="text-center" style="color: #718096;">${stock.reservedQuantity || 0}</td>
+                  <td class="text-center" style="font-size: 0.95rem; color: #2d3748;"><strong>${stock.availableQuantity || 0}</strong></td>
+                  <td class="text-right" style="font-weight: 600; color: #2d3748;">${stock.lastPurchasePrice || '-'}</td>
+                  <td style="color: #4a5568;">${stock.lastPurchaseDate ? new Date(stock.lastPurchaseDate).toLocaleDateString() : '-'}</td>
+                  <td><span class="stock-badge ${status.class}">${status.text}</span></td>
+                </tr>
+              `;
+            }).join('');
+
+            // Render pagination
+            const totalPages = data.totalPages || 1;
+            paginationContainer.innerHTML = '';
+            for (let i = 1; i <= totalPages; i++) {
+              const li = document.createElement('li');
+              li.className = i === page ? 'active' : '';
+              li.innerHTML = `<a href="#" onclick="goToPage(${i})">${i}</a>`;
+              paginationContainer.appendChild(li);
+            }
+
+            // Update showing entries
+            document.getElementById('title-filter').textContent = `Showing ${data.data.length} of ${data.total} entries`;
+          } else {
+            tableBody.innerHTML = '<tr><td colspan="8" class="text-center" style="padding: 30px; color: #718096;">No stock data found</td></tr>';
+          }
+        } catch (error) {
+          console.error('Error fetching stock:', error);
+          tableBody.innerHTML = '<tr><td colspan="8" class="text-center text-danger" style="padding: 30px; font-weight: 600;">Error loading inventory data</td></tr>';
+        }
+      }
+
+      // Event listeners
+      searchBtn.addEventListener('click', function() {
+        currentSearch = search.value.trim();
+        currentPage = 1;
+        fetchStock(currentPage, currentSearch, limit);
+      });
+
+      search.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          currentSearch = search.value.trim();
+          currentPage = 1;
+          fetchStock(currentPage, currentSearch, limit);
+        }
+      });
+
+      limitSelect.addEventListener('change', function() {
+        limit = this.value;
+        currentPage = 1;
+        fetchStock(currentPage, currentSearch, limit);
+      });
+
+      // Initial load
+      fetchStock(currentPage, currentSearch, limit);
+
+      // Global functions
+      window.goToPage = function(page) {
+        currentPage = page;
+        fetchStock(currentPage, currentSearch, limit);
+      };
+    });

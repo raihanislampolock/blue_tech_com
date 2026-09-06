@@ -1,0 +1,774 @@
+extends ../../layout
+block style
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css')
+  link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css')
+  style.
+    .selected-row {
+      background-color: #580db4 !important;
+      color: white !important;
+    }
+
+    .form-group {
+      position: relative;
+      margin-bottom: 7px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 1rem 1rem 0.3rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: none;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s, padding-top 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: #580db4;
+      box-shadow: 0 0 4px rgba(88, 13, 180, 0.6);
+    }
+
+    .form-group label {
+      position: absolute;
+      top: 0.7rem;
+      left: 1rem;
+      transform: translateY(0);
+      font-size: 1rem;
+      color: #aaa;
+      pointer-events: none;
+      transition: all 0.3s;
+      background-color: white;
+      padding: 0 5px;
+    }
+
+    .form-group input:focus ~ label,
+    .form-group input:not(:placeholder-shown) ~ label,
+    .form-group textarea:focus ~ label,
+    .form-group textarea:not(:placeholder-shown) ~ label {
+      top: -0.6rem;
+      font-size: 0.8rem;
+      color: #580db4;
+      padding: 0 5px;
+    }
+
+    .form-group-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .form-check {
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .form-check-input {
+      width: 2rem;
+      height: 2rem;
+      margin: 0;
+      cursor: pointer;
+      accent-color: #580db4;
+    }
+
+    .form-check-label {
+      font-size: 1rem;
+      color: #555;
+      cursor: pointer;
+      margin-left: 0.1rem;
+      margin-top: 0.5rem;
+    }
+
+    #add-edit-user-modal .modal-dialog {
+      max-width: 80%;
+      width: auto;
+    }
+
+    #show-user-modal .modal-dialog {
+      max-width: 90%;
+      width: auto;
+    }
+
+    .btn-group .btn-small {
+      padding: 2px 8px;
+      font-size: 12px;
+      line-height: 1.5;
+      border-radius: 3px;
+      background-color: #580db4;
+      color: white;
+      border: none;
+    }
+    .btn-group .btn-small:hover,
+    .btn-group .btn-small:focus {
+      background-color: #580db4;
+    }
+    .btn-group .dropdown-menu {
+      font-size: 12px;
+      min-width: 100px;
+    }
+    .caret {
+      margin-left: 2px;
+    }
+
+    /* Ensure the container has limited height and overflow */
+    .table-responsive {
+      max-height: 400px; /* Adjust height as needed */
+      overflow-y: auto;
+      position: relative;
+    }
+
+    /* Fix the table header */
+    .table-responsive table thead {
+      position: sticky;
+      top: 0;
+      background-color: #fff; /* Match table background */
+      z-index: 2;
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1); /* Optional shadow for better visibility */
+    }
+
+    #tableHead {
+      background-color: #580db4;
+      color: white;
+    }
+
+    .green {
+      background-color: #00a65a !important;
+    }
+    .cancelled {
+      background-color: #dd4b39 !important;
+    }
+
+
+    /* Reset modal styles */
+    #multi-user-modal .modal {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1050;
+      display: none;
+      outline: 0;
+      overflow: hidden;
+    }
+
+    /* Prevent body scrolling */
+    body.modal-open {
+      overflow: hidden;
+      padding-right: 0 !important;
+    }
+
+    /* Modal dialog styles */
+    #multi-user-modal .modal-dialog {
+      position: relative;
+      width: auto;
+      margin: 0;
+      max-width: 1000px;
+      height: 100%;
+      display: flex;
+      align-items: stretch;
+    }
+
+    /* Modal content styles */
+    #multi-user-modal .modal-content {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100vh;
+      background-color: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      border-radius: 0;
+      outline: 0;
+    }
+
+    /* Modal header styles - Fixed to have title on left and close button on right */
+    #multi-user-modal .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px;
+      flex-direction: row; /* Ensure correct direction */
+    }
+
+      #multi-user-modal .modal-header .modal-title {
+        margin: 0;
+        line-height: 1.5;
+        order: 0; /* Ensure title is first */
+    }
+
+    #multi-user-modal .modal-header .close {
+      order: 1; /* Ensure close button is last */
+      padding: 1rem;
+      margin: -1rem -1rem -1rem auto;
+    }
+
+    /* Modal body styles */
+    #multi-user-modal .modal-body {
+      position: relative;
+      flex: 1 1 auto;
+      padding: 15px;
+    }
+
+    /* Scrollable area styles */
+    #multi-user-modal .scrollable-area {
+      height: calc(100vh - 130px); /* Adjust based on header and footer height */
+      overflow-y: scroll !important; /* Force scrollbar to always show */
+      overflow-x: hidden;
+    }
+
+    /* Modal footer styles */
+    #multi-user-modal .modal-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 15px;
+    }
+
+    /* Custom scrollbar styles */
+    #multi-user-modal .scrollable-area::-webkit-scrollbar {
+      width: 6px;
+      display: block;
+    }
+
+    #multi-user-modal .scrollable-area::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+
+    #multi-user-modal .scrollable-area::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 10px;
+    }
+
+    #multi-user-modal .scrollable-area::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+
+block content
+  section.content-header
+    h1
+      | User&nbsp;&nbsp; 
+      button.btn.btn-sm.btn-primary.btn-add(type='submit' style='margin-left:10px' data-toggle='modal' data-target='#add-edit-user-modal') 
+        span.fa.fa-plus
+
+    ol.breadcrumb
+      li
+        a(href='/dashboard')
+          strong(style="color: #580db4") Dashboard 
+      li
+        a(href='/signup')
+          strong(style="color: #580db4") Users
+  section.content
+    .row
+      .col-md-12.col-xs-12
+        .box.box-parrot
+          .box-header.with-border
+            .pull-left
+              span.title-filter(style='display:flex;align-items:center;') Search:
+                input.form-control.input-sm(type='text' placeholder='Enter search criteria' name='search' autocomplete='off' style='margin-left:10px' id='search')
+                button.btn.btn-sm.btn-primary.btn-filter(type='submit' style='margin-left:3px' id='searchBtn') 
+                  span.fa.fa-filter
+            .pull-right
+              span.title-filter(style='display:flex;align-items:center') Show:
+                select.form-control.input-filter.input-sm(id='limitSelect')
+                  option 10
+                  option 25
+                  option 50
+                  option 100
+
+            .box-body 
+              .table.table-responsive
+                table.table.table-bordered.table-striped#userTable
+                  thead
+                    tr
+                      th 
+                        a(href='#') Emmployee Id &nbsp;
+                          <i class="fa fa-sort-alpha-asc"></i>
+                      th 
+                        a(href='#') User Name
+                      th 
+                        a(href='#') Employee Profile Pic  
+                      th 
+                        a(href='#') Gender
+                      th 
+                        a(href='#') Date Of Burth
+                      th 
+                        a(href='#') Email
+                      th 
+                        a(href='#') Phone Number
+                      th 
+                        a(href='#') Address
+                      th 
+                        a(href='#') Role
+                      th 
+                        a(href='#') Is Active
+                      th 
+                        a(href='#') Create Date
+                      th 
+                        a(href='#') Updated Date              
+                      th
+                        a(href='#') Actions
+                  tbody#userTableBody
+                    tr 
+                      td.text-center(colspan='12') No data to display. Use the search filters above to load data.
+
+          .box-footer.clearfix
+            .pull-left
+              span.title-filter#title-filter(style='display:flex;align-items:center;') Showing no entries
+            ul.pagination.pagination-sm.no-margin.pull-right#paginationContainer
+  include ./create
+  include ./reset
+
+block script
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      const tableBody = document.getElementById('userTableBody');
+      if (!tableBody) {
+        console.error("Element with id 'userTableBody' not found.");
+        return;
+      }
+      const paginationContainer = document.getElementById('paginationContainer');
+      const searchStr = document.getElementById('search');
+      const searchBtn = document.getElementById('searchBtn');
+      const limitSelect = document.getElementById('limitSelect');
+
+      let currentPage = 1;
+      let currentSearch = '';
+      let limit = limitSelect.value;
+
+      async function fetchUser(page = 1, search = '', limit = 10) {
+        tableBody.innerHTML = `<tr><td colspan="12" class="text-center"><i class="fa fa-spinner fa-spin" style="font-size: 24px; color: #580db4;"></i></td></tr>`;
+        try {
+          const response = await fetch(`/api/users/all?page=${page}&search=${search}&limit=${limit}`);
+          const data = await response.json();
+          console.log("API Response:", data);
+
+          if (data?.data?.length > 0) {
+            tableBody.innerHTML = data.data.map(user => {
+            return `
+              <tr style='cursor:pointer' class="table-row">
+                <td>${user.empId}</td>
+                <td>${user.username}</td>
+                <td>
+                  ${
+                    user.files
+                      ? `<a href="/${user.files}" target="_blank">
+                           <img src="/${user.files}" style="width:60px;height:60px;object-fit:cover;border-radius:5px;" />
+                         </a>`
+                      : 'No Profile Pic'
+                  }
+                </td>
+                <td>${user.gender}</td>
+                <td>${user.dateOfBirth}</td>
+                <td>${user.email}</td>
+                <td>${user.phone}</td>
+                <td>${user.address}</td>
+                <td>${user.role_name}</td>
+                <td>
+                  ${user.isActive 
+                    ? '<i class="bi bi-check-circle-fill text-success"></i>' 
+                    : '<i class="bi bi-x-circle-fill text-danger"></i>'}
+                </td>
+                <td>${user.createdAt}</td>
+                <td>${user.updatedAt}</td>
+                <td>
+                  <a href="" id='editUser' class="fa fa-edit" data-user-id="${user.userId}" style="font-size: 1em;" data-toggle='modal' data-target='#add-edit-user-modal'></a>
+                </td>
+                <td>
+                  <a href="#" onclick="openResetPasswordModal('${user.userId}')" class="fa fa-edit" style="font-size: 1em;"></a>
+                </td>
+              </tr>
+          `;
+          }).join('');
+
+          const totalRecords = data.totalRecords;
+          const startRecord = (currentPage - 1) * limit + 1;
+          const endRecord = Math.min(currentPage * limit, totalRecords);
+
+          document.querySelector('#title-filter').textContent = `Showing ${startRecord} to ${endRecord} of ${totalRecords} entries`;
+
+          } else {
+            tableBody.innerHTML = `<tr><td colspan="12" class="text-center">No data found</td></tr>`;
+            document.querySelector('#title-filter').textContent = 'No entries to display';
+            return;
+          }
+
+          // Generate pagination buttons
+          const totalPages = Math.ceil(data.totalRecords / limit);
+          renderPagination(totalPages, currentPage);
+
+        } catch (error) {
+          console.error('Error fetching reports:', error);
+          tableBody.innerHTML = `<tr><td colspan="12" class="text-center">Error loading data</td></tr>`;
+          document.querySelector('#title-filter').textContent = 'Error loading entries';
+        }
+      }
+
+      function renderPagination(totalPages, currentPage) {
+        paginationContainer.innerHTML = ""
+
+        const maxVisiblePages = 5
+        const firstPages = 2
+        const lastPages = 2
+
+        // Helper function to create pagination link
+        const createPageLink = (page, isActive = false) => {
+          const pageItem = document.createElement("li")
+          if (isActive) pageItem.classList.add("active")
+          pageItem.innerHTML = `<a href="#" class="pagination-link" data-page="${page}">${page}</a>`
+          paginationContainer.appendChild(pageItem)
+        }
+
+        // Show "Previous" button if not on first page
+        if (currentPage > 1) {
+          const prevItem = document.createElement("li")
+          prevItem.innerHTML = `<a href="#" class="pagination-link" data-page="${currentPage - 1}">« Previous</a>`
+          paginationContainer.appendChild(prevItem)
+        }
+
+        // For small number of pages, show all pages without ellipsis
+        if (totalPages <= maxVisiblePages) {
+          for (let i = 1; i <= totalPages; i++) {
+            createPageLink(i, i === currentPage)
+          }
+        } else {
+          // Show first page
+          createPageLink(1, currentPage === 1)
+
+          // Calculate range of pages to show around current page
+          let rangeStart = Math.max(2, currentPage - Math.floor(maxVisiblePages / 2))
+          const rangeEnd = Math.min(totalPages - 1, rangeStart + maxVisiblePages - 3)
+
+          // Adjust range if current page is near the end
+          if (rangeEnd === totalPages - 1) {
+            rangeStart = Math.max(2, rangeEnd - maxVisiblePages + 3)
+          }
+
+          // Show ellipsis after first page if needed
+          if (rangeStart > 2) {
+            paginationContainer.innerHTML += `<li><span>...</span></li>`
+          }
+
+          // Show pages in range
+          for (let i = rangeStart; i <= rangeEnd; i++) {
+            createPageLink(i, i === currentPage)
+          }
+
+          // Show ellipsis before last page if needed
+          if (rangeEnd < totalPages - 1) {
+            paginationContainer.innerHTML += `<li><span>...</span></li>`
+          }
+
+          // Show last page if not already shown
+          if (totalPages > 1) {
+            createPageLink(totalPages, currentPage === totalPages)
+          }
+        }
+
+        // Show "Next" button if not on last page
+        if (currentPage < totalPages) {
+          const nextItem = document.createElement("li")
+          nextItem.innerHTML = `<a href="#" class="pagination-link" data-page="${currentPage + 1}">Next »</a>`
+          paginationContainer.appendChild(nextItem)
+        }
+      }
+
+        // Update page and fetch data
+      function updatePage(page) {
+        currentSearch = searchStr.value;
+        currentPage = page;
+        fetchUser(currentPage, currentSearch, limit);
+      }
+
+      // Event listener for pagination links
+      paginationContainer.addEventListener('click', function(event) {
+        if (event.target.classList.contains('pagination-link')) {
+          event.preventDefault();
+          const page = parseInt(event.target.getAttribute('data-page'), 10);
+          if (!isNaN(page)) {
+            updatePage(page);
+          }
+        }
+      });
+
+
+      // Search and limit event listeners
+      searchBtn.addEventListener('click', () => {
+        currentSearch = searchStr.value;
+        fetchUser(1, currentSearch, limit);
+      });
+      limitSelect.addEventListener('change', () => {
+        limit = limitSelect.value;
+        currentPage = 1;
+        fetchUser(currentPage, currentSearch, limit);
+      });
+
+      fetchUser(currentPage, currentSearch, limit);
+    });
+
+    $(document).on('click', '.btn-add', function () {
+      $('#user-form')[0].reset();
+      $('#user-form').removeAttr('data-user-id');
+      $('#user-form input, #user-form textarea').val('');
+    });
+
+    $('#user-form').on('submit', function (e) {
+      e.preventDefault();
+      const userId = $(this).attr('data-user-id');
+      const formData = new FormData(this);
+
+      const fileInput = $('#file')[0]?.files[0];
+      if (fileInput) {
+        formData.set('file', fileInput);
+      }
+      
+
+      // Only validate password when creating
+      if (!userId) {
+        console.log(userId);
+        const password = $('#password').val();
+        const confirmPassword = $('#confirmPassword').val();
+
+        if (!password || !confirmPassword) {
+          swal("Error", "Password and Confirm Password are required", "error");
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          swal("Error", "Password and Confirm Password do not match", "error");
+          return;
+        }
+      }
+
+      if (userId) {
+        console.log('i want to update')
+        updateUser(userId, formData);
+      } else {
+         console.log('i want to create')
+        createUser(formData);
+      }
+    });
+
+    function updateUser(userId, formData) {
+      const roleId = $('#roleId').val();
+      const dateOfBirth = $('#dateOfBirth').val();
+      console.log("Submitting dateOfBirth:", dateOfBirth);
+    
+      $.ajax({
+        url: `/api/users/update/${userId}`,
+        type: 'PUT',
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function (response) {
+          if (response.status) {
+            swal({
+              title: response.message,
+              icon: "success",
+              closeOnClickOutside: false,
+              button: 'OK'
+            }).then(() => {
+              window.location.reload(); // Reload page on success
+            });
+          } else {
+            swal("Error", response.message || "Failed to update user record", "error");
+          }
+        }
+      });
+    }
+
+    $(document).on('click', '#editUser', function () {
+      const userId = $(this).attr('data-user-id');
+      console.log(userId)
+      console.log("userId from data attr:", userId);
+      loadUserForEdit(userId);
+    });
+
+    function loadUserForEdit(userId) {
+      console.log("[Frontend] loadUserForEdit() called with:", userId);
+      $.ajax({
+        url: `/api/users/edit/${userId}`,
+        type: 'GET',
+        success: function (response) {
+          if (response.status) {
+            $('#user-form').attr('data-user-id', response.data.userId);
+            $('#empId').val(response.data.empId);
+            $('#firstName').val(response.data.firstName);
+            $('#lastName').val(response.data.lastName);
+            $('#isActive').prop('checked', response.data.isActive === true);
+            $('#gender').val(response.data.gender).trigger('change');
+            $('#dateOfBirth').val(formatDateForInput(response.data.dateOfBirth));
+            $('#email').val(response.data.email);
+            $('#phone').val(response.data.phone);
+            $('#address').val(response.data.address);
+            $('#roleId').val(String(response.data.roleId)).trigger('change');
+            if (response.data.files) {
+              $('#filePreview').html(`
+                <div style="margin-bottom:10px;">
+                  <img src="/${response.data.files}" 
+                       style="width:100px;height:100px;object-fit:cover;border-radius:6px;border:1px solid #ccc;" />
+                </div>
+              `);
+            } else {
+              $('#filePreview').html('<small>No file uploaded</small>');
+            }
+
+            $('#add-edit-user-modal.modal-title').text('Update User');
+            $('#button-add-edit-user').text('Update');
+            // 🔸 Show reset password button
+            $('#password').closest('.form-group').hide();
+            $('#confirmPassword').closest('.form-group').hide();
+          } else {
+            swal("Error", response.message || "Failed to load coupon", "error");
+          }
+        }
+      });
+    }
+
+    function createUser(formData) {
+      const data = {
+        empId: $('#empId').val(),
+        firstName: $('#firstName').val(),
+        lastName: $('#lastName').val(),
+        isActive: $('#isActive').is(':checked'),
+        gender: $('#gender').val(),
+        dateOfBirth: $('#dateOfBirth').val(),
+        email: $('#email').val(),
+        phone: $('#phone').val(),
+        address: $('#address').val(),
+        roleId: $('#roleId').val(),
+        password: $('#password').val(),
+        confirmPassword: $('#confirmPassword').val()
+      };
+    
+      $.ajax({
+        url: `/signup`,
+        type: 'Post',
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function (response) {
+          if (response.status) {
+            swal({
+              title: response.message,
+              icon: "success",
+              closeOnClickOutside: false,
+              button: 'OK'
+            }).then(() => {
+              window.location.reload(); // Reload page on success
+            });
+          } else {
+            swal("Error", response.message || "Failed to Create user record", "error");
+          }
+        }
+      });
+    }    
+
+    $('#fetchEmployeeBtn').on('click', async function () {
+      const empId = $('#empId').val().trim();
+      if (!empId) {
+        alert('Please enter an Employee ID');
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/users/check-empId', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ empId })
+        });
+
+        const result = await response.json();
+
+        if (!result.status || !result.data) {
+          alert('No employee data found.');
+          return;
+        }
+
+        const data = result.data;
+        const $modal = $('#add-edit-user-modal');
+        
+
+        // Populate form fields with API data
+        $('#firstName').val(data.firstName || '');
+        $('#lastName').val(data.lastName || '');
+        $('#phone').val(data.mobileNo || '');
+        $('#email').val(data.email || '');
+        const dobInput = document.getElementById("dateOfBirth");
+        const dob = new Date(data.dob);
+        dobInput.value = dob.toISOString().split('T')[0];
+        let genderSelect = document.getElementById('gender')
+        const gender = data.gender;
+
+        if (gender === 'Male') {
+          genderSelect.value = 'M';
+        } else if (gender === 'Female') {
+          genderSelect.value = 'F';
+        } else {
+          genderSelect.value = 'M';
+        }        
+
+        if ($.fn.select2) {
+          $(genderSelect).trigger('change').select2();
+        }
+
+        // If status comes from API, you can also update isActive
+        if (data.status !== undefined) {
+          $('#isActive').prop('checked', data.status);
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Error fetching employee data');
+      }
+    });
+
+    function openResetPasswordModal(userId) {
+      $('#resetUserId').val(userId); // ✅ store the user ID
+      $('#resetPasswordModal').modal('show');
+    }
+
+    function formatDateForInput(dateStr) {
+      if (!dateStr) return '';
+      const date = new Date(dateStr);
+      return date.toISOString().split('T')[0];  // returns YYYY-MM-DD
+    }
+
+    $('#reset-password-form').on('submit', function (e) {
+      e.preventDefault();
+      const userId = $('#resetUserId').val(); // ✅ this now works
+      const oldPassword = $('#oldPassword').val().trim();
+      const newPassword = $('#newPassword').val().trim();
+      const cPassword = $('#cPassword').val().trim();
+
+      if (newPassword !== cPassword) {
+        return swal("Mismatch", "New password and confirm password must match", "warning");
+      }
+
+      $.ajax({
+        url: '/api/users/reset-password',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ userId, oldPassword, newPassword }),
+        success: function (res) {
+          if (res.status) {
+            $('#resetPasswordModal').modal('hide');
+            swal("Success", res.message, "success");
+          } else {
+            swal("Error", res.message, "error");
+          }
+        },
+        error: function () {
+          swal("Error", "Something went wrong", "error");
+        }
+      });
+    });
+
+
+        

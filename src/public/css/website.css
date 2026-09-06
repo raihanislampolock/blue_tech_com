@@ -1,0 +1,36 @@
+@import url("/css/variables.css");
+@import url("/css/components.css");
+@import url("/css/utilities.css");
+@import url("/css/responsive.css");
+
+*{
+
+    margin:0;
+
+    padding:0;
+
+    box-sizing:border-box;
+
+}
+
+body{
+
+    font-family:'Poppins',sans-serif;
+
+    color:var(--text);
+
+    background:var(--light);
+
+}
+
+a{
+
+    text-decoration:none;
+
+}
+
+section{
+
+    padding:80px 0;
+
+}

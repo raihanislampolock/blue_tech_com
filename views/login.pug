@@ -1,0 +1,194 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    title Blue Tech Solutions
+    meta(content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no', name='viewport')
+    link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/bower_components/font-awesome/css/font-awesome.min.css')
+    link(rel='stylesheet', href='/bower_components/Ionicons/css/ionicons.min.css')
+    link(rel='stylesheet', href='/dist/css/AdminLTE.min.css')
+    link(rel='stylesheet', href='/plugins/iCheck/square/blue.css')
+    link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic')
+    style.
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.4); /* Semi-transparent background with color #3a1f08 */
+        z-index: 99;
+        display: none; /* Hide by default */
+        display: flex; /* Use flexbox to center the content */
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+      }
+      .spinner {
+        font-size: 5em; /* Adjust size as needed */
+        color: #3a1f08; /* Spinner color */
+      }
+      .btn-primary.focus, .btn-primary:focus {
+        color: #fff;
+        background-color: #3a1f08 !important;
+        border-color: #3a1f08 !important;
+      }
+  body.hold-transition.login-page
+    .login-box
+      .login-logo
+        a(href='/')
+          img(src="/dist/img/blue-tech-logo.jpeg", alt='Blue Tech Solutions' width='70px')
+        p.login-msg Blue Tech Solutions
+      .login-box-body
+        -if(errorMessage)
+          div.alert.alert-danger(role='alert')=errorMessage
+        p.login-box-msg Sign in to start your session
+        form(action="/login" method="POST" id="loginForm")
+          .form-group.has-feedback
+            input.form-control(type='text', name='empId', placeholder='Enter employee ID', required='required')
+            span.glyphicon.glyphicon-envelope.form-control-feedback
+          .form-group.has-feedback
+            input.form-control(type='password',name='password', placeholder='Enter password')
+            span.glyphicon.glyphicon-lock.form-control-feedback
+          .row
+            .col-xs-8
+              .checkbox.icheck
+                //- label
+                //-   input(type='checkbox')
+                //-   |  Remember Me
+            .col-xs-4
+              button.btn.btn-primary.btn-block.btn-flat(type='submit') Sign In
+        .social-auth-links.text-center
+        a(href='#' data-toggle='modal' data-target='#modalForgotPassword') I forgot my password
+
+    .loading-overlay#loadingOverlay
+      i.fa.fa-spinner.fa-spin.spinner
+
+    #modalForgotPassword.modal.fade
+      .modal-dialog
+        .modal-content
+          .modal-header
+            h5.modal-title Forgot Password
+            button.close(type='button', data-dismiss='modal') &times;
+          .modal-body
+            input.form-control#empIdInput(type='text', placeholder='Enter Employee ID')
+            button.btn.btn-primary.mt-2#sendOtpBtn(type='button') Send OTP
+    
+    #modalOtpVerify.modal.fade
+      .modal-dialog
+        .modal-content
+          .modal-header
+            h5.modal-title Verify OTP
+            button.close(type='button', data-dismiss='modal') &times;
+          .modal-body
+            input.form-control#otpInput(type='text', placeholder='Enter 6-digit OTP')
+            button.btn.btn-success.mt-2#verifyOtpBtn(type='button') Verify OTP
+    
+    #modalResetPassword.modal.fade
+      .modal-dialog
+        .modal-content
+          .modal-header
+            h5.modal-title Reset Password
+            button.close(type='button', data-dismiss='modal') &times;
+          .modal-body
+            input.form-control#newPasswordInput(type='password', placeholder='New Password')
+            input.form-control#confirmPasswordInput.mt-2(type='password', placeholder='Confirm Password')
+            button.btn.btn-warning.mt-2#resetPasswordBtn(type='button') Reset Password  
+
+    script(src='/bower_components/jquery/dist/jquery.min.js')
+    script(src='/bower_components/bootstrap/dist/js/bootstrap.min.js')
+    script(src='/plugins/iCheck/icheck.min.js')
+    script.
+      $(function () {
+        $('input').iCheck({
+          checkboxClass: 'icheckbox_square-blue',
+          radioClass: 'iradio_square-blue',
+          increaseArea: '20%'
+        });
+
+        // Hide the loading overlay on page load
+        $('#loadingOverlay').hide(); // Ensure the loader is hidden on page load
+
+        // Show loading overlay on form submit
+        $('#loginForm').on('submit', function(event) {
+          event.preventDefault(); // Prevent default form submission
+
+          $('#loadingOverlay').show(); // Show the loading overlay
+
+          // Minimum delay of 2 seconds
+          const minDelay = 1000;
+          const form = this; // Reference to the form
+
+          // Simulate a delay before submitting the form
+          setTimeout(() => {
+            form.submit(); // Submit the form after 2 seconds
+          }, minDelay);
+        });
+      });
+
+      window.onpageshow = function(event) {
+        if (event.persisted) { // If the page is loaded from the cache
+          $('#loadingOverlay').hide(); // Ensure the loader is hidden
+        }
+      };
+
+      let empIdGlobal = '';
+
+      $('#sendOtpBtn').on('click', function () {
+        const empId = $('#empIdInput').val();
+        if (!empId) return alert('Please enter your Employee ID');
+      
+        empIdGlobal = empId;
+      
+        const $btn = $(this);
+        $btn.prop('disabled', true).text('Sending...'); // Show loader effect
+      
+        $.post('/forgot-password', { empId })
+          .done(function (res) {
+            if (res.success) {
+              $('#modalForgotPassword').modal('hide');
+              $('#modalOtpVerify').modal('show');
+            } else {
+              alert(res.message);
+            }
+          })
+          .fail(function () {
+            alert('Something went wrong. Please try again.');
+          })
+          .always(function () {
+            // Reset button after request completes (success or fail)
+            $btn.prop('disabled', false).text('Send OTP');
+          });
+      });
+
+
+      $('#verifyOtpBtn').on('click', function () {
+          const otp = $('#otpInput').val();
+          if (!otp) return alert('Please enter the OTP');
+
+          $.post('/verify-otp', { empId: empIdGlobal, otp }, function (res) {
+              if (res.success) {
+                  $('#modalOtpVerify').modal('hide');
+                  $('#modalResetPassword').modal('show');
+              } else {
+                  alert(res.message);
+              }
+          });
+      });
+
+      $('#resetPasswordBtn').on('click', function () {
+          const pass1 = $('#newPasswordInput').val();
+          const pass2 = $('#confirmPasswordInput').val();
+          if (!pass1 || !pass2) return alert('Please fill both password fields');
+          if (pass1 !== pass2) return alert('Passwords do not match');
+
+          $.post('/reset-password', { empId: empIdGlobal, newPassword: pass1 }, function (res) {
+              if (res.success) {
+                  alert('Password reset successful! Please login.');
+                  $('#modalResetPassword').modal('hide');
+              } else {
+                  alert(res.message);
+              }
+          });
+      });

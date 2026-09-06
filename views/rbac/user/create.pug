@@ -1,0 +1,93 @@
+#add-edit-user-modal.modal.fade
+    .modal-dialog.modal-lg
+        .modal-content
+          form#user-form(role='form', action='#', method='POST')
+            .modal-header
+                button.close(type='button', data-dismiss='modal', aria-label='Close')
+                    span(aria-hidden='true') &times;
+                h5.modal-title User
+
+            .modal-body
+                .row
+                    .col-md-6
+                        .form-group
+                            .input-group
+                              input.input-sm.form-control(type='text', id='empId', name='empId', placeholder=' ', required)
+                              label.control-label(for='empId') Employee Id
+                              span.input-group-btn
+                                button.btn.btn-info(type='button', id='fetchEmployeeBtn') Fetch
+                        .row
+                            .col-md-6
+                                .form-group
+                                    input.input-sm.form-control(type='text', id='firstName', name='firstName', placeholder=' ', required)
+                                    label.control-label(for='firstName') First Name
+                            .col-md-6
+                                .form-group
+                                    input.input-sm.form-control(type='text', id='lastName', name='lastName', placeholder=' ', required)
+                                    label.control-label(for='lastName') Last Name
+                        .form-group
+                                    input.input-sm.form-control(type='number', id='phone', name='phone', placeholder=' ', required)
+                                    label.control-label(for='phone') Mobile No
+                        .form-group
+                                    input.input-sm.form-control(type='text', id='email', name='email', placeholder=' ', required)
+                                    label.control-label(for='email') Email Address
+                        .row
+                            .col-md-6
+                                .form-group
+                                  select.form-control.select2(style='width: 100%;' name='gender' id='gender' data-placeholder='Select Gender')
+                                    option(value='' disabled selected)='Select Gender'
+                                    option(value='M')='Male'
+                                    option(value='F')='Female'
+                                    option(value='O')='Other'
+                            .col-md-6
+                                .form-group
+                                    input.input-sm.form-control#dateOfBirth(
+                                        type='date', 
+                                        name='dateOfBirth', 
+                                        placeholder='YYYY-MM-DD'
+                                        autocomplete='off'
+                                    )
+                                    //- label.control-label(for='dateOfBirth') Date Of Birth
+                        .form-check(style="margin-top: 1rem;")
+                            input.form-check-input(type='checkbox', id='isActive', name='isActive', value='true')
+                            label.form-check-label(for='isActive') Is Active
+                    .col-md-6
+                        .form-group
+                                select.form-control.select2(style='width: 100%;', id='roleId', name='roleId', data-placeholder='Select Role')
+                                    option(value='' disabled selected)='Select Role'
+                                    -if(roles?.length > 0)
+                                          each role in roles
+                                            option(value=role['roleId'])=role['name']
+                        .row
+                            .col-md-6
+                                .form-group
+                                    input.input-sm.form-control(type='password', id='password', name='password', placeholder=' ')
+                                    label.control-label(for='password') Password
+                            .col-md-6
+                                .form-group
+                                    input.input-sm.form-control(type='password', id='confirmPassword', name='confirmPassword', placeholder=' ')
+                                    label.control-label(for='confirmPassword') Confirm Password
+                        .form-group
+                                    input.input-sm.form-control(type='text', id='address', name='address', placeholder=' ')
+                                    label.control-label(for='address') Address
+                        .row
+                            .col-md-4
+                                .form-group
+                                  label(style='color: green') Document
+                                  // 👇 existing file preview goes here
+                                  #filePreview.mt-2
+                                  br
+                                  span(style='color: red;') N.B: If new file added previous file will be removed
+                                .form-group
+                                  input#file.form-control(type="file", name="file")
+                                  label(for="file") Upload New File         
+
+
+            .modal-footer
+                div.pull-left
+                    button.btn.btn-primary#button-create-user(type='submit', data-loading-text='Loading...')
+                        span.fa.fa-save
+                        |  &nbsp;Save
+                    button.btn.btn-default(type='button', data-dismiss='modal')
+                        span.fa.fa-times-circle
+                        |  &nbsp;Cancel

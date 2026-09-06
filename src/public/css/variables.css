@@ -1,0 +1,21 @@
+:root{
+
+    --primary:#0F172A;
+    --secondary:#2563EB;
+    --accent:#14B8A6;
+
+    --white:#FFFFFF;
+
+    --light:#F8FAFC;
+
+    --text:#1E293B;
+
+    --border:#E2E8F0;
+
+    --radius:12px;
+
+    --shadow:0 10px 25px rgba(0,0,0,.08);
+
+    --transition:.3s ease;
+
+}
