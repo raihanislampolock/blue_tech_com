@@ -55,6 +55,9 @@ import { BlueTechSupplierController } from "./modules/blue_tech/controllers/blue
 import { BlueTechPaymentMethodService } from "./modules/blue_tech/services/blue_tech_payment_method_service";
 import { BlueTechPaymentMethodRepository } from "./modules/blue_tech/repositories/blue_tech_payment_method_repository";
 import { BlueTechPaymentMethodController } from "./modules/blue_tech/controllers/blue_tech_payment_method_controller";
+import { BlueTechAdvancePaymentController } from "./modules/blue_tech/controllers/blue_tech_advance_payment_dashboard_controller";
+import { BlueTechAdvancePaymentService } from "./modules/blue_tech/services/blue_tech_advance_payment_dashboard_service";
+import { BlueTechAdvancePaymentRepository } from "./modules/blue_tech/repositories/blue_tech_advance_payment_dashboard_repository";
 
 // config
 const CONFIG_FILE = "config.json";
@@ -113,6 +116,7 @@ app.set("BlueTechPurchaseRepository", new BlueTechPurchaseRepository());
 app.set("BlueTechItemStockRepository", new BlueTechItemStockRepository());
 app.set("BlueTechSupplierRepository", new BlueTechSupplierRepository());
 app.set("BlueTechPaymentMethodRepository", new BlueTechPaymentMethodRepository());
+app.set("BlueTechAdvancePaymentRepository", new BlueTechAdvancePaymentRepository());
 
 
 
@@ -127,6 +131,7 @@ app.set("BlueTechItemStockService", new BlueTechItemStockService(app.get("BlueTe
 app.set("BlueTechPurchaseService", new BlueTechPurchaseService(app.get("BlueTechPurchaseRepository")));
 app.set("BlueTechSupplierService", new BlueTechSupplierService(app.get("BlueTechSupplierRepository")));
 app.set("BlueTechPaymentMethodService", new BlueTechPaymentMethodService(app.get("BlueTechPaymentMethodRepository")));
+app.set("BlueTechAdvancePaymentService", new BlueTechAdvancePaymentService(app.get("BlueTechAdvancePaymentRepository")));
 
 
 // Initialize and set the mailer to use
@@ -144,6 +149,7 @@ app.registerController(new BlueTechItemStockController());
 app.registerController(new BlueTechPurchaseController());
 app.registerController(new BlueTechSupplierController());
 app.registerController(new BlueTechPaymentMethodController());
+app.registerController(new BlueTechAdvancePaymentController());
 
 
 // Finally setup the cron jobs
