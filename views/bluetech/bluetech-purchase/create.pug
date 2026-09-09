@@ -43,23 +43,30 @@
               .col-md-3
                 .form-group
                   label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Quantity
-                  input.form-control.modern-control(type='number', id='qty', min='0', placeholder='Total quantity', style="border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.95rem; outline: none; transition: all 0.2s;")
+                  input.form-control.modern-control(type='number', id='qty', min='0', placeholder='Total quantity', readonly, style="background-color: #f7fafc; color: #2d3748; border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.95rem; outline: none; transition: all 0.2s;")
 
             .row.mt-2
               .col-md-4
                 .form-group
                   label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Total Purchase Price
-                  input.form-control.modern-control(type='number', id='purchasesPrice', min='0', step='0.01', placeholder='0.00', style='border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 1rem;')
+                  input.form-control.modern-control(type='number', id='purchasesPrice', min='0', step='0.01', placeholder='Calculated from items', readonly, style='background-color: #f7fafc; color: #2d3748; border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 1rem;')
 
               .col-md-4
                 .form-group
-                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Advance Payment
+                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Supplier Advance Used
+                  input.form-control.modern-control#supplierAdvanceAvailable(type='number', value='0.00', readonly, aria-label='Available supplier advance', style='background-color: #eff6ff; color: #0369a1; border: 1px solid #93c5fd; border-radius: 8px; padding: 0.5rem 1rem; margin-bottom: 0.5rem;')
+                  small#supplierAdvanceBalance.form-text.text-muted Supplier advance available: 0.00 BDT
                   input.form-control.modern-control(type='number', id='advancePayment', min='0', step='0.01', placeholder='0.00', style='border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 1rem;')
 
               .col-md-4
                 .form-group
+                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Settled Payment (Including Advance)
+                  input.form-control.modern-control(type='number', id='settledPayment', min='0', step='0.01', placeholder='Paid against invoice', style='border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 1rem;')
+
+              .col-md-4
+                .form-group
                   label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Due Payment
-                  input.form-control.modern-control(type='number', id='duePayment', min='0', step='0.01', placeholder='0.00', style='border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 1rem;')
+                  input.form-control.modern-control(type='number', id='duePayment', min='0', step='0.01', placeholder='Calculated after advance', readonly, style='background-color: #f7fafc; color: #2d3748; border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 1rem;')
 
             .row.mt-2
               .col-md-4
@@ -93,7 +100,8 @@
                         option(
                           value=item.id,
                           data-price=item.itemPrice,
-                          data-name=item.itemName
+                          data-name=item.itemName,
+                          data-imei=item.imeiNumber
                         ) #{item.itemName}
 
               .col-md-2
@@ -102,7 +110,7 @@
                   .input-group
                     .input-group-prepend
                       span.input-group-text()
-                    input.form-control.modern-control(type='number', id='unitPrice', readonly, style="background-color: #f7fafc; color: #2d3748; border: 1px solid #cbd5e0; border-radius: 0 8px 8px 0; padding: 0.5rem 0.75rem; font-size: 0.95rem; font-weight: 600;")
+                    input.form-control.modern-control(type='number', id='unitPrice', min='0.01', step='0.01', placeholder='Enter unit price', style="border: 1px solid #cbd5e0; border-radius: 0 8px 8px 0; padding: 0.5rem 0.75rem; font-size: 0.95rem; font-weight: 600;")
 
               .col-md-2
                 .form-group.mb-md-0
@@ -133,6 +141,7 @@
                 thead
                   tr
                     th(style="background-color: #580db4; color: white; font-weight: 500; padding: 0.85rem 1.25rem; border: none; font-size: 0.9rem;") Item Name
+                    th(style="background-color: #580db4; color: white; font-weight: 500; padding: 0.85rem 1.25rem; border: none; font-size: 0.9rem;") IMEI Number
                     th(style="background-color: #580db4; color: white; font-weight: 500; padding: 0.85rem 1.25rem; border: none; font-size: 0.9rem;") Description
                     th(style="background-color: #580db4; color: white; font-weight: 500; padding: 0.85rem 1.25rem; border: none; font-size: 0.9rem; text-align: center;") Quantity
                     th(style="background-color: #580db4; color: white; font-weight: 500; padding: 0.85rem 1.25rem; border: none; font-size: 0.9rem; text-align: right;") Unit Price
@@ -140,7 +149,7 @@
                     th(style="background-color: #580db4; color: white; font-weight: 500; padding: 0.85rem 1.25rem; border: none; font-size: 0.9rem; text-align: center; width: 80px;") Action
                 tbody
                   tr.no-data-row
-                    td.text-center(colspan='6' style="padding: 2.5rem; color: #a0aec0; font-size: 0.95rem;")
+                    td.text-center(colspan='7' style="padding: 2.5rem; color: #a0aec0; font-size: 0.95rem;")
                       i.fa.fa-folder-open.mr-2(style="font-size: 1.2rem; vertical-align: middle; color: #cbd5e0;")
                       | No entries added to payload registry yet.
 

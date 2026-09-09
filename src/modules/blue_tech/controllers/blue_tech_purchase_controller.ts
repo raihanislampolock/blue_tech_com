@@ -2,11 +2,13 @@ import { Controller } from "../../../core/Controller";
 import { NextFunc, HttpRequest, HttpResponse } from "../../../core/Types";
 import { BlueTechPurchaseService } from "../services/blue_tech_purchase_service";
 import ExcelJS from "exceljs";
+import multer from "multer";
 
 
 export class BlueTechPurchaseController extends Controller {
 
     private blueTechPurchaseService: BlueTechPurchaseService;
+    private formDataParser = multer().none();
     private auth = { private: true, public: false };
 
     constructor() {
@@ -16,10 +18,12 @@ export class BlueTechPurchaseController extends Controller {
 
     public onRegister(): void {
         this.onGet("/bluetech/bluetech-purchase", [], this.auth.private, this.index);
-        this.onPost("/api/bluetech/bluetech-purchase/create", [], this.auth.private, this.create);
+        this.onPost("/api/bluetech/bluetech-purchase/create", [this.formDataParser], this.auth.private, this.create);
         this.onGet("/api/bluetech/bluetech-purchase/all", [], this.auth.private, this.getAll);
         this.onGet("/api/bluetech/bluetech-purchase/edit/:id", [], this.auth.private, this.edit);
-        this.onPut("/api/bluetech/bluetech-purchase/update/:id", [], this.auth.private, this.update);
+        this.onPut("/api/bluetech/bluetech-purchase/update/:id", [this.formDataParser], this.auth.private, this.update);
+        this.onPost("/api/bluetech/supplier-advances", [], this.auth.private, this.recordSupplierAdvance);
+        this.onGet("/api/bluetech/supplier-advances/balance/:supplierName", [], this.auth.private, this.getSupplierAdvanceBalance);
         this.onGet("/api/bluetech/bluetech-purchase/generate-number", [], this.auth.private, this.generateNumber);
         this.onGet("/api/bluetech/bluetech-purchase/generate-pdf/:id", [], this.auth.private, this.generatePdf);
         // this.onPost("/api/bluetech/bluetech-purchase/send-email/:id", [], this.auth.private, this.sendEmailWithPdf);
@@ -65,6 +69,7 @@ export class BlueTechPurchaseController extends Controller {
                 qty,
                 purchasesPrice,
                 advancePayment,
+                settledPayment,
                 duePayment,
                 paymentMethod,
                 notes,
@@ -90,6 +95,7 @@ export class BlueTechPurchaseController extends Controller {
                 qty,
                 purchasesPrice,
                 advancePayment,
+                settledPayment,
                 duePayment,
                 paymentMethod,
                 notes,
@@ -188,6 +194,7 @@ export class BlueTechPurchaseController extends Controller {
                 qty,
                 purchasesPrice,
                 advancePayment,
+                settledPayment,
                 duePayment,
                 paymentMethod,
                 notes,
@@ -214,6 +221,7 @@ export class BlueTechPurchaseController extends Controller {
                     qty,
                     purchasesPrice,
                     advancePayment,
+                    settledPayment,
                     duePayment,
                     paymentMethod,
                     notes,
@@ -233,6 +241,44 @@ export class BlueTechPurchaseController extends Controller {
                 status: false,
                 message: error.message
             });
+        }
+    }
+
+    public async recordSupplierAdvance(req: HttpRequest, resp: HttpResponse) {
+        try {
+            const { supplierName, amount, paymentMethod, notes } = req.body;
+            const result = await this.blueTechPurchaseService.recordSupplierAdvance({
+                supplierName,
+                amount,
+                paymentMethod,
+                notes,
+                createdBy: req.user?.userId || "system"
+            });
+
+            return resp.status(201).json({
+                status: true,
+                message: "Supplier advance recorded successfully",
+                data: result
+            });
+        } catch (error: any) {
+            return resp.status(400).json({
+                status: false,
+                message: error.message
+            });
+        }
+    }
+
+    public async getSupplierAdvanceBalance(req: HttpRequest, resp: HttpResponse) {
+        try {
+            const supplierName = decodeURIComponent(String(req.params.supplierName || "")).trim();
+            if (!supplierName) {
+                return resp.status(400).json({ status: false, message: "Supplier name is required" });
+            }
+
+            const balance = await this.blueTechPurchaseService.getSupplierAdvanceBalance(supplierName);
+            return resp.json({ status: true, data: balance });
+        } catch (error: any) {
+            return resp.status(500).json({ status: false, message: error.message });
         }
     }
 
@@ -401,6 +447,7 @@ export class BlueTechPurchaseController extends Controller {
                 { header: "Quantity", key: "qty", width: 20 },
                 { header: "Total Price", key: "purchasesPrice", width: 20 },
                 { header: "Advance Payment", key: "advancePayment", width: 20 },
+                { header: "Settled Payment", key: "settledPayment", width: 20 },
                 { header: "Due Payment", key: "duePayment", width: 20 },
                 { header: "Payment Method", key: "paymentMethod", width: 20 },
                 { header: "Notes", key: "notes", width: 40 },
@@ -435,6 +482,7 @@ export class BlueTechPurchaseController extends Controller {
                     qty: row.qty ?? 0,
                     purchasesPrice: row.purchasesPrice ?? 0,
                     advancePayment: row.advancePayment ?? 0,
+                    settledPayment: row.settledPayment ?? 0,
                     duePayment: row.duePayment ?? 0,
                     paymentMethod: row.paymentMethod ?? "",
                     notes: row.notes ?? "",

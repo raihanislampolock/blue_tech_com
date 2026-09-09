@@ -346,6 +346,10 @@ block content
                 i.fa.fa-plus
                 | Direct Purchase
 
+              button.btn-modern.btn-modern-info(type='button' data-toggle='modal' data-target='#supplier-advance-modal')
+                i.fa.fa-money-bill-wave
+                | Supplier Advance
+
               button.btn-modern.btn-modern-primary.btn-modern-icon.btn-download(type='button' title="Download Export") 
                 i.fa.fa-download  
                 | Download Purchase  
@@ -369,9 +373,11 @@ block content
                   th View Inventory PDF
                   th Purchase Number
                   th Supplier Name
-                  th IMEI Number
                   th Quantity
                   th Total Price
+                  th Advance Price
+                  th Settled Price
+                  th Total Due
                   th Payment Method
                   th Purchase Notes
                   th Items
@@ -381,7 +387,7 @@ block content
                   th Updated Date
               tbody#purchaseTableBody
                 tr
-                  td.text-center(colspan='15' style="padding: 3rem;") 
+                  td.text-center(colspan='16' style="padding: 3rem;")
                     span(style="color: #a0aec0; font-size: 1.1rem;") No data captured. Apply parameters or lookups above.
 
           //- Footer Area
@@ -390,6 +396,42 @@ block content
             ul.pagination#paginationContainer
 
   // INCLUDE MODAL REGISTRY LINES
+  #supplier-advance-modal.modal.fade(data-backdrop='static', data-keyboard='false')
+    .modal-dialog.modal-dialog-centered
+      .modal-content(style="border-radius: 12px; border: none;")
+        .modal-header(style="background-color: #0ea5e9; color: #fff;")
+          h5.modal-title
+            i.fa.fa-money-bill-wave.mr-2
+            | Record Supplier Advance
+          button.close(type='button', data-dismiss='modal', style="color: #fff; opacity: 0.9;")
+            span &times;
+        .modal-body
+          .form-group
+            label Supplier
+            select.form-control#advanceSupplier
+              option(value='' selected disabled) Choose supplier
+              if suppliers && suppliers.length > 0
+                each supplier in suppliers
+                  option(value=supplier.label) #{supplier.label}
+          .form-group
+            label Advance Amount
+            input.form-control#supplierAdvanceAmount(type='number', min='0.01', step='0.01', placeholder='50000.00')
+          .form-group
+            label Payment Method
+            select.form-control#supplierAdvanceMethod
+              option(value='') Choose payment method
+              if paymentMethods && paymentMethods.length > 0
+                each method in paymentMethods
+                  option(value=method.label) #{method.label}
+          .form-group
+            label Notes
+            textarea.form-control#supplierAdvanceNotes(rows='2', placeholder='Advance reference or note')
+        .modal-footer
+          button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
+          button.btn.btn-info#saveSupplierAdvance(type='button')
+            i.fa.fa-save.mr-1
+            | Save Advance
+
   include ./create               
 
 block script
@@ -443,7 +485,7 @@ block script
       const selectedRows = new Set();
 
       async function fetchPurchase(page = 1, search = '', limit = 10) {
-        tableBody.innerHTML = `<tr><td colspan="15" class="text-center" style="padding: 3rem;"><i class="fa fa-spinner fa-spin" style="font-size: 32px; color: #580db4;"></i></td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="16" class="text-center" style="padding: 3rem;"><i class="fa fa-spinner fa-spin" style="font-size: 32px; color: #580db4;"></i></td></tr>`;
         try {
           const response = await fetch(`/api/bluetech/bluetech-purchase/all?page=${page}&search=${search}&limit=${limit}`);
           const data = await response.json();
@@ -459,15 +501,17 @@ block script
                   files: row.files,
                   purchaseNumber: row.purchaseNumber,
                   supplierName: row.supplierName,
-                  imeiNumber: row.imeiNumber,
                   qty: row.qty,
                   purchasesPrice: row.purchasesPrice,
+                  advancePayment: row.advancePayment,
+                  settledPayment: row.settledPayment,
+                  duePayment: row.duePayment,
                   paymentMethod: row.paymentMethod,
                   notes: row.notes,
                   createdBy: row.createdBy,
                   updatedBy: row.updatedBy,
-                  createdAt: row.createdAt,
-                  updatedAt: row.updatedAt,
+                  created_at: row.created_at,
+                  updated_at: row.updated_at,
                   items: []
                 };
                 groupedArray.push(groupMap[row.id]);
@@ -475,6 +519,7 @@ block script
 
               groupMap[row.id].items.push({
                 itemName: row.itemName,
+                imeiNumber: row.imeiNumber,
                 itemType: row.itemType,
                 itemConfigurations: row.itemConfigurations,
                 unitPrice: row.unitPrice,
@@ -513,9 +558,11 @@ block script
                 </td>
                 <td style="font-weight: 600; color: #580db4;">${c.purchaseNumber ?? '-'}</td>
                 <td>${c.supplierName ?? '-'}</td>
-                <td>${c.imeiNumber ?? '-'}</td>
                 <td>${format(c.qty)}</td>
-                <td style="font-weight: 600; color: #065f46;">${format(c.purchasesPrice)} BDT</td>
+                <td style="font-weight: 600; color: #090a0a;">${format(c.purchasesPrice)} BDT</td>
+                <td style="font-weight: 600; color: #12065f;">${format(c.advancePayment)} BDT</td>
+                <td style="font-weight: 600; color: #065f46;">${format(c.settledPayment)} BDT</td>
+                <td style="font-weight: 600; color: #5f1006;">${format(c.duePayment)} BDT</td>
                 <td>${c.paymentMethod ?? '-'}</td>
                 <td>${c.notes ?? ''}</td>
                 <td>
@@ -526,16 +573,17 @@ block script
 
                 <td>${c.createdBy ?? 'System'}</td>
                 <td>${c.updatedBy ?? '-'}</td>
-                <td>${c.createdAt ? new Date(c.createdAt).toLocaleDateString() : '-'}</td>
-                <td>${c.updatedAt ? new Date(c.updatedAt).toLocaleDateString() : '-'}</td>
+                <td>${c.created_at ? new Date(c.created_at).toLocaleDateString() : '-'}</td>
+                <td>${c.updated_at ? new Date(c.updated_at).toLocaleDateString() : '-'}</td>
               </tr>
 
               <tr id="items-${c.id}" style="display:none; background-color: transparent;">
-                <td colspan="15" class="child-table-wrapper">
+                <td colspan="16" class="child-table-wrapper">
                   <table class="child-table">
                     <thead>
                       <tr>
                         <th>Item</th>
+                        <th>IMEI Number</th>
                         <th>Notes</th>
                         <th>Type</th>
                         <th>Spec</th>
@@ -548,6 +596,7 @@ block script
                       ${c.items.map(i => `
                         <tr>
                           <td style="font-weight: 500;">${i.itemName ?? '-'}</td>
+                          <td>${i.imeiNumber ?? '-'}</td>
                           <td>${i.itemNotes ?? '-'}</td>
                           <td><code style="color: #ed4014;">${i.itemType ?? '-'}</code></td>
                           <td style="font-weight: 700;">${i.itemConfigurations ?? '0'}</td>
@@ -557,7 +606,7 @@ block script
                         </tr>
                       `).join('')}
                       <tr style="background:#f1f5f9;">
-                        <td colspan="4" style="text-align:right; font-weight: 700; color: #2d3748;">GRAND TOTAL:</td>
+                        <td colspan="5" style="text-align:right; font-weight: 700; color: #2d3748;">GRAND TOTAL:</td>
                         <td style="font-weight: 700; color: #2d3748;">${totalQty} Units</td>
                         <td style="font-weight: 700; color: #065f46;">${totalUnite} BDT</td>
                         <td style="font-weight: 700; color: #991b1b;">${totalBuy} BDT</td>
@@ -582,7 +631,7 @@ block script
             document.querySelector('#title-filter').textContent = `Showing ${startRecord} to ${endRecord} of ${totalRecords} records assigned`;
 
           } else {
-            tableBody.innerHTML = `<tr><td colspan="15" class="text-center" style="padding: 3rem; color: #a0aec0;">No data records extracted matching this criteria query scope.</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="16" class="text-center" style="padding: 3rem; color: #a0aec0;">No data records extracted matching this criteria query scope.</td></tr>`;
             document.querySelector('#title-filter').textContent = 'No entries matching filters';
             return;
           }
@@ -591,7 +640,7 @@ block script
 
         } catch (error) {
           console.error('Core Exception in purchase parsing framework:', error);
-          tableBody.innerHTML = `<tr><td colspan="15" class="text-center" style="padding: 3rem; color: #e53e3e;"><i class="fa fa-exclamation-triangle"></i> Execution Error pipeline mapping failed.</td></tr>`;
+          tableBody.innerHTML = `<tr><td colspan="16" class="text-center" style="padding: 3rem; color: #e53e3e;"><i class="fa fa-exclamation-triangle"></i> Execution Error pipeline mapping failed.</td></tr>`;
           document.querySelector('#title-filter').textContent = 'Error loading entries';
         }
       }
@@ -704,12 +753,41 @@ block script
           
           // Calculate total sum using array reduce
           const totalSum = cart.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
+
+          const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+          purchasesPrice.value = totalSum.toFixed(2);
+          qty.value = totalQuantity;
+          advancePayment.max = totalSum.toFixed(2);
+          settledPayment.max = totalSum.toFixed(2);
+
+          if (!editMode && availableSupplierAdvance > 0) {
+            advancePayment.value = Math.min(availableSupplierAdvance, totalSum).toFixed(2);
+          }
+
+          updateDuePayment(totalSum);
           
           // Format and update text node natively
           purchaseGrandTotal.textContent = '' + totalSum.toLocaleString('en-US', {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2
           });
+        }
+
+        function updateDuePayment(total = cart.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0)) {
+          const advance = Math.max(0, Number(advancePayment.value) || 0);
+          let settled = Math.max(0, Number(settledPayment.value) || 0);
+          const cappedAdvance = Math.min(advance, total);
+          const cappedSettled = Math.min(Math.max(settled, cappedAdvance), total);
+
+          if (advance !== cappedAdvance) {
+            advancePayment.value = cappedAdvance.toFixed(2);
+          }
+
+          if (settled !== cappedSettled) {
+            settledPayment.value = cappedSettled.toFixed(2);
+          }
+
+          duePayment.value = Math.max(0, total - cappedSettled).toFixed(2);
         }
 
         document.addEventListener('click', function (e) {
@@ -762,10 +840,45 @@ block script
         const qty = document.getElementById('qty');
         const purchasesPrice = document.getElementById('purchasesPrice');
         const advancePayment = document.getElementById('advancePayment');
+        const settledPayment = document.getElementById('settledPayment');
         const duePayment = document.getElementById('duePayment');
         const paymentMethod = document.getElementById('paymentMethod');
         const notes = document.getElementById('notes');
         const addPurchaseBtn = document.querySelector("[data-target='#add-edit-purchase-modal']");
+        const supplierAdvanceBalance = document.getElementById('supplierAdvanceBalance');
+        const supplierAdvanceAvailable = document.getElementById('supplierAdvanceAvailable');
+        let availableSupplierAdvance = 0;
+
+        async function loadSupplierAdvanceBalance() {
+          const supplier = supplierName.value.trim();
+          if (!supplier) {
+            availableSupplierAdvance = 0;
+            supplierAdvanceAvailable.value = '0.00';
+            supplierAdvanceBalance.textContent = 'Supplier advance available: 0.00 BDT';
+            return;
+          }
+
+          try {
+            const response = await fetch(`/api/bluetech/supplier-advances/balance/${encodeURIComponent(supplier)}`);
+            const result = await response.json();
+            const available = Number(result?.data?.availableAdvance || 0);
+            availableSupplierAdvance = Math.max(0, available);
+            supplierAdvanceAvailable.value = availableSupplierAdvance.toFixed(2);
+            supplierAdvanceBalance.textContent = `Supplier advance available: ${available.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BDT`;
+            advancePayment.max = availableSupplierAdvance.toFixed(2);
+
+            if (!editMode) {
+              const invoiceTotal = Number(purchasesPrice.value) || 0;
+              advancePayment.value = Math.min(availableSupplierAdvance, invoiceTotal).toFixed(2);
+              settledPayment.value = Math.max(Number(settledPayment.value) || 0, Number(advancePayment.value) || 0).toFixed(2);
+              updateDuePayment(invoiceTotal);
+            }
+          } catch (error) {
+            availableSupplierAdvance = 0;
+            supplierAdvanceAvailable.value = '0.00';
+            supplierAdvanceBalance.textContent = 'Supplier advance available: unavailable';
+          }
+        }
 
         async function generatePurchaseNumber() {
             try {
@@ -792,12 +905,16 @@ block script
             qty.value = '';
             purchasesPrice.value = '';
             advancePayment.value = '';
+            settledPayment.value = '';
             duePayment.value = '';
             paymentMethod.value = '';
             $(paymentMethod).trigger('change');
             notes.value = '';
             generatePurchaseNumber();
+            loadSupplierAdvanceBalance();
         });
+
+        $(supplierName).on('change', loadSupplierAdvanceBalance);
 
         // ========================
         // EDIT CLICK
@@ -830,11 +947,20 @@ block script
         // ========================
         // ITEM CHANGE
         // ========================
-        itemSelect?.addEventListener('change', function () {
+        $(itemSelect).on('change', function () {
             const opt = this.options[this.selectedIndex];
             if (!opt?.value) return;
 
             unitPrice.value = opt.dataset.price || '';
+            imeiNumber.value = opt.dataset.imei || '';
+        });
+
+        advancePayment?.addEventListener('input', function () {
+          updateDuePayment();
+        });
+
+        settledPayment?.addEventListener('input', function () {
+          updateDuePayment();
         });
 
         // ========================
@@ -856,6 +982,12 @@ block script
                 return;
             }
 
+            if (!unitPrice.value || Number(unitPrice.value) <= 0) {
+              swal("Warning", "Enter unit price", "warning");
+              unitPrice.focus();
+              return;
+            }
+
             if (cart.find(x => x.itemId == itemId)) {
                 swal("Warning", "Item already added", "warning");
                 return;
@@ -864,6 +996,7 @@ block script
             cart.push({
                 itemId,
                 itemName: opt.dataset.name || opt.text,
+                imeiNumber: imeiNumber.value || opt.dataset.imei || '',
                 description: description || '',
                 quantity: Number(quantity.value),
                 unitPrice: Number(unitPrice.value) || 0
@@ -889,6 +1022,14 @@ block script
             renderCart();
         });
 
+          document.addEventListener('input', function (e) {
+            const field = e.target.closest('.editItemImei');
+            if (!field) return;
+
+            const item = cart[Number(field.dataset.index)];
+            if (item) item.imeiNumber = field.value.trim();
+          });
+
         // ========================
         // RENDER CART
         // ========================
@@ -899,7 +1040,7 @@ block script
             if (!cart.length) {
                 tbody.innerHTML = `
                     <tr class="no-data-row">
-                        <td class="text-center" colspan="6" style="padding: 2.5rem; color: #a0aec0; font-size: 0.95rem;">
+                        <td class="text-center" colspan="7" style="padding: 2.5rem; color: #a0aec0; font-size: 0.95rem;">
                             <i class="fa fa-folder-open mr-2" style="font-size: 1.2rem; vertical-align: middle; color: #cbd5e0;"></i>
                             No entries added to payload registry yet.
                         </td>
@@ -916,6 +1057,9 @@ block script
                 tbody.innerHTML += `
                     <tr>
                         <td style="padding: 0.85rem 1.25rem; font-size: 0.95rem; color: #2d3748;">${item.itemName}</td>
+                        <td style="padding: 0.85rem 1.25rem; font-size: 0.95rem; color: #2d3748;">
+                          <input type="text" class="form-control editItemImei" data-index="${i}" value="${item.imeiNumber || ''}" placeholder="IMEI number">
+                        </td>
                         <td style="padding: 0.85rem 1.25rem; font-size: 0.95rem; color: #4a5568;">${item.description || ''}</td>
                         <td style="padding: 0.85rem 1.25rem; font-size: 0.95rem; text-align: center; color: #2d3748;">${item.quantity}</td>
                         <td style="padding: 0.85rem 1.25rem; font-size: 0.95rem; text-align: right; color: #2d3748;">${item.unitPrice.toFixed(2)}</td>
@@ -956,14 +1100,17 @@ block script
                 qty.value = p.qty || '';
                 purchasesPrice.value = p.purchasesPrice || '';
                 advancePayment.value = p.advancePayment || '';
+                settledPayment.value = p.settledPayment || '';
                 duePayment.value = p.duePayment || '';
                 paymentMethod.value = p.paymentMethod || '';
                 $(paymentMethod).trigger('change');
                 notes.value = p.notes || '';
+                loadSupplierAdvanceBalance();
 
                 cart = (p.items || []).map(i => ({
                     itemId: i.itemId,
                     itemName: i.itemName,
+                    imeiNumber: i.imeiNumber || '',
                     description: i.description || i.itemNotes || '',
                     quantity: Number(i.quantity) || 0,
                     unitPrice: Number(i.unitPrice) || 0
@@ -986,6 +1133,8 @@ block script
             return;
         }
 
+          updateGrandTotal();
+
             const formData = new FormData();
             formData.append('purchaseNumber', purchaseNumber.value);
             formData.append('supplierName', supplierName.value);
@@ -993,6 +1142,7 @@ block script
             formData.append('qty', qty.value);
             formData.append('purchasesPrice', purchasesPrice.value);
             formData.append('advancePayment', advancePayment.value);
+            formData.append('settledPayment', settledPayment.value);
             formData.append('duePayment', duePayment.value);
             formData.append('paymentMethod', paymentMethod.value);
             formData.append('notes', notes.value);
@@ -1043,4 +1193,47 @@ block script
         const id = window.location.pathname.split('/').pop();
         if (!isNaN(id)) loadPurchase(id);
 
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const advanceSupplier = document.getElementById('advanceSupplier');
+      const supplierAdvanceAmount = document.getElementById('supplierAdvanceAmount');
+      const supplierAdvanceMethod = document.getElementById('supplierAdvanceMethod');
+      const supplierAdvanceNotes = document.getElementById('supplierAdvanceNotes');
+      const saveSupplierAdvance = document.getElementById('saveSupplierAdvance');
+
+      saveSupplierAdvance?.addEventListener('click', async function () {
+        const supplierName = advanceSupplier?.value;
+        const amount = Number(supplierAdvanceAmount?.value || 0);
+
+        if (!supplierName || amount <= 0) {
+          swal('Warning', 'Choose a supplier and enter a positive advance amount', 'warning');
+          return;
+        }
+
+        try {
+          const response = await fetch('/api/bluetech/supplier-advances', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              supplierName,
+              amount,
+              paymentMethod: supplierAdvanceMethod?.value || '',
+              notes: supplierAdvanceNotes?.value || ''
+            })
+          });
+          const result = await response.json();
+
+          if (!result.status) {
+            swal('Error', result.message || 'Could not save supplier advance', 'error');
+            return;
+          }
+
+          swal('Saved', 'Supplier advance recorded successfully', 'success').then(() => {
+            window.location.reload();
+          });
+        } catch (error) {
+          swal('Error', 'Request failed while recording supplier advance', 'error');
+        }
+      });
     });

@@ -25,6 +25,9 @@ export class BlueTechPurchaseModel {
     @Column({ type: "varchar", length: 255, nullable: true })
     advancePayment!: string | null;
 
+    @Column({ type: "varchar", length: 255, nullable: true, default: "0" })
+    settledPayment!: string | null;
+
     @Column({ type: "varchar", length: 255, nullable: true })
     duePayment!: string | null;
 

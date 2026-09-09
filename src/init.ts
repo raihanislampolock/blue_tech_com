@@ -13,6 +13,8 @@ import { BlueTechPurchaseModel } from "./modules/blue_tech/models/blue_tech_purc
 import { BlueTechStockMovementModel } from "./modules/blue_tech/models/blue_tech_stock_movement_model";
 import { BlueTechSupplierModel } from "./modules/blue_tech/models/blue_tech_supplier_model";
 import { BlueTechPaymentMethodModel } from "./modules/blue_tech/models/blue_tech_payment_method_model";
+import { BlueTechSupplierPaymentModel } from "./modules/blue_tech/models/blue_tech_supplier_payment_model";
+import { BlueTechSupplierPaymentAllocationModel } from "./modules/blue_tech/models/blue_tech_supplier_payment_allocation_model";
 
 
 const APP_CONFIG: Config = new Config(JSON.parse(fs.readFileSync("config.json").toString()));
@@ -26,7 +28,8 @@ export const AppDataSource = new DataSource({
     password: APP_CONFIG.postgres.dbPassword || 'secret',
     database: APP_CONFIG.postgres.dbName || 'blue_tech_db',
     entities: [UserModel, RoleModel, ProviderModel, PermissionModel, EmailConfigModel, BlueTechItemsModel, BlueTechItemStockModel,
-        BlueTechPurchaseItemModel, BlueTechPurchaseModel, BlueTechStockMovementModel, BlueTechSupplierModel, BlueTechPaymentMethodModel],
+        BlueTechPurchaseItemModel, BlueTechPurchaseModel, BlueTechStockMovementModel, BlueTechSupplierModel, BlueTechPaymentMethodModel,
+        BlueTechSupplierPaymentModel, BlueTechSupplierPaymentAllocationModel],
     synchronize: true, // Automatically sync entity schema (disable in production)
     logging: false,
 });

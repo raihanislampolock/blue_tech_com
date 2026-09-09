@@ -88,6 +88,14 @@ export class BlueTechPurchaseService {
         }
     }
 
+    public async recordSupplierAdvance(data: any): Promise<any> {
+        return this.blueTechPurchaseRepository.recordSupplierAdvance(data);
+    }
+
+    public async getSupplierAdvanceBalance(supplierName: string): Promise<any> {
+        return this.blueTechPurchaseRepository.getSupplierAdvanceBalance(supplierName);
+    }
+
 
     // ===============================
     // ✅ DROPDOWN
@@ -159,6 +167,11 @@ export class BlueTechPurchaseService {
                 return sum + qty * price;
             }, 0);
 
+            // Extract and parse financial payment amounts from query/object
+            const advancePayment = Number(purchase.advancePayment) || 0;
+            const settledPayment = Number(purchase.settledPayment) || 0;
+            const duePayment = Number(purchase.duePayment) || 0;
+
             const pdfDoc = await PDFDocument.create();
 
             // Load header and footer images
@@ -179,7 +192,7 @@ export class BlueTechPurchaseService {
 
             const margin = 40;
             const HEADER_HEIGHT = 85;
-            const FOOTER_HEIGHT = 45;
+            const FOOTER_HEIGHT = 65;
             const BOTTOM_LIMIT = FOOTER_HEIGHT + 110; // Extra room for the new dual-column signatures
 
             let page = pdfDoc.addPage([A4_WIDTH, A4_HEIGHT]);
@@ -260,7 +273,7 @@ export class BlueTechPurchaseService {
                 page.drawText(value, { x: boxX + 90, y: currentY, size: 9, font: helvetica, color: rgb(0.1, 0.1, 0.1) });
             };
 
-            drawMetaLine('PO Number:', purchase.purchaseNumber || 'N/A', boxY + 65);
+            drawMetaLine('PR Number:', purchase.purchaseNumber || 'N/A', boxY + 65);
             drawMetaLine('Date:', new Date().toLocaleDateString(), boxY + 49);
             drawMetaLine('Supplier:', purchase.supplierName || 'N/A', boxY + 33);
             // drawMetaLine('Email:', purchase.supplierEmail ? (purchase.supplierEmail.length > 18 ? purchase.supplierEmail.substring(0,20)+'...' : purchase.supplierEmail) : 'N/A', boxY + 17);
@@ -376,25 +389,53 @@ export class BlueTechPurchaseService {
             }
 
             // --- TOTALS BAR (EXCEL WRAPPED STYLE) ---
-            const totalTopY = yPosition + 14;
-            const totalBottomY = totalTopY - 22;
+            const totalRows = [
+                { label: 'Total:', value: totalAmount, isBold: true },
+                { label: 'Advance Payment:', value: advancePayment, isBold: false },
+                { label: 'Settled Payment:', value: settledPayment, isBold: false },
+                { label: 'Due Payment:', value: duePayment, isBold: true, color: rgb(0.75, 0.15, 0.15) }
+            ];
 
-            // Bottom horizontal lock on calculations block
-            page.drawLine({ start: { x: colX.priceEnd, y: totalTopY }, end: { x: colX.amountEnd, y: totalTopY }, thickness: 1, color: rgb(0.7, 0.73, 0.77) });
-            page.drawLine({ start: { x: colX.priceEnd, y: totalBottomY }, end: { x: colX.amountEnd, y: totalBottomY }, thickness: 1, color: rgb(0.7, 0.73, 0.77) });
-            page.drawLine({ start: { x: colX.priceEnd, y: totalTopY }, end: { x: colX.priceEnd, y: totalBottomY }, thickness: 1, color: rgb(0.7, 0.73, 0.77) });
-            page.drawLine({ start: { x: colX.amountEnd, y: totalTopY }, end: { x: colX.amountEnd, y: totalBottomY }, thickness: 1, color: rgb(0.7, 0.73, 0.77) });
+            const totalRowHeight = 20;
+            const totalBlockHeight = totalRows.length * totalRowHeight;
 
-            const formattedTotal = this.formatCurrency(totalAmount);
-            const totalTxtWidth = helveticaBold.widthOfTextAtSize(formattedTotal, 10);
-            page.drawText('Total:', { x: colX.qtyEnd + 10, y: totalBottomY + 7, size: 10, font: helveticaBold });
-            page.drawText(formattedTotal, { x: colX.amountEnd - totalTxtWidth - 8, y: totalBottomY + 7, size: 10, font: helveticaBold, color: rgb(0.11, 0.16, 0.23) });
+            if (yPosition < BOTTOM_LIMIT + totalBlockHeight) {
+                addPage();
+            }
 
-            yPosition = totalBottomY - 15;
+            const blockTopY = yPosition + 14;
+            const blockBottomY = blockTopY - totalBlockHeight;
+
+            // Draw outer borders for totals/payments area
+            page.drawLine({ start: { x: colX.qtyEnd, y: blockTopY }, end: { x: colX.amountEnd, y: blockTopY }, thickness: 1, color: rgb(0.7, 0.73, 0.77) });
+            page.drawLine({ start: { x: colX.qtyEnd, y: blockBottomY }, end: { x: colX.amountEnd, y: blockBottomY }, thickness: 1, color: rgb(0.7, 0.73, 0.77) });
+            page.drawLine({ start: { x: colX.qtyEnd, y: blockTopY }, end: { x: colX.qtyEnd, y: blockBottomY }, thickness: 1, color: rgb(0.7, 0.73, 0.77) });
+            page.drawLine({ start: { x: colX.priceEnd, y: blockTopY }, end: { x: colX.priceEnd, y: blockBottomY }, thickness: 1, color: rgb(0.7, 0.73, 0.77) });
+            page.drawLine({ start: { x: colX.amountEnd, y: blockTopY }, end: { x: colX.amountEnd, y: blockBottomY }, thickness: 1, color: rgb(0.7, 0.73, 0.77) });
+
+            // Iterate through financial line items
+            totalRows.forEach((row, index) => {
+                const currentLineY = blockTopY - ((index + 1) * totalRowHeight) + 6;
+                const fontToUse = row.isBold ? helveticaBold : helvetica;
+                const textColor = row.color || rgb(0.11, 0.16, 0.23);
+
+                if (index < totalRows.length - 1) {
+                    const lineDividerY = blockTopY - ((index + 1) * totalRowHeight);
+                    page.drawLine({ start: { x: colX.qtyEnd, y: lineDividerY }, end: { x: colX.amountEnd, y: lineDividerY }, thickness: 0.5, color: rgb(0.85, 0.87, 0.9) });
+                }
+
+                const formattedVal = this.formatCurrency(row.value);
+                const txtWidth = fontToUse.widthOfTextAtSize(formattedVal, 9);
+
+                page.drawText(row.label, { x: colX.qtyEnd + 8, y: currentLineY, size: 9, font: fontToUse, color: textColor });
+                page.drawText(formattedVal, { x: colX.amountEnd - txtWidth - 8, y: currentLineY, size: 9, font: fontToUse, color: textColor });
+            });
+
+            yPosition = blockBottomY - 15;
 
             // In Words Segment
             if (yPosition < BOTTOM_LIMIT) addPage();
-            page.drawText(`In words: ${this.numberToWords(Math.floor(totalAmount))} only.`, {
+            page.drawText(`In words: ${this.numberToWords(Math.floor(totalAmount))}.`, {
                 x: margin, y: yPosition, size: 9, font: helvetica, color: rgb(0.3, 0.3, 0.3),
             });
 
@@ -402,19 +443,18 @@ export class BlueTechPurchaseService {
                 addPage();
             }
 
-            // Hardcode a fixed Y position so it is always perfectly anchored right above the footer graphic
-            const fixedSignatureY = 80;
+            // Fixed Signature Anchor Point
+            const fixedSignatureY = 98;
 
-            // Column Left Anchor Point: Prepared By
+            // Column Left: Prepared By
             const leftSignX = margin;
             page.drawLine({ start: { x: leftSignX, y: fixedSignatureY }, end: { x: leftSignX + 150, y: fixedSignatureY }, thickness: 0.75, color: rgb(0.6, 0.6, 0.6) });
             page.drawText('Prepared By', { x: leftSignX, y: fixedSignatureY - 14, size: 9, font: helveticaBold, color: rgb(0.2, 0.2, 0.2) });
             page.drawText(purchase.username || "System User", { x: leftSignX, y: fixedSignatureY - 26, size: 9, font: helvetica, color: rgb(0.4, 0.4, 0.4) });
 
-            // Column Right Anchor Point: Authorized Signature
+            // Column Right: Authorized Signature
             const rightSignX = A4_WIDTH - margin - 150;
 
-            // Draw signature graphic relative to the fixed row anchor line bounds
             page.drawImage(signatureImage, {
                 x: rightSignX + 1,
                 y: fixedSignatureY + 5,

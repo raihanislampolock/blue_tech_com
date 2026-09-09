@@ -5,6 +5,8 @@ import { BlueTechPurchaseItemModel } from "../models/blue_tech_purchase_item_mod
 import { BlueTechStockMovementModel } from "../models/blue_tech_stock_movement_model";
 import { BlueTechItemsModel } from "../models/blue_tech_item_model";
 import { BlueTechItemStockModel } from "../models/blue_tech_itemstock_model";
+import { BlueTechSupplierPaymentModel } from "../models/blue_tech_supplier_payment_model";
+import { BlueTechSupplierPaymentAllocationModel } from "../models/blue_tech_supplier_payment_allocation_model";
 
 export class BlueTechPurchaseRepository implements IBlueTechPurchaseRepository {
 
@@ -19,6 +21,14 @@ export class BlueTechPurchaseRepository implements IBlueTechPurchaseRepository {
         await qr.startTransaction();
 
         try {
+            const totalPrice = Number(data.purchasesPrice) || 0;
+            const advanceApplied = Math.max(0, Number(data.advancePayment) || 0);
+            const settledPayment = Math.max(advanceApplied, Number(data.settledPayment) || 0);
+            const duePayment = Math.max(0, totalPrice - settledPayment);
+
+            if (settledPayment > totalPrice) {
+                throw new Error("Settled payment cannot exceed the purchase price");
+            }
 
             // 👉 1. Save Purchase
             const purchase = qr.manager.create(BlueTechPurchaseModel, {
@@ -27,14 +37,25 @@ export class BlueTechPurchaseRepository implements IBlueTechPurchaseRepository {
                 imeiNumber: data.imeiNumber,
                 qty: data.qty,
                 purchasesPrice: data.purchasesPrice,
-                advancePayment: data.advancePayment,
-                duePayment: data.duePayment,
+                advancePayment: advanceApplied.toFixed(2),
+                settledPayment: settledPayment.toFixed(2),
+                duePayment: duePayment.toFixed(2),
                 paymentMethod: data.paymentMethod,
                 notes: data.notes,
                 createdBy: data.createdBy
             });
 
             const savedPurchase = await qr.manager.save(purchase);
+
+            if (advanceApplied > 0) {
+                await this.allocateSupplierAdvance(
+                    qr,
+                    savedPurchase.id,
+                    data.supplierName,
+                    advanceApplied,
+                    data.createdBy
+                );
+            }
 
             // 👉 2. Process Items
             for (const item of data.items) {
@@ -44,6 +65,7 @@ export class BlueTechPurchaseRepository implements IBlueTechPurchaseRepository {
                     purchaseId: savedPurchase.id,
                     itemId: item.itemId,
                     quantity: item.quantity,
+                    imeiNumber: item.imeiNumber || null,
                     unitPrice: item.unitPrice,
                     totalPrice: item.totalPrice,
                     notes: item.description || '',
@@ -106,6 +128,89 @@ export class BlueTechPurchaseRepository implements IBlueTechPurchaseRepository {
         }
     }
 
+    public async recordSupplierAdvance(data: any): Promise<any> {
+        const amount = Number(data.amount) || 0;
+        const supplierName = String(data.supplierName || "").trim();
+
+        if (!supplierName || amount <= 0) {
+            throw new Error("Supplier name and a positive advance amount are required");
+        }
+
+        return this.purchaseRepo.manager.save(BlueTechSupplierPaymentModel, {
+            supplierName,
+            amount: amount.toFixed(2),
+            allocatedAmount: "0.00",
+            paymentMethod: data.paymentMethod || null,
+            notes: data.notes || null,
+            createdBy: data.createdBy || "system"
+        });
+    }
+
+    public async getSupplierAdvanceBalance(supplierName: string): Promise<any> {
+        const result = await AppDataSource.query(`
+            SELECT
+                COALESCE(SUM(amount), 0) AS "totalAdvance",
+                COALESCE(SUM("allocatedAmount"), 0) AS "allocatedAdvance",
+                COALESCE(SUM(amount - "allocatedAmount"), 0) AS "availableAdvance"
+            FROM public.blue_tech_supplier_payments
+            WHERE LOWER(TRIM("supplierName")) = LOWER(TRIM($1))
+        `, [supplierName]);
+
+        return {
+            totalAdvance: Number(result[0]?.totalAdvance || 0),
+            allocatedAdvance: Number(result[0]?.allocatedAdvance || 0),
+            availableAdvance: Number(result[0]?.availableAdvance || 0)
+        };
+    }
+
+    private async allocateSupplierAdvance(
+        qr: any,
+        purchaseId: number,
+        supplierName: string,
+        amount: number,
+        createdBy: string
+    ): Promise<void> {
+        if (!supplierName) {
+            throw new Error("A supplier is required when applying supplier advance");
+        }
+
+        const payments = await qr.manager.query(`
+            SELECT id, amount, "allocatedAmount"
+            FROM public.blue_tech_supplier_payments
+            WHERE LOWER(TRIM("supplierName")) = LOWER(TRIM($1))
+              AND amount > "allocatedAmount"
+            ORDER BY created_at ASC, id ASC
+            FOR UPDATE
+        `, [supplierName]);
+
+        let remaining = amount;
+        for (const payment of payments) {
+            if (remaining <= 0) break;
+
+            const available = Number(payment.amount) - Number(payment.allocatedAmount);
+            const allocation = Math.min(remaining, available);
+
+            await qr.manager.query(`
+                UPDATE public.blue_tech_supplier_payments
+                SET "allocatedAmount" = "allocatedAmount" + $1
+                WHERE id = $2
+            `, [allocation.toFixed(2), payment.id]);
+
+            await qr.manager.save(BlueTechSupplierPaymentAllocationModel, {
+                supplierPaymentId: payment.id,
+                purchaseId,
+                amount: allocation.toFixed(2),
+                createdBy: createdBy || "system"
+            });
+
+            remaining -= allocation;
+        }
+
+        if (remaining > 0.005) {
+            throw new Error(`Supplier advance balance is insufficient by ${remaining.toFixed(2)}`);
+        }
+    }
+
 
     // ✅ GET ALL
     public async getAll(searchStr: string, page = 1, limit = 10) {
@@ -131,6 +236,7 @@ export class BlueTechPurchaseRepository implements IBlueTechPurchaseRepository {
                 p."qty",
                 p."purchasesPrice",
                 p."advancePayment",
+                COALESCE(p."settledPayment", '0') AS "settledPayment",
                 p."duePayment",
                 p."paymentMethod",
                 p.notes,
@@ -140,6 +246,7 @@ export class BlueTechPurchaseRepository implements IBlueTechPurchaseRepository {
                 i."itemConfigurations",
                 i."manufactureOrigin",
                 pi.quantity,
+                pi."imeiNumber",
                 pi."unitPrice",
                 pi.notes AS "itemNotes",
                 (pi.quantity * pi."unitPrice"::numeric) AS "totalPrice",
@@ -189,6 +296,7 @@ export class BlueTechPurchaseRepository implements IBlueTechPurchaseRepository {
                 p."qty",
                 p."purchasesPrice",
                 p."advancePayment",
+                COALESCE(p."settledPayment", '0') AS "settledPayment",
                 p."duePayment",
                 p."paymentMethod",
                 p."supplierName",
@@ -202,6 +310,7 @@ export class BlueTechPurchaseRepository implements IBlueTechPurchaseRepository {
                 i."itemConfigurations",
                 i."itemPrice",
                 pi.quantity,
+                pi."imeiNumber",
                 pi."unitPrice",
                 pi."totalPrice",
                 pi.notes AS "itemNotes"
@@ -228,6 +337,7 @@ export class BlueTechPurchaseRepository implements IBlueTechPurchaseRepository {
             qty: rows[0].qty,
             purchasesPrice: rows[0].purchasesPrice,
             advancePayment: rows[0].advancePayment,
+            settledPayment: rows[0].settledPayment,
             duePayment: rows[0].duePayment,
             paymentMethod: rows[0].paymentMethod,
             notes: rows[0].notes,
@@ -243,6 +353,7 @@ export class BlueTechPurchaseRepository implements IBlueTechPurchaseRepository {
                 itemPrice: Number(r.itemPrice),   // master price
                 unitPrice: Number(r.unitPrice),   // purchase price
                 quantity: Number(r.quantity),
+                imeiNumber: r.imeiNumber || '',
                 totalPrice: Number(r.totalPrice),
                 description: r.itemNotes || ''
             }))
@@ -259,6 +370,14 @@ export class BlueTechPurchaseRepository implements IBlueTechPurchaseRepository {
         await qr.startTransaction();
 
         try {
+            const totalPrice = Number(data.purchasesPrice) || 0;
+            const advanceApplied = Math.max(0, Number(data.advancePayment) || 0);
+            const settledPayment = Math.max(advanceApplied, Number(data.settledPayment) || 0);
+            const duePayment = Math.max(0, totalPrice - settledPayment);
+
+            if (settledPayment > totalPrice) {
+                throw new Error("Settled payment cannot exceed the purchase price");
+            }
 
             // 👉 1. Get old items
             const oldItems = await qr.manager.find(BlueTechPurchaseItemModel, {
@@ -266,6 +385,8 @@ export class BlueTechPurchaseRepository implements IBlueTechPurchaseRepository {
             });
 
             const stockRepo = qr.manager.getRepository(BlueTechItemStockModel);
+
+            await this.releaseSupplierAdvance(qr, id);
 
             // 👉 2. REVERSE OLD STOCK
             for (const old of oldItems) {
@@ -299,12 +420,23 @@ export class BlueTechPurchaseRepository implements IBlueTechPurchaseRepository {
                 imeiNumber: data.imeiNumber,
                 qty: data.qty,
                 purchasesPrice: data.purchasesPrice,
-                advancePayment: data.advancePayment,
-                duePayment: data.duePayment,
+                advancePayment: advanceApplied.toFixed(2),
+                settledPayment: settledPayment.toFixed(2),
+                duePayment: duePayment.toFixed(2),
                 paymentMethod: data.paymentMethod,
                 notes: data.notes,
                 updatedBy: data.updatedBy
             });
+
+            if (advanceApplied > 0) {
+                await this.allocateSupplierAdvance(
+                    qr,
+                    id,
+                    data.supplierName,
+                    advanceApplied,
+                    data.updatedBy
+                );
+            }
 
             // 👉 5. Insert NEW items
             for (const item of data.items) {
@@ -313,6 +445,7 @@ export class BlueTechPurchaseRepository implements IBlueTechPurchaseRepository {
                     purchaseId: id,
                     itemId: item.itemId,
                     quantity: item.quantity,
+                    imeiNumber: item.imeiNumber || null,
                     unitPrice: item.unitPrice,
                     totalPrice: item.totalPrice,
                     notes: item.description || '',
@@ -371,6 +504,25 @@ export class BlueTechPurchaseRepository implements IBlueTechPurchaseRepository {
             await qr.release();
         }
     }
+
+    private async releaseSupplierAdvance(qr: any, purchaseId: number): Promise<void> {
+        const allocations = await qr.manager.query(`
+            SELECT "supplierPaymentId", amount
+            FROM public.blue_tech_supplier_payment_allocations
+            WHERE "purchaseId" = $1
+            FOR UPDATE
+        `, [purchaseId]);
+
+        for (const allocation of allocations) {
+            await qr.manager.query(`
+                UPDATE public.blue_tech_supplier_payments
+                SET "allocatedAmount" = GREATEST(0, "allocatedAmount" - $1)
+                WHERE id = $2
+            `, [allocation.amount, allocation.supplierPaymentId]);
+        }
+
+        await qr.manager.delete(BlueTechSupplierPaymentAllocationModel, { purchaseId });
+    }
     // ✅ DROPDOWN
     public async getDataByItemId(): Promise<{ id: string; label: string }[]> {
         const query = `
@@ -384,7 +536,8 @@ export class BlueTechPurchaseRepository implements IBlueTechPurchaseRepository {
                 i."itemPrice",
                 i."itemName",
                 i."itemType",
-                i."itemConfigurations"
+                i."itemConfigurations",
+                i."imeiNumber"
             FROM public.blue_tech_items i
             ORDER BY i."itemName"
         `;

@@ -6,6 +6,7 @@ export interface IBlueTechPurchaseItem {
     purchaseId?: number;
     itemId: number;
     quantity: number;
+    imeiNumber?: string | null;
     unitPrice?: string | null;
     totalPrice?: string | null;
     notes?: string | null;
@@ -23,6 +24,7 @@ export interface IBlueTechPurchase {
     qty?: string | null;
     purchasesPrice?: string | null;
     advancePayment?: string | null;
+    settledPayment?: string | null;
     duePayment?: string | null;
     paymentMethod?: string | null;
     notes?: string | null;
@@ -60,5 +62,5 @@ export interface IBlueTechPurchaseRepository {
     edit(id: number): Promise<IBlueTechPurchase | null>;
     update(id: number, updateData: Partial<IBlueTechPurchase>): Promise<any>;
 
-    getDataByItemId(): Promise<{ id: string; label: string }[]>;
+    getDataByItemId(): Promise<{ id: string; label: string; imeiNumber?: string | null }[]>;
 }

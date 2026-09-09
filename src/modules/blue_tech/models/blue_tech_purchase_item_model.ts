@@ -18,6 +18,9 @@ export class BlueTechPurchaseItemModel {
     quantity!: number;
 
     @Column({ type: "varchar", length: 255, nullable: true })
+    imeiNumber!: string | null;
+
+    @Column({ type: "varchar", length: 255, nullable: true })
     unitPrice!: string;
 
     @Column({ type: "varchar", length: 500, nullable: true })
