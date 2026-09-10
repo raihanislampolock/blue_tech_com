@@ -15,6 +15,8 @@ import { BlueTechSupplierModel } from "./modules/blue_tech/models/blue_tech_supp
 import { BlueTechPaymentMethodModel } from "./modules/blue_tech/models/blue_tech_payment_method_model";
 import { BlueTechSupplierPaymentModel } from "./modules/blue_tech/models/blue_tech_supplier_payment_model";
 import { BlueTechSupplierPaymentAllocationModel } from "./modules/blue_tech/models/blue_tech_supplier_payment_allocation_model";
+import { BlueTechPurchaseOrderModel } from "./modules/blue_tech/models/blue_tech_purchase_order_model";
+import { BlueTechPurchaseOrderItemModel } from "./modules/blue_tech/models/blue_tech_purchase_order_item_model";
 
 
 const APP_CONFIG: Config = new Config(JSON.parse(fs.readFileSync("config.json").toString()));
@@ -29,7 +31,7 @@ export const AppDataSource = new DataSource({
     database: APP_CONFIG.postgres.dbName || 'blue_tech_db',
     entities: [UserModel, RoleModel, ProviderModel, PermissionModel, EmailConfigModel, BlueTechItemsModel, BlueTechItemStockModel,
         BlueTechPurchaseItemModel, BlueTechPurchaseModel, BlueTechStockMovementModel, BlueTechSupplierModel, BlueTechPaymentMethodModel,
-        BlueTechSupplierPaymentModel, BlueTechSupplierPaymentAllocationModel],
+        BlueTechSupplierPaymentModel, BlueTechSupplierPaymentAllocationModel, BlueTechPurchaseOrderModel, BlueTechPurchaseOrderItemModel],
     synchronize: true, // Automatically sync entity schema (disable in production)
     logging: false,
 });
@@ -48,7 +50,7 @@ export const initializeDatabase = async (): Promise<void> => {
             console.log('Connected to PostgreSQL with TypeORM');
 
             // ✅ CREATE SEQUENCES if they don't exist
-            // await createSequences();
+            await createSequences();
 
             return;
         } catch (error) {
@@ -64,17 +66,16 @@ export const initializeDatabase = async (): Promise<void> => {
 };
 
 // ✅ CREATE SEQUENCES
-// const createSequences = async (): Promise<void> => {
-    // try {
-    //     // Create rms_ref_seq if it doesn't exist
-    //     await AppDataSource.query(`
-    //         CREATE SEQUENCE IF NOT EXISTS rms_ref_seq
-    //         START WITH 1
-    //         INCREMENT BY 1
-    //         NO MINVALUE
-    //         NO MAXVALUE
-    //         CACHE 1;
-    //     `);
+const createSequences = async (): Promise<void> => {
+    try {
+        await AppDataSource.query(`
+            CREATE SEQUENCE IF NOT EXISTS blue_tech_purchase_order_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+        `);
 
     //     // Create rms_delivery_seq if it doesn't exist
     //     await AppDataSource.query(`
@@ -117,8 +118,9 @@ export const initializeDatabase = async (): Promise<void> => {
     //     `);
 
     //     console.log('✅ Database sequences initialized');
-    // } catch (error) {
-    //     console.error('Error creating sequences:', error);
-    // }
-// };
+    } catch (error) {
+        console.error('Error creating sequences:', error);
+        throw error;
+    }
+};
 

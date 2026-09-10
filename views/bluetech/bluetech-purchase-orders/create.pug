@@ -1,4 +1,4 @@
-#add-edit-purchase-modal.modal.fade(data-backdrop='static', data-keyboard='false')
+#add-edit-purchase-order-modal.modal.fade(data-backdrop='static', data-keyboard='false')
   .modal-dialog.modal-dialog-centered.modal-xl
     .modal-content(style="border-radius: 16px; border: none; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); overflow: hidden;")
       form#purchase-form(role='form', method='POST', enctype='multipart/form-data')
@@ -7,7 +7,7 @@
         .modal-header(style="background-color: #580db4; padding: 1.25rem 1.75rem; border-bottom: none;")
           h5.modal-title(style="color: #ffffff; font-weight: 600; font-size: 1.25rem; display: inline-flex; align-items: center; gap: 0.5rem;")
             i.fa.fa-shopping-cart
-            | Blue Tech Purchase Management
+            | Blue Tech Purchase Order Management
           button.close(type='button', data-dismiss='modal', style="color: #ffffff; opacity: 0.8; transition: all 0.2s; outline: none;")
             span(style="font-size: 1.5rem;") &times;
 
@@ -18,13 +18,13 @@
           .section-block(style="background: #ffffff; padding: 1.5rem; border-radius: 12px; border: 1px solid #edf2f7; margin-bottom: 1.75rem; box-shadow: 0 2px 12px rgba(0,0,0,0.01);")
             h6.mb-3(style="font-weight: 600; color: #580db4; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 0.5rem;")
               i.fa.fa-file-alt
-              | Purchase Information
+              | Purchase Order Information
             
             .row
               .col-md-3
                 .form-group
-                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Purchase Number
-                  input.form-control.modern-control(type='text', id='purchaseNumber', readonly, placeholder='Auto generated', style="background-color: #f7fafc; color: #a0aec0; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.95rem;")
+                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Purchase Order Number
+                  input.form-control.modern-control(type='text', id='purchaseOrderNumber', readonly, placeholder='Auto generated', style="background-color: #f7fafc; color: #a0aec0; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.95rem;")
 
               .col-md-3
                 .form-group
@@ -38,7 +38,7 @@
               .col-md-3
                 .form-group
                   label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") IMEI Number
-                  input.form-control.modern-control(type='text', id='imeiNumber', placeholder='Enter IMEI Number', style="border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.95rem; outline: none; transition: all 0.2s;")
+                  input.form-control.modern-control(type='text', id='imeiNumber', placeholder='Enter IMEI Number', readonly, style="background-color: #f7fafc; color: #a0aec0; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.95rem;")
 
               .col-md-3
                 .form-group
@@ -48,8 +48,8 @@
             .row.mt-2
               .col-md-4
                 .form-group
-                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Total Purchase Price
-                  input.form-control.modern-control(type='number', id='purchasesPrice', min='0', step='0.01', placeholder='Calculated from items', readonly, style='background-color: #f7fafc; color: #2d3748; border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 1rem;')
+                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Total Purchase Order Price
+                  input.form-control.modern-control(type='number', id='purchasesOrderPrice', min='0', step='0.01', placeholder='Calculated from items', readonly, style='background-color: #f7fafc; color: #2d3748; border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 1rem;')
 
               .col-md-4
                 .form-group

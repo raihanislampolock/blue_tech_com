@@ -1,0 +1,31 @@
+#createPurchaseOrderInvoiceModal.modal.fade
+  .modal-dialog.modal-dialog-centered
+    .modal-content
+
+      .modal-header
+        h5.modal-title Create Invoice From Purchase Order
+
+      .modal-body
+
+        .form-group
+          label PurchaseOrder Ref# or ID
+
+          input.form-control(
+            type='text',
+            id='searchPurchaseOrderId',
+            placeholder='Enter purchase order ref or ID'
+          )
+
+      .modal-footer
+
+        button.btn.btn-primary(
+          type='button',
+          id='loadPurchaseOrderForInvoice'
+        )
+          i.fa.fa-search
+          |  Load
+
+        button.btn.btn-danger(
+          type='button',
+          data-dismiss='modal'
+        ) Cancel

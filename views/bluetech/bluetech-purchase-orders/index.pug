@@ -316,7 +316,7 @@ block style
 block content
   section.content-header.mb-4
     div(style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;")
-      h1(style="margin: 0; font-weight: 600; color: #2d3748;") Blue Purchase Dashboard
+      h1(style="margin: 0; font-weight: 600; color: #2d3748;") Blue Tech Purchase Order Dashboard
       ol.breadcrumb(style="margin: 0;")
         li
           a(href='/dashboard' style="color: #580db4; font-weight: 500; text-decoration: none;")
@@ -327,7 +327,7 @@ block content
           span(style="color: #4a5568; font-weight: 500;") Blue Tech Solutions
         li
           span(style="color: #718096; margin: 0 0.5rem;")
-          a(href='/bluetech/bluetech-purchase' style="color: #718096; text-decoration: none;") Purchase Dashboard
+          a(href='/bluetech/bluetech-purchase-orders' style="color: #718096; text-decoration: none;") Purchase Order Dashboard
         
   section.content
     .row
@@ -342,13 +342,9 @@ block content
                 button.btn-modern.btn-modern-primary.btn-modern-icon#searchBtn(type='button')
                   i.fa.fa-search
               
-              button.btn-modern.btn-modern-primary(type='button' data-toggle='modal' data-target='#add-edit-purchase-modal') 
+              button.btn-modern.btn-modern-primary(type='button' data-toggle='modal' data-target='#add-edit-purchase-order-modal') 
                 i.fa.fa-plus
-                | Direct Purchase
-
-              button.btn-modern.btn-modern-info(type='button' data-toggle='modal' data-target='#load-purchase-order-modal')
-                i.fa.fa-file-import
-                | From Purchase Order
+                | Direct Purchase 
 
               button.btn-modern.btn-modern-info(type='button' data-toggle='modal' data-target='#supplier-advance-modal')
                 i.fa.fa-money-bill-wave
@@ -356,7 +352,7 @@ block content
 
               button.btn-modern.btn-modern-primary.btn-modern-icon.btn-download(type='button' title="Download Export") 
                 i.fa.fa-download  
-                | Download Purchase  
+                | Download Purchase Orders
                 
             .toolbar-group
               .modern-input-group
@@ -375,10 +371,10 @@ block content
                   th Edit
                   th Download Inventory PDF 
                   th View Inventory PDF
-                  th Purchase Number
+                  th Purchase Order Number
                   th Supplier Name
                   th Quantity
-                  th Total Price
+                  th Total Purchase Order Price
                   th Advance Price
                   th Settled Price
                   th Total Due
@@ -436,25 +432,6 @@ block content
             i.fa.fa-save.mr-1
             | Save Advance
 
-  #load-purchase-order-modal.modal.fade(data-backdrop='static', data-keyboard='false')
-    .modal-dialog.modal-dialog-centered
-      .modal-content(style="border-radius: 12px; border: none;")
-        .modal-header(style="background-color: #0ea5e9; color: #fff;")
-          h5.modal-title
-            i.fa.fa-file-import.mr-2
-            | Create Purchase From Purchase Order
-          button.close(type='button', data-dismiss='modal', style="color: #fff; opacity: 0.9;")
-            span &times;
-        .modal-body
-          .form-group
-            label(for='purchaseOrderSourceId') Purchase Order ID
-            input.form-control#purchaseOrderSourceId(type='number', min='1', placeholder='Enter purchase order ID')
-        .modal-footer
-          button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
-          button.btn.btn-info#loadPurchaseOrder(type='button')
-            i.fa.fa-download.mr-1
-            | Load Purchase Order
-
   include ./create               
 
 block script
@@ -464,7 +441,7 @@ block script
   
   script.
     document.addEventListener('DOMContentLoaded', function() {
-      const purchaseModal = $('#add-edit-purchase-modal');
+      const purchaseModal = $('#add-edit-purchase-order-modal');
       ['#supplierName', '#paymentMethod', '#itemSelect'].forEach(function (selector) {
         const field = $(selector);
         if (field.length && field.hasClass('select2-hidden-accessible')) {
@@ -498,7 +475,7 @@ block script
               }
       
               window.location.href =
-                  `/api/bluetech/bluetech-purchase/export/excel?${params.toString()}`;
+                  `/api/bluetech/bluetech-purchase-orders/export/excel?${params.toString()}`;
           });
       }
 
@@ -507,10 +484,10 @@ block script
       let limit = limitSelect.value;
       const selectedRows = new Set();
 
-      async function fetchPurchase(page = 1, search = '', limit = 10) {
+      async function fetchPurchaseOrder(page = 1, search = '', limit = 10) {
         tableBody.innerHTML = `<tr><td colspan="16" class="text-center" style="padding: 3rem;"><i class="fa fa-spinner fa-spin" style="font-size: 32px; color: #580db4;"></i></td></tr>`;
         try {
-          const response = await fetch(`/api/bluetech/bluetech-purchase/all?page=${page}&search=${search}&limit=${limit}`);
+          const response = await fetch(`/api/bluetech/bluetech-purchase-orders/all?page=${page}&search=${search}&limit=${limit}`);
           const data = await response.json();
 
           if (data?.data?.length > 0) {
@@ -522,10 +499,10 @@ block script
                 groupMap[row.id] = {
                   id: row.id,
                   files: row.files,
-                  purchaseNumber: row.purchaseNumber,
+                  purchaseOrderNumber: row.purchaseOrderNumber,
                   supplierName: row.supplierName,
                   qty: row.qty,
-                  purchasesPrice: row.purchasesPrice,
+                  purchasesOrderPrice: row.purchasesOrderPrice,
                   advancePayment: row.advancePayment,
                   settledPayment: row.settledPayment,
                   duePayment: row.duePayment,
@@ -565,24 +542,24 @@ block script
               return `
               <tr class="main-row" data-id="${c.id}">
                 <td>
-                  <a href="#" class="action-icon editPurchase" data-purchase-id="${c.id}" data-toggle="modal" data-target="#add-edit-purchase-modal" title="Modify Purchase Properties">
+                  <a href="#" class="action-icon editPurchaseOrder" data-purchase-order-id="${c.id}" data-toggle="modal" data-target="#add-edit-purchase-order-modal" title="Modify Purchase Order Properties">
                     <i class="fa fa-edit"></i>
                   </a>
                 </td>
                 <td>
-                  <a href="/api/bluetech/bluetech-purchase/generate-pdf/${c.id}" class="action-icon pdf-icon" target="_blank" title="Download System Ledger Package PDF">
+                  <a href="/api/bluetech/bluetech-purchase-orders/generate-pdf/${c.id}" class="action-icon pdf-icon" target="_blank" title="Download System Ledger Package PDF">
                     <i class="fa fa-download fa-lg"></i>
                   </a>
                 </td>
                 <td>
-                  <a href="/api/bluetech/bluetech-purchase/view-pdf/${c.id}" class="action-icon pdf-icon" target="_blank" title="Review Document Vector Stream">
+                  <a href="/api/bluetech/bluetech-purchase-orders/view-pdf/${c.id}" class="action-icon pdf-icon" target="_blank" title="Review Document Vector Stream">
                     <i class="fa fa-eye fa-lg"></i>
                   </a>
                 </td>
-                <td style="font-weight: 600; color: #580db4;">${c.purchaseNumber ?? '-'}</td>
+                <td style="font-weight: 600; color: #580db4;">${c.purchaseOrderNumber ?? '-'}</td>
                 <td>${c.supplierName ?? '-'}</td>
                 <td>${format(c.qty)}</td>
-                <td style="font-weight: 600; color: #090a0a;">${format(c.purchasesPrice)} BDT</td>
+                <td style="font-weight: 600; color: #090a0a;">${format(c.purchasesOrderPrice)} BDT</td>
                 <td style="font-weight: 600; color: #12065f;">${format(c.advancePayment)} BDT</td>
                 <td style="font-weight: 600; color: #065f46;">${format(c.settledPayment)} BDT</td>
                 <td style="font-weight: 600; color: #5f1006;">${format(c.duePayment)} BDT</td>
@@ -727,7 +704,7 @@ block script
       function updatePage(page) {
         let currentSearch = search.value;
         currentPage = page;
-        fetchPurchase(currentPage, currentSearch, limit);
+        fetchPurchaseOrder(currentPage, currentSearch, limit);
       }
 
       paginationContainer.addEventListener('click', function(event) {
@@ -750,17 +727,17 @@ block script
       searchBtn.addEventListener('click', () => {
         selectedRows.clear();
         currentSearch = search.value;
-        fetchPurchase(1, currentSearch, limit);
+        fetchPurchaseOrder(1, currentSearch, limit);
       });
       
       limitSelect.addEventListener('change', () => {
         limit = limitSelect.value;
         currentSearch = search.value;
         currentPage = 1;
-        fetchPurchase(currentPage, currentSearch, limit);
+        fetchPurchaseOrder(currentPage, currentSearch, limit);
       });
 
-      fetchPurchase(currentPage, search.value, limit);
+      fetchPurchaseOrder(currentPage, search.value, limit);
     });
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -769,16 +746,16 @@ block script
         let editMode = false;
         let editId = null;
 
-        const purchaseGrandTotal = document.getElementById('purchaseGrandTotal');
+        const purchaseOrderGrandTotal = document.getElementById('purchaseGrandTotal');
 
         function updateGrandTotal() {
-          if (!purchaseGrandTotal) return;
+          if (!purchaseOrderGrandTotal) return;
           
           // Calculate total sum using array reduce
           const totalSum = cart.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
 
           const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
-          purchasesPrice.value = totalSum.toFixed(2);
+          purchasesOrderPrice.value = totalSum.toFixed(2);
           qty.value = totalQuantity;
           advancePayment.max = totalSum.toFixed(2);
           settledPayment.max = totalSum.toFixed(2);
@@ -790,7 +767,7 @@ block script
           updateDuePayment(totalSum);
           
           // Format and update text node natively
-          purchaseGrandTotal.textContent = '' + totalSum.toLocaleString('en-US', {
+          purchaseOrderGrandTotal.textContent = '' + totalSum.toLocaleString('en-US', {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2
           });
@@ -814,16 +791,16 @@ block script
         }
 
         document.addEventListener('click', function (e) {
-          if (!e.target.classList.contains('sendPurchaseOrderEmail')) return;
+          if (!e.target.classList.contains('sendPurchaseEmail')) return;
 
           e.preventDefault();
 
-          const id = Number(e.target.getAttribute('data-purchase-order-id'));
+          const id = Number(e.target.getAttribute('data-purchase-id'));
           const email = e.target.getAttribute('data-supplier-email');
           const companyName = e.target.getAttribute('data-supplier-name');
 
           if (!id || !email) {
-              swal("Error", "Email not found for this purchase order", "error");
+              swal("Error", "Email not found for this purchase", "error");
               return;
           }
 
@@ -848,7 +825,7 @@ block script
           e.target.style.cursor = 'not-allowed';
 
           // Send email via API
-            swal("Unavailable", "Email sending is not enabled for BlueTech purchases Order", "info");
+            swal("Unavailable", "Email sending is not enabled for BlueTech purchase orders", "info");
           });
         });
 
@@ -857,17 +834,17 @@ block script
         const quantity = document.getElementById('quantity');
         const itemDescription = document.getElementById('itemDescription');
 
-        const purchaseNumber = document.getElementById('purchaseNumber');
+        const purchaseOrderNumber = document.getElementById('purchaseOrderNumber');
         const supplierName = document.getElementById('supplierName');
         const imeiNumber = document.getElementById('imeiNumber');
         const qty = document.getElementById('qty');
-        const purchasesPrice = document.getElementById('purchasesPrice');
+        const purchasesOrderPrice = document.getElementById('purchasesOrderPrice');
         const advancePayment = document.getElementById('advancePayment');
         const settledPayment = document.getElementById('settledPayment');
         const duePayment = document.getElementById('duePayment');
         const paymentMethod = document.getElementById('paymentMethod');
         const notes = document.getElementById('notes');
-        const addPurchaseBtn = document.querySelector("[data-target='#add-edit-purchase-modal']");
+        const addPurchaseBtn = document.querySelector("[data-target='#add-edit-purchase-order-modal']");
         const supplierAdvanceBalance = document.getElementById('supplierAdvanceBalance');
         const supplierAdvanceAvailable = document.getElementById('supplierAdvanceAvailable');
         let availableSupplierAdvance = 0;
@@ -891,7 +868,7 @@ block script
             advancePayment.max = availableSupplierAdvance.toFixed(2);
 
             if (!editMode) {
-              const invoiceTotal = Number(purchasesPrice.value) || 0;
+              const invoiceTotal = Number(purchasesOrderPrice.value) || 0;
               advancePayment.value = Math.min(availableSupplierAdvance, invoiceTotal).toFixed(2);
               settledPayment.value = Math.max(Number(settledPayment.value) || 0, Number(advancePayment.value) || 0).toFixed(2);
               updateDuePayment(invoiceTotal);
@@ -906,10 +883,10 @@ block script
         async function generatePurchaseNumber() {
             try {
                 const supplierCode = document.getElementById('supplierName').value.trim() || 'GEN';
-            const res = await fetch(`/api/bluetech/bluetech-purchase/generate-number?supplierCode=${encodeURIComponent(supplierCode)}`);
+                const res = await fetch(`/api/bluetech/bluetech-purchase-orders/generate-number?supplierCode=${encodeURIComponent(supplierCode)}`);
                 const result = await res.json();
-            if (result?.status && result.purchaseNumber) {
-              purchaseNumber.value = result.purchaseNumber;
+                if (result?.status && result.purchaseOrderNumber) {
+                    purchaseOrderNumber.value = result.purchaseOrderNumber;
                 }
             } catch (err) {
                 console.error('Purchase Order number generation failed:', err);
@@ -921,12 +898,12 @@ block script
             editId = null;
             cart = [];
             renderCart();
-            purchaseNumber.value = '';
+            purchaseOrderNumber.value = '';
             supplierName.value = '';
             $(supplierName).trigger('change');
             imeiNumber.value = '';
             qty.value = '';
-            purchasesPrice.value = '';
+            purchasesOrderPrice.value = '';
             advancePayment.value = '';
             settledPayment.value = '';
             duePayment.value = '';
@@ -936,57 +913,6 @@ block script
             generatePurchaseNumber();
             loadSupplierAdvanceBalance();
         });
-
-          document.getElementById('loadPurchaseOrder')?.addEventListener('click', async function () {
-            const sourceId = Number(document.getElementById('purchaseOrderSourceId').value);
-
-            if (!sourceId || isNaN(sourceId)) {
-              swal('Warning', 'Enter a valid purchase order ID', 'warning');
-              return;
-            }
-
-            try {
-              const response = await fetch(`/api/bluetech/bluetech-purchase-orders/edit/${sourceId}`);
-              const result = await response.json();
-
-              if (!response.ok || !result.status || !result.data) {
-                swal('Error', result.message || 'Purchase order not found', 'error');
-                return;
-              }
-
-              const purchaseOrder = result.data;
-              editMode = false;
-              editId = null;
-              purchaseNumber.value = '';
-              supplierName.value = purchaseOrder.supplierName || '';
-              $(supplierName).trigger('change');
-              imeiNumber.value = purchaseOrder.imeiNumber || '';
-              advancePayment.value = purchaseOrder.advancePayment || '';
-              settledPayment.value = purchaseOrder.settledPayment || '';
-              duePayment.value = purchaseOrder.duePayment || '';
-              paymentMethod.value = purchaseOrder.paymentMethod || '';
-              $(paymentMethod).trigger('change');
-              notes.value = purchaseOrder.notes || '';
-
-              cart = (purchaseOrder.items || []).map(item => ({
-                itemId: item.itemId,
-                itemName: item.itemName,
-                imeiNumber: item.imeiNumber || '',
-                description: item.description || item.itemNotes || '',
-                quantity: Number(item.quantity) || 0,
-                unitPrice: Number(item.unitPrice) || 0
-              }));
-
-              renderCart();
-              await generatePurchaseNumber();
-              $('#load-purchase-order-modal').modal('hide');
-              $('#add-edit-purchase-modal').modal('show');
-              document.getElementById('purchaseOrderSourceId').value = '';
-            } catch (error) {
-              console.error('Purchase Order load failed:', error);
-              swal('Error', 'Unable to load purchase order', 'error');
-            }
-          });
 
         $(supplierName).on('change', loadSupplierAdvanceBalance);
 
@@ -1157,7 +1083,7 @@ block script
         async function loadPurchase(id) {
         
             try {
-                const res = await fetch(`/api/bluetech/bluetech-purchase/edit/${id}`);
+                const res = await fetch(`/api/bluetech/bluetech-purchase-orders/edit/${id}`);
                 const result = await res.json();
 
                 if (!result.status) return;
@@ -1167,12 +1093,12 @@ block script
                 editMode = true;
                 editId = id;
 
-                purchaseNumber.value = p.purchaseNumber || '';
+                purchaseOrderNumber.value = p.purchaseOrderNumber || '';
                 supplierName.value = p.supplierName || '';
                 $(supplierName).trigger('change');
                 imeiNumber.value = p.imeiNumber || '';
                 qty.value = p.qty || '';
-                purchasesPrice.value = p.purchasesPrice || '';
+                purchasesOrderPrice.value = p.purchasesOrderPrice || '';
                 advancePayment.value = p.advancePayment || '';
                 settledPayment.value = p.settledPayment || '';
                 duePayment.value = p.duePayment || '';
@@ -1210,11 +1136,11 @@ block script
           updateGrandTotal();
 
             const formData = new FormData();
-            formData.append('purchaseNumber', purchaseNumber.value);
+            formData.append('purchaseOrderNumber', purchaseOrderNumber.value);
             formData.append('supplierName', supplierName.value);
             formData.append('imeiNumber', imeiNumber.value);
             formData.append('qty', qty.value);
-            formData.append('purchasesPrice', purchasesPrice.value);
+            formData.append('purchasesOrderPrice', purchasesOrderPrice.value);
             formData.append('advancePayment', advancePayment.value);
             formData.append('settledPayment', settledPayment.value);
             formData.append('duePayment', duePayment.value);
@@ -1223,15 +1149,15 @@ block script
             formData.append('items', JSON.stringify(cart));
 
             const baseUrl = `${window.location.protocol}//${window.location.host}`;
-            let url = `${baseUrl}/api/bluetech/bluetech-purchase/create`;
+            let url = `${baseUrl}/api/bluetech/bluetech-purchase-orders/create`;
             let method = 'POST';
 
             if (editMode) {
-                url = `${baseUrl}/api/bluetech/bluetech-purchase/update/${editId}`;
+                url = `${baseUrl}/api/bluetech/bluetech-purchase-orders/update/${editId}`;
                 method = 'PUT';
             }
 
-            console.log('Saving purchase to', url);
+            console.log('Saving purchase order to', url);
 
             try {
                 const res = await fetch(url, {
@@ -1244,7 +1170,7 @@ block script
 
                 if (result.status) {
                     swal({
-                        title: editMode ? "Updated Purchase Successfully" : "Created Purchase Successfully",
+                        title: editMode ? "Updated Purchase Order Successfully" : "Created Purchase Order Successfully",
                         text: result.message || "",
                         icon: "success",
                         button: "OK"
@@ -1252,7 +1178,7 @@ block script
                         window.location.reload();
                     });
                 } else {
-                    swal("Error", result.message || "Failed to save purchase", "error");
+                    swal("Error", result.message || "Failed to save purchase order", "error");
                 }
 
             } catch (err) {
@@ -1265,7 +1191,7 @@ block script
         // AUTO EDIT (URL ID)
         // ========================
         const id = window.location.pathname.split('/').pop();
-        if (!isNaN(id)) loadPurchase(id);
+        if (!isNaN(id)) loadPurchaseOrder(id);
 
     });
 
