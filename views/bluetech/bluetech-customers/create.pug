@@ -1,0 +1,299 @@
+#add-edit-customer-modal.modal.fade(data-backdrop='static', data-keyboard='false')
+  .modal-dialog.modal-dialog-centered.modal-xl
+    .modal-content(style="border-radius:16px; border:none; box-shadow:0 10px 30px rgba(0,0,0,0.08); overflow:hidden;")
+
+      //- ==========================================
+      //- Customer Modal Styles
+      //- ==========================================
+      style.
+        .customer-modal-header {
+          background-color: #ffffff;
+          border-bottom: 1px solid #edf2f7;
+          padding: 1.25rem 1.75rem;
+        }
+
+        .customer-modal-title {
+          font-weight: 600;
+          color: #2d3748;
+          margin: 0;
+        }
+
+        .customer-modal-body {
+          padding: 2rem 1.75rem;
+          background-color: #ffffff;
+        }
+
+        .customer-section-title {
+          font-size: 1rem;
+          font-weight: 600;
+          color: #580db4;
+          letter-spacing: 0.3px;
+          border-bottom: 2px solid rgba(88, 13, 180, 0.08);
+          padding-bottom: 0.5rem;
+          margin-bottom: 1.5rem;
+        }
+
+        .customer-form-group {
+          position: relative;
+          margin-bottom: 1.5rem;
+        }
+
+        .customer-form-group .form-control {
+          border: 1px solid #cbd5e0;
+          border-radius: 8px;
+          padding: 0.65rem 1rem;
+          font-size: 0.95rem;
+          transition: all 0.2s;
+          background-color: #fcfcfc;
+          color: #2d3748;
+          height: auto;
+          box-shadow: none;
+        }
+
+        .customer-form-group .form-control:focus {
+          border-color: #580db4;
+          box-shadow: 0 0 0 3px rgba(88, 13, 180, 0.1);
+          background-color: #ffffff;
+        }
+
+        .customer-form-group textarea.form-control {
+          min-height: 110px;
+          resize: vertical;
+        }
+
+        .customer-form-label {
+          font-weight: 500;
+          color: #718096;
+          font-size: 0.9rem;
+          margin-bottom: 0.4rem;
+          display: inline-block;
+        }
+
+        .customer-required {
+          color: #e53e3e;
+          font-weight: 600;
+        }
+
+        .customer-active-wrapper {
+          background-color: #f8fafc;
+          border: 1px solid #e2e8f0;
+          border-radius: 8px;
+          padding: 0.9rem 1rem;
+          display: flex;
+          align-items: center;
+          min-height: 48px;
+        }
+
+        .customer-active-wrapper .form-check {
+          margin: 0;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .customer-active-wrapper .form-check-input {
+          margin-top: 0;
+        }
+
+        .customer-active-wrapper .form-check-label {
+          color: #4a5568;
+          font-weight: 500;
+          cursor: pointer;
+          margin: 0;
+        }
+
+        .customer-modal-footer {
+          background-color: #f8f9fa;
+          border-top: 1px solid #edf2f7;
+          padding: 1.25rem 1.75rem;
+        }
+
+        .customer-modal-btn {
+          padding: 0.55rem 1.25rem;
+          font-weight: 500;
+          border-radius: 8px;
+          transition: all 0.2s ease;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.45rem;
+          border: none;
+          cursor: pointer;
+        }
+
+        .customer-modal-btn-primary {
+          background-color: #580db4;
+          color: #ffffff;
+          box-shadow: 0 2px 4px rgba(88, 13, 180, 0.2);
+        }
+
+        .customer-modal-btn-primary:hover {
+          background-color: #480a96;
+          color: #ffffff;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 6px rgba(88, 13, 180, 0.3);
+        }
+
+        .customer-modal-btn-secondary {
+          background-color: #e2e8f0;
+          color: #4a5568;
+          box-shadow: none;
+        }
+
+        .customer-modal-btn-secondary:hover {
+          background-color: #cbd5e0;
+          color: #2d3748;
+        }
+
+      //- ==========================================
+      //- Customer Form
+      //- ==========================================
+      form#customer-form(
+        role='form'
+        action='#'
+        method='POST'
+      )
+
+        //- ==========================================
+        //- Modal Header
+        //- ==========================================
+        .modal-header.customer-modal-header
+          h5.modal-title.customer-modal-title
+            i.fa.fa-user.mr-2
+            | BlueTech Customer Information
+
+          button.close(
+            type='button'
+            data-dismiss='modal'
+            aria-label='Close'
+            style="outline:none; font-size:1.5rem;"
+          )
+            span(aria-hidden='true') &times;
+
+        //- ==========================================
+        //- Modal Body
+        //- ==========================================
+        .modal-body.customer-modal-body(
+          style='max-height:72vh; overflow-y:auto;'
+        )
+
+          //- Hidden Customer ID
+          input#customerId(
+            type='hidden'
+            name='customerId'
+          )
+
+          h5.customer-section-title
+            i.fa.fa-user.mr-2
+            | Customer Information
+
+          //- Customer Name / Phone
+          .row
+
+            .col-md-6
+              .customer-form-group
+                label.customer-form-label(for='customerName')
+                  | Customer Name
+                  span.customer-required.ml-1 *
+
+                input.form-control#customerName(
+                  type='text'
+                  name='customerName'
+                  placeholder='Enter customer name'
+                  autocomplete='off'
+                  required
+                )
+
+            .col-md-6
+              .customer-form-group
+                label.customer-form-label(for='customerPhone')
+                  | Phone Number
+
+                input.form-control#customerPhone(
+                  type='text'
+                  name='phoneNumber'
+                  placeholder='Enter phone number'
+                  autocomplete='off'
+                )
+
+          //- Email / Tax Number
+          .row
+
+            .col-md-6
+              .customer-form-group
+                label.customer-form-label(for='customerEmail')
+                  | Email Address
+
+                input.form-control#customerEmail(
+                  type='email'
+                  name='email'
+                  placeholder='customer@example.com'
+                  autocomplete='off'
+                )
+
+            .col-md-6
+              .customer-form-group
+                label.customer-form-label(for='customerTaxNumber')
+                  | Tax Number
+
+                input.form-control#customerTaxNumber(
+                  type='text'
+                  name='taxNumber'
+                  placeholder='Enter Tax / VAT number'
+                  autocomplete='off'
+                )
+
+          //- Billing Address
+          .customer-form-group
+            label.customer-form-label(for='customerBillingAddress')
+              | Billing Address
+
+            textarea.form-control#customerBillingAddress(
+              name='billingAddress'
+              rows='3'
+              placeholder='Enter customer billing address'
+            )
+
+          //- Notes
+          .customer-form-group
+            label.customer-form-label(for='customerNotes')
+              | Notes
+
+            textarea.form-control#customerNotes(
+              name='notes'
+              rows='3'
+              placeholder='Enter additional customer notes'
+            )
+
+          //- Customer Status
+          .customer-form-group
+            label.customer-form-label
+              | Customer Status
+
+            .customer-active-wrapper
+              .form-check
+                input.form-check-input#customerIsActive(
+                  type='checkbox'
+                  name='isActive'
+                  checked
+                )
+
+                label.form-check-label(for='customerIsActive')
+                  | Active Customer
+
+        //- ==========================================
+        //- Modal Footer
+        //- ==========================================
+        .modal-footer.customer-modal-footer
+
+          button.customer-modal-btn.customer-modal-btn-primary#button-add-edit-customer(
+            type='submit'
+          )
+            i.fa.fa-save
+            | Create
+
+          button.customer-modal-btn.customer-modal-btn-secondary(
+            type='button'
+            data-dismiss='modal'
+          )
+            i.fa.fa-times-circle
+            | Cancel

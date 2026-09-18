@@ -1,0 +1,2342 @@
+extends ../../layout
+
+block style
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css')
+
+  style.
+    .invoice-card {
+      background:#fff;
+      border:1px solid #edf2f7;
+      border-radius:12px;
+      box-shadow:0 4px 20px rgba(0,0,0,.04);
+      overflow:hidden;
+    }
+
+    .invoice-toolbar {
+      padding:1.25rem 1.5rem;
+      border-bottom:1px solid #edf2f7;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:1rem;
+      flex-wrap:wrap;
+    }
+
+    .invoice-toolbar-group {
+      display:flex;
+      align-items:center;
+      gap:.75rem;
+      flex-wrap:wrap;
+    }
+
+    .invoice-control {
+      border:1px solid #cbd5e0;
+      border-radius:8px;
+      padding:.5rem .75rem;
+      outline:none;
+    }
+
+    .invoice-btn {
+      border:0;
+      border-radius:8px;
+      padding:.55rem 1rem;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:.4rem;
+    }
+
+    .invoice-btn-primary {
+      background:#580db4;
+      color:#fff;
+    }
+
+    .invoice-btn-primary:hover {
+      background:#480a96;
+      color:#fff;
+    }
+
+    .invoice-table-wrap {
+      overflow:auto;
+      max-height:65vh;
+    }
+
+    .invoice-table {
+      width:100%;
+      border-collapse:collapse;
+      white-space:nowrap;
+    }
+
+    .invoice-table th {
+      position:sticky;
+      top:0;
+      background:#580db4;
+      color:#fff;
+      padding:.9rem 1rem;
+      text-align:center;
+      z-index:2;
+    }
+
+    .invoice-table td {
+      padding:.9rem 1rem;
+      border-bottom:1px solid #edf2f7;
+      text-align:center;
+    }
+
+    .invoice-table tr:hover {
+      background:#fbf8ff;
+    }
+
+    .invoice-action-icon {
+      color:#580db4;
+      font-size:16px;
+      text-decoration:none;
+      margin:0 4px;
+    }
+
+    .invoice-action-icon:hover {
+      color:#480a96;
+      text-decoration:none;
+    }
+
+    .invoice-footer {
+      padding:1rem 1.5rem;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .invoice-status {
+      display:inline-block;
+      padding:.3rem .65rem;
+      border-radius:20px;
+      font-size:.8rem;
+      font-weight:600;
+    }
+
+    .invoice-status-paid {
+      background:#dcfce7;
+      color:#166534;
+    }
+
+    .invoice-status-partial {
+      background:#fef3c7;
+      color:#92400e;
+    }
+
+    .invoice-status-due {
+      background:#fee2e2;
+      color:#991b1b;
+    }
+
+    .invoice-status-default {
+      background:#e2e8f0;
+      color:#475569;
+    }
+
+    .btn-view-items {
+      background-color: #ebf4ff;
+      color: #3182ce;
+      border: none;
+      border-radius: 6px;
+      padding: 0.4rem 0.75rem;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-view-items:hover {
+      background-color: #3182ce;
+      color: white;
+    }
+
+block content
+
+  section.content-header.mb-4
+    div(style='display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;')
+      h1(style='margin:0; font-weight:600; color:#2d3748;')
+        | Blue Tech Invoice Dashboard
+
+      ol.breadcrumb(style='margin:0;')
+        li
+          a(href='/dashboard' style='color:#580db4; text-decoration:none;')
+            i.fa.fa-home.mr-1
+            | Dashboard
+
+        li
+          span(style='color:#4a5568; margin-left:.5rem;')
+            | Sales Invoices
+
+  section.content
+
+    .invoice-card
+
+      //- ==========================================
+      //- Invoice Toolbar
+      //- ==========================================
+      .invoice-toolbar
+
+        .invoice-toolbar-group
+
+          input.invoice-control#invoiceSearch(
+            type='text'
+            placeholder='Search invoice or customer...'
+            autocomplete='off'
+          )
+
+          button.invoice-btn.invoice-btn-primary#invoiceSearchBtn(
+            type='button'
+          )
+            i.fa.fa-search
+
+          button.invoice-btn.invoice-btn-primary.btn-add-invoice(
+            type='button'
+            data-toggle='modal'
+            data-target='#add-edit-invoice-modal'
+          )
+            i.fa.fa-plus
+            | Create Invoice
+
+          button.invoice-btn(
+            type='button'
+            data-toggle='modal'
+            data-target='#customer-advance-modal'
+            style='background:#0ea5e9; color:#fff;'
+          )
+            i.fa.fa-wallet
+            | Customer Advance
+
+        .invoice-toolbar-group
+
+          label(
+            for='invoiceLimit'
+            style='margin:0;'
+          )
+            | Show:
+
+          select.invoice-control#invoiceLimit
+            option(value='10') 10
+            option(value='25') 25
+            option(value='50') 50
+            option(value='100') 100
+
+      //- ==========================================
+      //- Invoice Table
+      //- ==========================================
+      .invoice-table-wrap
+
+        table.invoice-table
+
+          thead
+            tr
+              th Edit
+              th Download PDF
+              th View PDF
+              th Invoice Number
+              th Customer
+              th Invoice Date
+              th Subtotal
+              th Discount
+              th Tax
+              th Total
+              th Advance Applied
+              th Paid
+              th Due
+              th Payment Status
+              th Items
+
+          tbody#invoiceTableBody
+
+            tr
+              td(
+                colspan='15'
+                style='padding:3rem; color:#a0aec0;'
+              )
+                | Loading invoices...
+
+      //- ==========================================
+      //- Invoice Footer
+      //- ==========================================
+      .invoice-footer
+
+        span#invoiceTitleFilter
+          | Showing no entries
+
+        ul.pagination#invoicePagination(
+          style='margin:0;'
+        )
+
+  //- ==========================================
+  //- Customer Advance Modal
+  //- ==========================================
+  #customer-advance-modal.modal.fade(
+    data-backdrop='static'
+    data-keyboard='false'
+  )
+
+    .modal-dialog.modal-dialog-centered
+
+      .modal-content(
+        style='border-radius:12px; border:none;'
+      )
+
+        .modal-header(
+          style='background:#0ea5e9; color:#fff;'
+        )
+
+          h5.modal-title
+            i.fa.fa-wallet.mr-2
+            | Record Customer Advance
+
+          button.close(
+            type='button'
+            data-dismiss='modal'
+            style='color:#fff; opacity:.9;'
+          )
+            span &times;
+
+        .modal-body
+
+          .form-group
+
+            label(for='advanceCustomerId')
+              | Customer
+
+            select.form-control#advanceCustomerId
+
+              option(
+                value=''
+                selected
+                disabled
+              )
+                | Choose customer
+
+              each customer in customers
+                option(value=customer.id)= customer.label
+
+          .form-group
+
+            label(for='customerAdvanceAmount')
+              | Advance Amount
+
+            input.form-control#customerAdvanceAmount(
+              type='number'
+              min='0.01'
+              step='0.01'
+              placeholder='50000.00'
+            )
+
+          .form-group
+
+            label(for='customerAdvanceMethod')
+              | Payment Method
+
+            select.form-control#customerAdvanceMethod
+
+              option(value='')
+                | Choose payment method
+
+              each method in paymentMethods
+                option(value=method.id)= method.paymentMethodName
+
+          .form-group
+
+            label(for='customerAdvanceNotes')
+              | Notes
+
+            textarea.form-control#customerAdvanceNotes(
+              rows='2'
+              placeholder='Advance reference or note'
+            )
+
+        .modal-footer
+
+          button.btn.btn-secondary(
+            type='button'
+            data-dismiss='modal'
+          )
+            | Cancel
+
+          button.btn.btn-info#saveCustomerAdvance(
+            type='button'
+          )
+            i.fa.fa-save.mr-1
+            | Save Advance
+
+  //- ==========================================
+  //- Invoice Create/Edit Modal
+  //- ==========================================
+  include ./create
+
+
+block script
+
+  //- ============================================================
+  //- Invoice List / Search / Pagination / Export
+  //- ============================================================
+  script.
+    (() => {
+
+      const body = document.getElementById('invoiceTableBody');
+      const pagination = document.getElementById('invoicePagination');
+      const limit = document.getElementById('invoiceLimit');
+      const search = document.getElementById('invoiceSearch');
+
+      let currentPage = 1;
+
+      const money = value => {
+        return Number(value || 0).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      };
+
+      const escapeHtml = value => {
+        return String(value ?? '').replace(
+          /[&<>"']/g,
+          character => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+          }[character])
+        );
+      };
+
+      $(document).on(
+        'click',
+        '.toggleItems',
+        function () {
+        
+          const id = $(this).data('id');
+      
+          $(`#items-${id}`).toggle();
+      
+        }
+      );
+
+      function getPaymentStatusClass(status) {
+
+        const normalized = String(status || '').toLowerCase();
+
+        if (normalized === 'paid') {
+          return 'invoice-status invoice-status-paid';
+        }
+
+        if (
+          normalized === 'partial' ||
+          normalized === 'partially paid'
+        ) {
+          return 'invoice-status invoice-status-partial';
+        }
+
+        if (
+          normalized === 'due' ||
+          normalized === 'unpaid' ||
+          normalized === 'pending'
+        ) {
+          return 'invoice-status invoice-status-due';
+        }
+
+        return 'invoice-status invoice-status-default';
+      }
+
+      async function loadInvoices(page = 1) {
+
+        currentPage = page;
+
+        body.innerHTML = `
+          <tr>
+            <td colspan="15" style="padding:3rem;">
+              <i class="fa fa-spinner fa-spin"></i>
+              Loading...
+            </td>
+          </tr>
+        `;
+
+        try {
+
+          const response = await fetch(
+            `/api/bluetech/invoices/all?page=${page}&limit=${limit.value}&search=${encodeURIComponent(search.value.trim())}`
+          );
+
+          const result = await response.json();
+
+          if (!result.status || !result.data?.length) {
+
+            body.innerHTML = `
+              <tr>
+                <td
+                  colspan="15"
+                  style="padding:3rem; color:#a0aec0;"
+                >
+                  No invoices found.
+                </td>
+              </tr>
+            `;
+
+            document.getElementById(
+              'invoiceTitleFilter'
+            ).textContent = 'No entries matching filters';
+
+            pagination.innerHTML = '';
+
+            return;
+          }
+
+          // ==========================================
+          // GROUP INVOICE DATA BY INVOICE ID
+          // ==========================================
+
+          const groupedArray = [];
+          const groupMap = {};
+
+          result.data.forEach(row => {
+          
+            if (!groupMap[row.id]) {
+            
+              groupMap[row.id] = {
+              
+                id: row.id,
+
+                invoiceNumber: row.invoiceNumber,
+
+                customerId: row.customerId,
+                customerName:
+                  row.customerName ||
+                  row.customerNameSnapshot,
+
+                customerPhone:
+                  row.customerPhone ||
+                  row.customerPhoneSnapshot,
+
+                invoiceDate: row.invoiceDate,
+                dueDate: row.dueDate,
+
+                invoiceStatus: row.invoiceStatus,
+                paymentStatus: row.paymentStatus,
+
+                paymentMethod: row.paymentMethod,
+
+                subtotal: row.subtotal,
+                discountAmount: row.discountAmount,
+                taxAmount: row.taxAmount,
+                totalAmount: row.totalAmount,
+
+                advanceAmountApplied:
+                  row.advanceAmountApplied,
+
+                paidAmount: row.paidAmount,
+                dueAmount: row.dueAmount,
+
+                billingAddress:
+                  row.billingAddress ||
+                  row.billingAddressSnapshot,
+
+                notes: row.notes,
+
+                createdBy: row.createdBy,
+                updatedBy: row.updatedBy,
+
+                created_at: row.created_at,
+                updated_at: row.updated_at,
+
+                items: []
+
+              };
+
+              groupedArray.push(
+                groupMap[row.id]
+              );
+            }
+
+
+            // ==========================================
+            // ADD ITEM TO THIS INVOICE
+            // ==========================================
+
+            groupMap[row.id].items.push({
+            
+              itemName: row.itemName,
+              itemType: row.itemType,
+              imeiNumber: row.imeiNumber,
+              itemConfigurations:
+                row.itemConfigurations,
+
+              quantity: row.quantity,
+              unitPrice: row.unitPrice,
+              totalPrice: row.totalPrice,
+
+              itemNotes: row.itemNotes
+
+            });
+
+          });
+
+
+          // ==========================================
+          // SORT NEWEST FIRST
+          // ==========================================
+
+          groupedArray.sort(
+            (a, b) =>
+              new Date(b.created_at) -
+              new Date(a.created_at)
+          );
+
+
+          // ==========================================
+          // RENDER INVOICE ROWS
+          // ==========================================
+
+          body.innerHTML = groupedArray.map(invoice => {
+          
+            const paymentStatus =
+              invoice.paymentStatus || '-';
+
+
+            const paymentStatusUpper =
+              String(paymentStatus).toUpperCase();
+
+
+            // ==========================================
+            // CALCULATE ITEM TOTALS
+            // ==========================================
+
+            const totalQty =
+              invoice.items.reduce(
+                (sum, item) =>
+                  sum + (Number(item.quantity) || 0),
+                0
+              );
+
+
+            const totalUnitPrice =
+              invoice.items.reduce(
+                (sum, item) =>
+                  sum + (Number(item.unitPrice) || 0),
+                0
+              );
+
+
+            const totalItemPrice =
+              invoice.items.reduce(
+                (sum, item) =>
+                  sum + (Number(item.totalPrice) || 0),
+                0
+              );
+
+
+            // ==========================================
+            // ACTION BUTTON
+            // ==========================================
+
+            let actionHtml = '';
+
+
+            if (paymentStatusUpper !== 'PAID') {
+            
+              actionHtml = `
+
+                <a
+                  href="#"
+                  class="invoice-action-icon settle-invoice-btn"
+                  data-invoice-id="${invoice.id}"
+                  data-toggle="modal"
+                  data-target="#add-edit-invoice-modal"
+                  title="Modify / Settle Invoice"
+                  style="color:#16a34a;"
+                >
+                  <i class="fa fa-money-bill-wave"></i>
+                </a>
+
+              `;
+
+            } else {
+            
+              actionHtml = `
+
+                <span
+                  style="color:#94a3b8;"
+                  title="Paid Invoice"
+                >
+                  <i class="fa fa-lock"></i>
+                </span>
+
+              `;
+            }
+
+
+            return `
+
+              <!-- =====================================
+                   MAIN INVOICE ROW
+              ====================================== -->
+
+              <tr
+                class="main-row"
+                data-id="${invoice.id}"
+              >
+
+                <!-- Action -->
+
+                <td>
+                  ${actionHtml}
+                </td>
+
+
+                <!-- Download PDF -->
+
+                <td>
+
+                  <a
+                    target="_blank"
+                    class="invoice-action-icon"
+                    href="/api/bluetech/invoices/generate-pdf/${invoice.id}"
+                    title="Download PDF"
+                  >
+                    <i class="fa fa-download"></i>
+                  </a>
+
+                </td>
+
+
+                <!-- View PDF -->
+
+                <td>
+
+                  <a
+                    target="_blank"
+                    class="invoice-action-icon"
+                    href="/api/bluetech/invoices/view-pdf/${invoice.id}"
+                    title="View PDF"
+                  >
+                    <i class="fa fa-eye"></i>
+                  </a>
+
+                </td>
+
+
+                <!-- Invoice Number -->
+
+                <td
+                  style="
+                    font-weight:600;
+                    color:#580db4;
+                  "
+                >
+                  ${escapeHtml(
+                    invoice.invoiceNumber || '-'
+                  )}
+                </td>
+
+
+                <!-- Customer -->
+
+                <td>
+
+                  ${escapeHtml(
+                    invoice.customerName || '-'
+                  )}
+
+                </td>
+
+
+                <!-- Invoice Date -->
+
+                <td>
+
+                  ${
+                    invoice.invoiceDate
+                      ? String(
+                          invoice.invoiceDate
+                        ).slice(0, 10)
+                      : '-'
+                  }
+
+                </td>
+
+
+                <!-- Subtotal -->
+
+                <td>
+
+                  ${money(invoice.subtotal)} BDT
+
+                </td>
+
+
+                <!-- Discount -->
+
+                <td>
+
+                  ${money(
+                    invoice.discountAmount
+                  )} BDT
+
+                </td>
+
+
+                <!-- Tax -->
+
+                <td>
+
+                  ${money(
+                    invoice.taxAmount
+                  )} BDT
+
+                </td>
+
+
+                <!-- Total -->
+
+                <td
+                  style="font-weight:600;"
+                >
+
+                  ${money(
+                    invoice.totalAmount
+                  )} BDT
+
+                </td>
+
+
+                <!-- Advance -->
+
+                <td>
+
+                  ${money(
+                    invoice.advanceAmountApplied
+                  )} BDT
+
+                </td>
+
+
+                <!-- Paid -->
+
+                <td>
+
+                  ${money(
+                    invoice.paidAmount
+                  )} BDT
+
+                </td>
+
+
+                <!-- Due -->
+
+                <td
+                  style="color:#991b1b;"
+                >
+
+                  ${money(
+                    invoice.dueAmount
+                  )} BDT
+
+                </td>
+
+
+                <!-- Payment Status -->
+
+                <td>
+
+                  <span
+                    class="${getPaymentStatusClass(
+                      paymentStatus
+                    )}"
+                  >
+
+                    ${escapeHtml(
+                      paymentStatus
+                    )}
+
+                  </span>
+
+                </td>
+
+
+                <!-- Items -->
+
+                <td>
+
+                  <button
+                    class="btn-view-items toggleItems"
+                    data-id="${invoice.id}"
+                  >
+
+                    <i class="fa fa-list-ul mr-1"></i>
+
+                    Lines (${invoice.items.length})
+
+                  </button>
+
+                </td>
+
+              </tr>
+
+
+              <!-- =====================================
+                   CHILD ITEM ROW
+              ====================================== -->
+
+              <tr
+                id="items-${invoice.id}"
+                style="
+                  display:none;
+                  background-color:transparent;
+                "
+              >
+
+                <td
+                  colspan="15"
+                  class="child-table-wrapper"
+                >
+
+                  <table class="child-table">
+
+                    <thead>
+
+                      <tr>
+
+                        <th>Item</th>
+
+                        <th>Type</th>
+
+                        <th>IMEI Number</th>
+
+                        <th>Specification</th>
+
+                        <th>Notes</th>
+
+                        <th>Qty</th>
+
+                        <th>Unit Price</th>
+
+                        <th>Total Price</th>
+
+                      </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                      ${
+                        invoice.items.map(item => `
+
+                          <tr>
+
+                            <td
+                              style="font-weight:500;"
+                            >
+                              ${escapeHtml(
+                                item.itemName || '-'
+                              )}
+                            </td>
+
+
+                            <td>
+
+                              <code
+                                style="color:#ed4014;"
+                              >
+                                ${escapeHtml(
+                                  item.itemType || '-'
+                                )}
+                              </code>
+
+                            </td>
+
+
+                            <td>
+
+                              ${escapeHtml(
+                                item.imeiNumber || '-'
+                              )}
+
+                            </td>
+
+
+                            <td
+                              style="font-weight:700;"
+                            >
+
+                              ${escapeHtml(
+                                item.itemConfigurations || '-'
+                              )}
+
+                            </td>
+
+
+                            <td>
+
+                              ${escapeHtml(
+                                item.itemNotes || '-'
+                              )}
+
+                            </td>
+
+
+                            <td
+                              style="font-weight:700;"
+                            >
+
+                              ${money(
+                                item.quantity
+                              )}
+
+                            </td>
+
+
+                            <td
+                              style="
+                                font-weight:700;
+                                color:#065f46;
+                              "
+                            >
+
+                              ${money(
+                                item.unitPrice
+                              )} BDT
+
+                            </td>
+
+
+                            <td
+                              style="
+                                font-weight:700;
+                                color:#991b1b;
+                              "
+                            >
+
+                              ${money(
+                                item.totalPrice
+                              )} BDT
+
+                            </td>
+
+                          </tr>
+
+                        `).join('')
+                      }
+
+
+                      <!-- GRAND TOTAL -->
+
+                      <tr
+                        style="
+                          background:#f1f5f9;
+                        "
+                      >
+
+                        <td
+                          colspan="5"
+                          style="
+                            text-align:right;
+                            font-weight:700;
+                            color:#2d3748;
+                          "
+                        >
+                          GRAND TOTAL:
+                        </td>
+
+
+                        <td
+                          style="
+                            font-weight:700;
+                            color:#2d3748;
+                          "
+                        >
+
+                          ${totalQty} Units
+
+                        </td>
+
+
+                        <td
+                          style="
+                            font-weight:700;
+                            color:#065f46;
+                          "
+                        >
+
+                          ${money(
+                            totalUnitPrice
+                          )} BDT
+
+                        </td>
+
+
+                        <td
+                          style="
+                            font-weight:700;
+                            color:#991b1b;
+                          "
+                        >
+
+                          ${money(
+                            totalItemPrice
+                          )} BDT
+
+                        </td>
+
+                      </tr>
+
+                    </tbody>
+
+                  </table>
+
+                </td>
+
+              </tr>
+
+            `;
+
+          }).join('');
+
+          const start =
+            ((page - 1) * Number(limit.value)) + 1;
+
+          const end =
+            Math.min(
+              page * Number(limit.value),
+              result.total
+            );
+
+          document.getElementById(
+            'invoiceTitleFilter'
+          ).textContent =
+            `Showing ${start} to ${end} of ${result.total} records`;
+
+          pagination.innerHTML = '';
+
+          for (
+            let index = 1;
+            index <= result.totalPages;
+            index += 1
+          ) {
+
+            pagination.innerHTML += `
+              <li class="${index === page ? 'active' : ''}">
+                <a
+                  href="#"
+                  data-page="${index}"
+                >
+                  ${index}
+                </a>
+              </li>
+            `;
+          }
+
+        } catch (error) {
+
+          console.error('Invoice loading error:', error);
+
+          body.innerHTML = `
+            <tr>
+              <td
+                colspan="15"
+                style="padding:3rem; color:#e53e3e;"
+              >
+                Failed to load invoices.
+              </td>
+            </tr>
+          `;
+        }
+      }
+
+      document
+        .getElementById('invoiceSearchBtn')
+        .addEventListener('click', () => {
+          loadInvoices(1);
+        });
+
+      search.addEventListener('keydown', event => {
+
+        if (event.key === 'Enter') {
+          loadInvoices(1);
+        }
+
+      });
+
+      limit.addEventListener('change', () => {
+        loadInvoices(1);
+      });
+
+      pagination.addEventListener('click', event => {
+
+        const page =
+          event.target.closest('[data-page]')?.dataset.page;
+
+        if (page) {
+
+          event.preventDefault();
+
+          loadInvoices(Number(page));
+        }
+
+      });
+
+      loadInvoices();
+
+    })();
+
+
+  //- ============================================================
+  //- Invoice Create / Edit / Item Management
+  //- ============================================================
+  script.
+    (() => {
+
+      let invoiceItems = [];
+      let availableAdvance = 0;
+
+      const getElement = id => {
+        return document.getElementById(id);
+      };
+
+      const money = value => {
+        return (Number(value) || 0).toFixed(2);
+      };
+
+      //- ----------------------------------------------------------
+      //- Reset Invoice Form
+      //- ----------------------------------------------------------
+      function resetInvoiceForm() {
+
+        const form = getElement('invoice-form');
+
+        if (form) {
+          form.reset();
+        }
+
+        getElement('invoiceId').value = '';
+
+        getElement('invoiceNumber').value = '';
+
+        getElement('invoiceDate').value =
+          new Date().toISOString().slice(0, 10);
+
+        getElement('invoiceDueDate').value = '';
+
+        getElement('invoiceAvailableAdvance').value = '0.00';
+
+        getElement('invoiceAdvanceAmount').value = '0';
+
+        getElement('invoicePaidAmount').value = '0';
+
+        getElement('invoiceDiscountAmount').value = '0';
+
+        getElement('invoiceTaxAmount').value = '0';
+
+        getElement('invoiceSubtotal').value = '0.00';
+
+        getElement('invoiceTotalAmount').value = '0.00';
+
+        getElement('invoiceDueAmount').value = '0.00';
+
+        getElement('invoiceUnitPrice').value = '';
+
+        getElement('invoiceQuantity').value = '1';
+
+        getElement('invoiceItemImei').value = '';
+
+        getElement('invoiceItemNotes').value = '';
+
+        invoiceItems = [];
+
+        availableAdvance = 0;
+
+        renderInvoiceItems();
+
+        document
+          .querySelector('#add-edit-invoice-modal .modal-title')
+          .innerHTML = `
+            <i class="fa fa-file-invoice mr-2"></i>
+            Blue Tech Sales Invoice
+          `;
+
+        getElement('saveInvoice').innerHTML = `
+          <i class="fa fa-save mr-1"></i>
+          Create Invoice
+        `;
+      }
+
+
+      //- ----------------------------------------------------------
+      //- Recalculate Invoice
+      //- ----------------------------------------------------------
+      function recalculateInvoice() {
+
+        let subtotal = 0;
+
+        invoiceItems.forEach(function (item) {
+          const quantity = Number(item.quantity || 0);
+          const unitPrice = Number(item.unitPrice || 0);
+
+          subtotal += quantity * unitPrice;
+        });
+
+        const discount = Number($('#invoiceDiscountAmount').val() || 0);
+        const tax = Number($('#invoiceTaxAmount').val() || 0);
+
+        const total = Math.max(
+          0,
+          subtotal - discount + tax
+        );
+
+        const advanceAmount = Number(
+          $('#invoiceAdvanceAmount').val() || 0
+        );
+
+        const newPayment = Number(
+          $('#invoicePaidAmount').val() || 0
+        );
+
+        const availableAdvance = Number(
+          $('#invoiceAvailableAdvance').val() || 0
+        );
+
+        const appliedAdvance = Math.min(
+          Math.max(0, advanceAmount),
+          Math.max(0, availableAdvance),
+          total
+        );
+
+        /*
+         * Existing paid amount
+         *
+         * When editing an invoice, this value should come from
+         * the existing invoice.
+         */
+        const existingPaidAmount = Number(
+          $('#invoicePaidAmount').data('existing-paid') || 0
+        );
+
+        /*
+         * New payment entered by the user
+         */
+        const totalPaidAmount =
+          existingPaidAmount + newPayment;
+
+        const dueAmount = Math.max(
+          0,
+          total - appliedAdvance - totalPaidAmount
+        );
+
+        $('#invoiceSubtotal').val(subtotal.toFixed(2));
+        $('#invoiceTotalAmount').val(total.toFixed(2));
+
+        $('#invoiceAdvanceAmount').val(
+          appliedAdvance.toFixed(2)
+        );
+
+        $('#invoiceDueAmount').val(
+          dueAmount.toFixed(2)
+        );
+      }
+
+
+      //- ----------------------------------------------------------
+      //- Render Invoice Items
+      //- ----------------------------------------------------------
+      function renderInvoiceItems() {
+
+        const table =
+          getElement('invoiceItemTable');
+
+        if (!table) {
+          return;
+        }
+
+        const tbody =
+          table.querySelector('tbody');
+
+        if (!invoiceItems.length) {
+
+          tbody.innerHTML = `
+            <tr id="invoiceEmptyItems">
+              <td
+                class="text-center"
+                colspan="7"
+              >
+                No items added.
+              </td>
+            </tr>
+          `;
+
+          recalculateInvoice();
+
+          return;
+        }
+
+        tbody.innerHTML =
+          invoiceItems.map((item, index) => {
+
+            return `
+              <tr>
+
+                <td>
+                  ${escapeHtmlInvoice(item.itemName)}
+                </td>
+
+                <td>
+                  ${escapeHtmlInvoice(item.imeiNumber || '-')}
+                </td>
+
+                <td>
+                  ${escapeHtmlInvoice(item.notes || '-')}
+                </td>
+
+                <td>
+                  ${item.quantity}
+                </td>
+
+                <td>
+                  ${money(item.unitPrice)}
+                </td>
+
+                <td>
+                  ${money(
+                    Number(item.quantity) *
+                    Number(item.unitPrice)
+                  )}
+                </td>
+
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-danger"
+                    data-remove-invoice-item="${index}"
+                  >
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+
+              </tr>
+            `;
+
+          }).join('');
+
+        recalculateInvoice();
+      }
+
+
+      //- ----------------------------------------------------------
+      //- Escape HTML
+      //- ----------------------------------------------------------
+      function escapeHtmlInvoice(value) {
+
+        return String(value ?? '').replace(
+          /[&<>"']/g,
+          character => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+          }[character])
+        );
+      }
+
+
+      //- ----------------------------------------------------------
+      //- Load Customer Advance
+      //- ----------------------------------------------------------
+      async function loadCustomerAdvance() {
+
+        const customerId =
+          Number(
+            getElement('invoiceCustomerId').value
+          );
+
+        if (!customerId) {
+
+          availableAdvance = 0;
+
+          getElement(
+            'invoiceAvailableAdvance'
+          ).value = '0.00';
+
+          getElement(
+            'invoiceAdvanceAmount'
+          ).value = '0.00';
+
+          recalculateInvoice();
+
+          return;
+        }
+
+        try {
+
+          const response = await fetch(
+            `/api/bluetech/customer-advances/balance/${customerId}`
+          );
+
+          const result =
+            await response.json();
+
+          availableAdvance =
+            Number(
+              result.data?.availableAdvance || 0
+            );
+
+          getElement(
+            'invoiceAvailableAdvance'
+          ).value =
+            money(availableAdvance);
+
+          getElement(
+            'invoiceAdvanceAmount'
+          ).max =
+            money(availableAdvance);
+
+          recalculateInvoice();
+
+        } catch (error) {
+
+          console.error(
+            'Customer advance loading error:',
+            error
+          );
+
+          availableAdvance = 0;
+
+          getElement(
+            'invoiceAvailableAdvance'
+          ).value = '0.00';
+
+          recalculateInvoice();
+        }
+      }
+
+
+      //- ----------------------------------------------------------
+      //- Generate Invoice Number
+      //- ----------------------------------------------------------
+      async function generateInvoiceNumber() {
+
+        try {
+
+          const response = await fetch(
+  
+            '/api/bluetech/invoices/generate-number' 
+          );
+
+          const result =
+  
+            await response.json();
+
+          if (result.invoiceNumber) {
+  
+            getElement(
+  
+              'invoiceNumber'
+  
+            ).value =
+  
+              result.invoiceNumber;
+  
+          }  
+        } catch (error) {
+         console.error( 
+            'Invoice number generation error:', 
+            error  
+          );  
+        }  
+      }
+
+
+      //- ----------------------------------------------------------
+      //- Create Invoice
+      //- ----------------------------------------------------------
+      function createInvoice(formData) {
+
+        $.ajax({
+
+          url: '/api/bluetech/invoices/create',
+
+          type: 'POST',
+
+          data: formData,
+
+          processData: false,
+
+          contentType: false,
+
+          success: function (response) {
+
+            console.log(
+              'Create Invoice response:',
+              response
+            );
+
+            if (response.status) {
+            
+              swal({
+              
+                title:
+                  response.message ||
+                  'Invoice created successfully',
+
+                icon: 'success',
+
+                button: 'OK'
+
+              }).then(function () {
+              
+                window.location.reload();
+
+              });
+
+            } else {
+            
+              swal(
+                'Error',
+                response.message ||
+                'Failed to create invoice',
+                'error'
+              );
+            }
+          },
+
+          error: function (xhr) {
+          
+            console.error(
+              'Create Invoice Error:',
+              xhr.responseText
+            );
+
+            swal(
+              'Error',
+              xhr.responseJSON?.message ||
+              'Something went wrong',
+              'error'
+            );
+          }
+        });
+      }
+
+
+      //- ----------------------------------------------------------
+      //- Update Invoice
+      //- ----------------------------------------------------------
+      function updateInvoice(id, formData) {
+
+        $.ajax({
+
+          url:
+            `/api/bluetech/invoices/update/${id}`,
+
+          type: 'PUT',
+
+          data: formData,
+
+          processData: false,
+
+          contentType: false,
+
+          success: function (response) {
+
+            console.log(
+              'Update Invoice response:',
+              response
+            );
+      
+            if (response.status) {
+            
+              swal({
+              
+                title:
+                  response.message ||
+                  'Invoice updated successfully',
+      
+                icon: 'success',
+      
+                button: 'OK'
+      
+              }).then(function () {
+              
+                window.location.reload();
+      
+              });
+      
+            } else {
+            
+              swal(
+                'Error',
+                response.message ||
+                'Failed to update invoice',
+                'error'
+              );
+            }
+          },
+      
+          error: function (xhr) {
+          
+            console.error(
+              'Update Invoice Error:',
+              xhr.responseText
+            );
+      
+            swal(
+              'Error',
+              xhr.responseJSON?.message ||
+              'Something went wrong',
+              'error'
+            );
+          }
+        });
+      }
+
+
+      //- ----------------------------------------------------------
+      //- Load Invoice For Edit
+      //- ----------------------------------------------------------
+      function loadInvoiceForEdit(id) {
+
+        $.ajax({
+
+          url:
+            `/api/bluetech/invoices/edit/${id}`,
+
+          type: 'GET',
+
+          success: function (result) {
+
+            if (
+              !result.status ||
+              !result.data
+            ) {
+
+              alert(
+                result.message ||
+                'Invoice data could not be loaded.'
+              );
+
+              return;
+            }
+
+            const invoice =
+              result.data;
+
+            getElement('invoiceId').value =
+              invoice.id || id;
+
+            getElement('invoiceNumber').value =
+              invoice.invoiceNumber || '';
+
+            getElement('invoiceCustomerId').value =
+              invoice.customerId || '';
+
+            getElement('invoiceDate').value =
+              String(
+                invoice.invoiceDate || ''
+              ).slice(0, 10);
+
+            getElement('invoiceDueDate').value =
+              String(
+                invoice.dueDate || ''
+              ).slice(0, 10);
+
+            getElement('invoicePaymentMethodId').value =
+              invoice.paymentMethodId || '';
+
+            getElement('invoiceDiscountAmount').value =
+              invoice.discountAmount || 0;
+
+            getElement('invoiceTaxAmount').value =
+              invoice.taxAmount || 0;
+
+            getElement('invoicePaidAmount').value =
+              invoice.paidAmount || 0;
+
+            getElement('invoiceAdvanceAmount').value =
+              invoice.advanceAmountApplied || 0;
+
+            getElement('invoiceNotes').value =
+              invoice.notes || '';
+
+            invoiceItems =
+              Array.isArray(invoice.items)
+                ? invoice.items.map(item => ({
+                    itemId: item.itemId,
+                    itemName:
+                      item.itemName ||
+                      item.itemNameSnapshot ||
+                      '',
+                    quantity:
+                      Number(item.quantity) || 1,
+                    unitPrice:
+                      Number(item.unitPrice) || 0,
+                    imeiNumber:
+                      item.imeiNumber || '',
+                    notes:
+                      item.notes || ''
+                  }))
+                : [];
+
+            document
+              .querySelector(
+                '#add-edit-invoice-modal .modal-title'
+              )
+              .innerHTML = `
+                <i class="fa fa-file-invoice mr-2"></i>
+                Modify Blue Tech Sales Invoice
+              `;
+
+            getElement('saveInvoice').innerHTML = `
+              <i class="fa fa-save mr-1"></i>
+              Update Invoice
+            `;
+
+            renderInvoiceItems();
+
+            loadCustomerAdvance();
+
+          },
+
+          error: function (xhr) {
+
+            console.error(
+              'Load invoice error:',
+              xhr
+            );
+
+            alert(
+              xhr.responseJSON?.message ||
+              'Failed to load invoice.'
+            );
+          }
+
+        });
+      }
+
+
+      //- ==========================================================
+      //- Document Ready
+      //- ==========================================================
+      $(document).ready(function () {
+
+
+        //- --------------------------------------------------------
+        //- Add Invoice Button
+        //- --------------------------------------------------------
+        $(document).on(
+          'click',
+          '.btn-add-invoice',
+          function () {
+
+            resetInvoiceForm();
+
+            setTimeout(
+              function () {
+                generateInvoiceNumber();
+              },
+              100
+            );
+          }
+        );
+
+
+        //- --------------------------------------------------------
+        //- Edit Invoice Button
+        //- --------------------------------------------------------
+        $(document).on(
+          'click',
+          '.settle-invoice-btn',
+          function (event) {
+
+            event.preventDefault();
+
+            const invoiceId =
+              $(this).data('invoice-id');
+
+            if (!invoiceId) {
+
+              alert(
+                'Invoice ID is missing.'
+              );
+
+              return;
+            }
+
+            resetInvoiceForm();
+
+            loadInvoiceForEdit(
+              invoiceId
+            );
+          }
+        );
+
+
+        //- --------------------------------------------------------
+        //- Customer Changed
+        //- --------------------------------------------------------
+        $(document).on(
+          'change',
+          '#invoiceCustomerId',
+          function () {
+
+            loadCustomerAdvance();
+
+            if (
+              !getElement('invoiceId').value
+            ) {
+              generateInvoiceNumber();
+            }
+
+          }
+        );
+
+
+        //- --------------------------------------------------------
+        //- Catalog Item Changed
+        //- --------------------------------------------------------
+        $(document).on(
+          'change',
+          '#invoiceItemId',
+          function () {
+
+            const option =
+              this.selectedOptions[0];
+
+            getElement(
+              'invoiceUnitPrice'
+            ).value =
+              option?.dataset.price || '';
+
+            getElement(
+              'invoiceItemImei'
+            ).value =
+              option?.dataset.imei || '';
+
+          }
+        );
+
+
+        //- --------------------------------------------------------
+        //- Recalculate Fields
+        //- --------------------------------------------------------
+        $(document).on(
+          'input',
+          '#invoiceDiscountAmount, #invoiceTaxAmount, #invoiceAdvanceAmount, #invoicePaidAmount',
+          function () {
+
+            recalculateInvoice();
+          }
+        );
+
+
+        //- --------------------------------------------------------
+        //- Add Invoice Item
+        //- --------------------------------------------------------
+        $(document).on(
+          'click',
+          '#addInvoiceItem',
+          function () {
+
+            const option =
+              getElement(
+                'invoiceItemId'
+              ).selectedOptions[0];
+
+            const quantity =
+              Number(
+                getElement(
+                  'invoiceQuantity'
+                ).value
+              );
+
+            const unitPrice =
+              Number(
+                getElement(
+                  'invoiceUnitPrice'
+                ).value
+              );
+
+            if (
+              !option?.value ||
+              quantity <= 0
+            ) {
+
+              alert(
+                'Select an item and enter a valid quantity.'
+              );
+
+              return;
+            }
+
+            if (
+              unitPrice < 0
+            ) {
+
+              alert(
+                'Unit price cannot be negative.'
+              );
+
+              return;
+            }
+
+            const purchaseItemId = option.dataset.purchaseItemId
+              ? Number(option.dataset.purchaseItemId)
+              : null;
+
+            if (
+              invoiceItems.some(item =>
+                (purchaseItemId && item.purchaseItemId === purchaseItemId) ||
+                (!purchaseItemId && item.itemId === Number(option.value) && item.imeiNumber === (option.dataset.imei || ''))
+              )
+            ) {
+              alert('This IMEI is already added to the invoice.');
+              return;
+            }
+
+            invoiceItems.push({
+
+              itemId:
+                Number(option.value),
+
+              purchaseItemId:
+                option.dataset.purchaseItemId
+                  ? Number(option.dataset.purchaseItemId)
+                  : null,
+
+              itemName:
+                option.dataset.name ||
+                option.textContent,
+
+              quantity:
+                quantity,
+
+              unitPrice:
+                unitPrice,
+
+              imeiNumber:
+                option.dataset.imei || '',
+
+              notes:
+                getElement(
+                  'invoiceItemNotes'
+                ).value || ''
+
+            });
+
+            renderInvoiceItems();
+
+            getElement(
+              'invoiceItemId'
+            ).value = '';
+
+            getElement(
+              'invoiceUnitPrice'
+            ).value = '';
+
+            getElement(
+              'invoiceQuantity'
+            ).value = '1';
+
+            getElement(
+              'invoiceItemImei'
+            ).value = '';
+
+            getElement(
+              'invoiceItemNotes'
+            ).value = '';
+          }
+        );
+
+
+        //- --------------------------------------------------------
+        //- Remove Invoice Item
+        //- --------------------------------------------------------
+        $(document).on(
+          'click',
+          '[data-remove-invoice-item]',
+          function () {
+
+            const index =
+              Number(
+                $(this).attr(
+                  'data-remove-invoice-item'
+                )
+              );
+
+            invoiceItems.splice(
+              index,
+              1
+            );
+
+            renderInvoiceItems();
+          }
+        );
+
+
+        //- --------------------------------------------------------
+        //- Submit Invoice Form
+        //- --------------------------------------------------------
+        $(document).on(
+          'submit',
+          '#invoice-form',
+          function (event) {
+
+            event.preventDefault();
+
+            if (
+              !getElement(
+                'invoiceCustomerId'
+              ).value
+            ) {
+
+              alert(
+                'Customer is required.'
+              );
+
+              return;
+            }
+
+            if (
+              !invoiceItems.length
+            ) {
+
+              alert(
+                'At least one invoice item is required.'
+              );
+
+              return;
+            }
+
+            const formData =
+              new FormData();
+
+            const invoiceId =
+              getElement(
+                'invoiceId'
+              ).value;
+
+            formData.append(
+              'invoiceNumber',
+              getElement(
+                'invoiceNumber'
+              ).value
+            );
+
+            formData.append(
+              'customerId',
+              getElement(
+                'invoiceCustomerId'
+              ).value
+            );
+
+            formData.append(
+              'invoiceDate',
+              getElement(
+                'invoiceDate'
+              ).value
+            );
+
+            formData.append(
+              'dueDate',
+              getElement(
+                'invoiceDueDate'
+              ).value
+            );
+
+            formData.append(
+              'paymentMethodId',
+              getElement(
+                'invoicePaymentMethodId'
+              ).value
+            );
+
+            formData.append(
+              'discountAmount',
+              getElement(
+                'invoiceDiscountAmount'
+              ).value
+            );
+
+            formData.append(
+              'taxAmount',
+              getElement(
+                'invoiceTaxAmount'
+              ).value
+            );
+
+            formData.append(
+              'paidAmount',
+              getElement(
+                'invoicePaidAmount'
+              ).value
+            );
+
+            formData.append(
+              'advanceAmountApplied',
+              getElement(
+                'invoiceAdvanceAmount'
+              ).value
+            );
+
+            formData.append(
+              'notes',
+              getElement(
+                'invoiceNotes'
+              ).value
+            );
+
+            formData.append(
+              'items',
+              JSON.stringify(
+                invoiceItems
+              )
+            );
+
+            const button =
+              getElement(
+                'saveInvoice'
+              );
+
+            button.disabled = true;
+
+            if (invoiceId) {
+
+              updateInvoice(
+                invoiceId,
+                formData
+              );
+
+            } else {
+
+              createInvoice(
+                formData
+              );
+            }
+
+            setTimeout(
+              function () {
+                button.disabled = false;
+              },
+              1500
+            );
+          }
+        );
+
+
+        //- --------------------------------------------------------
+        //- Customer Advance
+        //- --------------------------------------------------------
+        $(document).on(
+          'click',
+          '#saveCustomerAdvance',
+          function () {
+
+            const customerId =
+              getElement(
+                'advanceCustomerId'
+              ).value;
+
+            const amount =
+              getElement(
+                'customerAdvanceAmount'
+              ).value;
+
+            const paymentMethodId =
+              getElement(
+                'customerAdvanceMethod'
+              ).value;
+
+            if (
+              !customerId ||
+              Number(amount) <= 0
+            ) {
+
+              alert(
+                'Customer and a positive amount are required.'
+              );
+
+              return;
+            }
+
+            const payload =
+              new FormData();
+
+            payload.append(
+              'customerId',
+              customerId
+            );
+
+            payload.append(
+              'amount',
+              amount
+            );
+
+            payload.append(
+              'paymentMethodId',
+              paymentMethodId
+            );
+
+            payload.append(
+              'notes',
+              getElement(
+                'customerAdvanceNotes'
+              ).value
+            );
+
+            const button =
+              getElement(
+                'saveCustomerAdvance'
+              );
+
+            button.disabled = true;
+
+            $.ajax({
+
+              url:
+                '/api/bluetech/customer-advances',
+
+              type: 'POST',
+
+              data: payload,
+
+              processData: false,
+
+              contentType: false,
+
+              success: function (result) {
+
+                alert(
+                  result.message ||
+                  'Advance recorded successfully.'
+                );
+
+                if (result.status) {
+                  window.location.reload();
+                }
+
+              },
+
+              error: function (xhr) {
+
+                console.error(
+                  'Customer advance error:',
+                  xhr
+                );
+
+                alert(
+                  xhr.responseJSON?.message ||
+                  'Failed to record customer advance.'
+                );
+              },
+
+              complete: function () {
+                button.disabled = false;
+              }
+
+            });
+          }
+        );
+
+      });
+
+    })();

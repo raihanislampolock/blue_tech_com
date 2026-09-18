@@ -17,6 +17,11 @@ import { BlueTechSupplierPaymentModel } from "./modules/blue_tech/models/blue_te
 import { BlueTechSupplierPaymentAllocationModel } from "./modules/blue_tech/models/blue_tech_supplier_payment_allocation_model";
 import { BlueTechPurchaseOrderModel } from "./modules/blue_tech/models/blue_tech_purchase_order_model";
 import { BlueTechPurchaseOrderItemModel } from "./modules/blue_tech/models/blue_tech_purchase_order_item_model";
+import { BlueTechCustomerModel } from "./modules/blue_tech/models/blue_tech_customer_model";
+import { BlueTechInvoiceModel } from "./modules/blue_tech/models/blue_tech_invoice_modal";
+import { BlueTechInvoiceItemModel } from "./modules/blue_tech/models/blue_tech_invoice_item_modal";
+import { BlueTechCustomerAdvanceModel } from "./modules/blue_tech/models/blue_tech_customer_advance_model";
+import { BlueTechCustomerAdvanceAllocationModel } from "./modules/blue_tech/models/blue_tech_customer_advance_allocation_model";
 
 
 const APP_CONFIG: Config = new Config(JSON.parse(fs.readFileSync("config.json").toString()));
@@ -31,7 +36,9 @@ export const AppDataSource = new DataSource({
     database: APP_CONFIG.postgres.dbName || 'blue_tech_db',
     entities: [UserModel, RoleModel, ProviderModel, PermissionModel, EmailConfigModel, BlueTechItemsModel, BlueTechItemStockModel,
         BlueTechPurchaseItemModel, BlueTechPurchaseModel, BlueTechStockMovementModel, BlueTechSupplierModel, BlueTechPaymentMethodModel,
-        BlueTechSupplierPaymentModel, BlueTechSupplierPaymentAllocationModel, BlueTechPurchaseOrderModel, BlueTechPurchaseOrderItemModel],
+        BlueTechSupplierPaymentModel, BlueTechSupplierPaymentAllocationModel, BlueTechPurchaseOrderModel, BlueTechPurchaseOrderItemModel,
+        BlueTechCustomerModel, BlueTechInvoiceModel, BlueTechInvoiceItemModel, BlueTechCustomerAdvanceModel,
+        BlueTechCustomerAdvanceAllocationModel],
     synchronize: true, // Automatically sync entity schema (disable in production)
     logging: false,
 });
@@ -75,6 +82,21 @@ const createSequences = async (): Promise<void> => {
             NO MINVALUE
             NO MAXVALUE
             CACHE 1;
+        `);
+
+        await AppDataSource.query(`
+            CREATE SEQUENCE IF NOT EXISTS blue_tech_purchase_seq
+            START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
+        `);
+
+        await AppDataSource.query(`
+            CREATE SEQUENCE IF NOT EXISTS blue_tech_invoice_seq
+            START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
+        `);
+
+        await AppDataSource.query(`
+            CREATE SEQUENCE IF NOT EXISTS blue_tech_customer_advance_seq
+            START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
         `);
 
     //     // Create rms_delivery_seq if it doesn't exist

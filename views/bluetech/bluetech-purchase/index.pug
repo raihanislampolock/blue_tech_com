@@ -994,12 +994,12 @@ block script
         // EDIT CLICK
         // ========================
         document.addEventListener('click', function (e) {
-            const btn = e.target.closest('[data-purchase-order-id]');
+          const btn = e.target.closest('[data-purchase-id]');
             if (!btn) return;
 
             e.preventDefault();
 
-            const id = Number(btn.dataset.purchaseOrderId);
+            const id = Number(btn.dataset.purchaseId);
             if (!id || isNaN(id)) return;
 
             loadPurchase(id);
@@ -1045,6 +1045,7 @@ block script
             const opt = itemSelect.options[itemSelect.selectedIndex];
             const itemId = itemSelect.value;
             const description = itemDescription.value.trim();
+            const enteredImei = (imeiNumber.value || opt.dataset.imei || '').trim();
 
             if (!itemId) {
                 swal("Warning", "Select item", "warning");
@@ -1062,15 +1063,15 @@ block script
               return;
             }
 
-            if (cart.find(x => x.itemId == itemId)) {
-                swal("Warning", "Item already added", "warning");
+            if (cart.find(x => x.itemId == itemId && (x.imeiNumber || '').trim() === enteredImei)) {
+                swal("Warning", "This item and IMEI are already added", "warning");
                 return;
             }
 
             cart.push({
                 itemId,
                 itemName: opt.dataset.name || opt.text,
-                imeiNumber: imeiNumber.value || opt.dataset.imei || '',
+                imeiNumber: enteredImei,
                 description: description || '',
                 quantity: Number(quantity.value),
                 unitPrice: Number(unitPrice.value) || 0
@@ -1081,7 +1082,8 @@ block script
             itemSelect.value = '';
             $(itemSelect).trigger('change');
             unitPrice.value = '';
-            quantity.value = '';
+            quantity.value = '1';
+            imeiNumber.value = '';
             itemDescription.value = '';
         });
 

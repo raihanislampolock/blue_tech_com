@@ -37,20 +37,16 @@
 
               .col-md-3
                 .form-group
-                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") IMEI Number
-                  input.form-control.modern-control(type='text', id='imeiNumber', placeholder='Enter IMEI Number', style="border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.95rem; outline: none; transition: all 0.2s;")
-
-              .col-md-3
-                .form-group
                   label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Quantity
                   input.form-control.modern-control(type='number', id='qty', min='0', placeholder='Total quantity', readonly, style="background-color: #f7fafc; color: #2d3748; border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.95rem; outline: none; transition: all 0.2s;")
 
-            .row.mt-2
-              .col-md-4
+              .col-md-3
                 .form-group
                   label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Total Purchase Price
-                  input.form-control.modern-control(type='number', id='purchasesPrice', min='0', step='0.01', placeholder='Calculated from items', readonly, style='background-color: #f7fafc; color: #2d3748; border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 1rem;')
+                  input.form-control.modern-control(type='number', id='purchasesPrice', min='0', step='0.01', placeholder='Calculated from items', readonly, style='background-color: #f7fafc; color: #2d3748; border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 1rem;')    
 
+            .row.mt-2
+              
               .col-md-4
                 .form-group
                   label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Supplier Advance Used
@@ -115,12 +111,17 @@
               .col-md-2
                 .form-group.mb-md-0
                   label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Quantity
-                  input.form-control.modern-control(type='number', id='quantity', placeholder='Qty', min='1', style="border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.95rem;")
+                  input.form-control.modern-control(type='number', id='quantity', readonly, value='1', placeholder='Qty', min='1', style="border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.95rem;")
 
               .col-md-3
-                .form-group.mb-md-0
-                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Line Custom Description
-                  input.form-control.modern-control(type='text', id='itemDescription', placeholder='Specifications or modifications...', style="border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.95rem;")
+                .form-group
+                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") IMEI Number
+                  input.form-control.modern-control(type='text', id='imeiNumber', placeholder='Enter IMEI Number', style="border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.95rem; outline: none; transition: all 0.2s;")
+
+              .col-md-12
+                .form-group
+                  label(style="font-weight: 500; color: #4a5568; margin-bottom: 0.4rem; font-size: 0.9rem;") Item Description
+                  textarea.form-control.modern-control(id='itemDescription', name='itemDescription', placeholder='Enter item description...', rows='2', style='border: 1px solid #cbd5e0; border-radius: 8px; padding: 0.5rem 1rem;')
 
               .row.mt-2.justify-content-center
               .col-md-11.col-12

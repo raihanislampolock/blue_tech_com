@@ -1,0 +1,1131 @@
+extends ../../layout
+
+block style
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css')
+  style.
+    /* === Customer Card === */
+    .customer-card {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      border: 1px solid #edf2f7;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
+    /* === Toolbar === */
+    .customer-toolbar {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid #edf2f7;
+      background-color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .customer-toolbar-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    /* === Inputs === */
+    .customer-input-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+      color: #4a5568;
+    }
+
+    .customer-control {
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      background-color: #fcfcfc;
+      outline: none;
+      color: #2d3748;
+    }
+
+    .customer-control:focus {
+      border-color: #580db4;
+      box-shadow: 0 0 0 3px rgba(88, 13, 180, 0.1);
+      background-color: #fff;
+    }
+
+    /* === Buttons === */
+    .customer-btn {
+      padding: 0.5rem 1.1rem;
+      font-weight: 500;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .customer-primary {
+      background-color: #580db4;
+      color: #fff;
+      box-shadow: 0 2px 4px rgba(88, 13, 180, 0.2);
+    }
+
+    .customer-primary:hover {
+      background-color: #480a96;
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px rgba(88, 13, 180, 0.3);
+    }
+
+    .customer-export {
+      background-color: #0ea5e9;
+      color: #fff;
+    }
+
+    .customer-export:hover {
+      background-color: #0284c7;
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* === Table === */
+    .customer-table-wrap {
+      padding: 0;
+      max-height: 60vh;
+      overflow-y: auto;
+      overflow-x: auto;
+      position: relative;
+    }
+
+    .customer-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 0;
+      white-space: nowrap;
+    }
+
+    .customer-table thead th {
+      position: sticky;
+      top: 0;
+      background-color: #580db4;
+      color: #fff;
+      font-weight: 500;
+      padding: 1rem 1.25rem;
+      border: none;
+      z-index: 10;
+      text-align: center;
+      white-space: nowrap;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .customer-table tbody td {
+      padding: 1rem 1.25rem;
+      vertical-align: middle;
+      border-bottom: 1px solid #edf2f7;
+      color: #2d3748;
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    .customer-table tbody tr {
+      background-color: #ffffff;
+      transition: all 0.2s;
+    }
+
+    .customer-table tbody tr:hover {
+      background-color: #fbf8ff;
+    }
+
+    /* === Action Icon === */
+    .customer-action-icon {
+      color: #718096;
+      background: #edf2f7;
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: all 0.2s;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+
+    .customer-action-icon:hover {
+      background: #580db4;
+      color: #fff;
+      transform: scale(1.05);
+      text-decoration: none;
+    }
+
+    /* === Footer === */
+    .customer-footer {
+      padding: 1.25rem 1.5rem;
+      background-color: #f8f9fa;
+      border-top: 1px solid #edf2f7;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .customer-footer .title-filter {
+      color: #718096;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    /* === Pagination === */
+    .pagination {
+      margin: 0;
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    .pagination li a,
+    .pagination li span {
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 0.4rem 0.75rem;
+      color: #4a5568;
+      background: #fff;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .pagination li.active a {
+      background-color: #580db4;
+      border-color: #580db4;
+      color: #fff;
+      box-shadow: 0 2px 4px rgba(88, 13, 180, 0.2);
+    }
+
+    .pagination li a:hover {
+      background-color: #edf2f7;
+      color: #580db4;
+      text-decoration: none;
+    }
+
+    .breadcrumb {
+      background: transparent;
+      padding: 0;
+    }
+
+block content
+  section.content-header.mb-4
+    div(style='display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;')
+      h1(style='margin:0; font-weight:600; color:#2d3748;') Blue Tech Customer Dashboard
+
+      ol.breadcrumb(style='margin:0;')
+        li
+          a(href='/dashboard' style='color:#580db4; font-weight:500; text-decoration:none;')
+            i.fa.fa-home.mr-1
+            | Dashboard
+        li
+          span(style='color:#4a5568; font-weight:500; margin-left:.5rem;') Customers
+
+  section.content
+    .customer-card
+
+      //- ============================
+      //- Toolbar
+      //- ============================
+      .customer-toolbar
+        .customer-toolbar-group
+
+          .customer-input-group
+            span Search:
+            input.customer-control#customerSearch(
+              type='text'
+              placeholder='Search Customer...'
+              name='search'
+              autocomplete='off'
+              style='width:250px;'
+            )
+
+            button.customer-btn.customer-primary#customerSearchBtn(type='button')
+              i.fa.fa-search
+
+          button.customer-btn.customer-primary.btn-add-customer(
+            type='button'
+            data-toggle='modal'
+            data-target='#add-edit-customer-modal'
+          )
+            i.fa.fa-plus
+            | Create Customer
+
+          button.customer-btn.customer-export#customerExportBtn(
+            type='button'
+            title='Download Customer Export'
+          )
+            i.fa.fa-download
+            | Download Customers
+
+        .customer-toolbar-group
+          .customer-input-group
+            span Show:
+            select.customer-control#customerLimit(style='width:80px;')
+              option(value='10') 10
+              option(value='25') 25
+              option(value='50') 50
+              option(value='100') 100
+
+      //- ============================
+      //- Customer Table
+      //- ============================
+      .customer-table-wrap
+        table.customer-table#customerTable
+          thead
+            tr
+              th Action
+              th Customer Name
+              th Phone
+              th Email
+              th Tax Number
+              th Billing Address
+              th Notes
+              th Status
+              th Created By
+              th Created Date
+
+          tbody#customerTableBody
+            tr
+              td.text-center(colspan='10' style='padding:3rem;')
+                i.fa.fa-spinner.fa-spin(
+                  style='font-size:32px; color:#580db4;'
+                )
+
+      //- ============================
+      //- Footer / Pagination
+      //- ============================
+      .customer-footer
+        span.title-filter#customerTitleFilter Showing no entries
+        ul.pagination#customerPagination
+
+  //- ============================
+  //- Modal Registry
+  //- ============================
+  include ./create
+
+
+block script
+  script.
+    document.addEventListener('DOMContentLoaded', function () {
+
+      const tableBody = document.getElementById('customerTableBody');
+      const paginationContainer = document.getElementById('customerPagination');
+      const search = document.getElementById('customerSearch');
+      const searchBtn = document.getElementById('customerSearchBtn');
+      const limitSelect = document.getElementById('customerLimit');
+      const exportExcelBtn = document.getElementById('customerExportBtn');
+
+      let currentPage = 1;
+      let currentSearch = '';
+      let limit = Number(limitSelect.value);
+
+      // ==========================================
+      // HTML Escape
+      // ==========================================
+      function escapeHtml(value) {
+        return String(value ?? '').replace(
+          /[&<>"']/g,
+          function (character) {
+            return {
+              '&': '&amp;',
+              '<': '&lt;',
+              '>': '&gt;',
+              '"': '&quot;',
+              "'": '&#39;'
+            }[character];
+          }
+        );
+      }
+
+      // ==========================================
+      // Fetch Customers
+      // ==========================================
+      async function fetchCustomers(page = 1, searchValue = '', limitValue = 10) {
+
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="10" class="text-center" style="padding:3rem;">
+              <i class="fa fa-spinner fa-spin"
+                 style="font-size:32px; color:#580db4;"></i>
+            </td>
+          </tr>
+        `;
+
+        try {
+
+          const response = await fetch(
+            `/api/bluetech/bluetech-customers/all?page=${page}&search=${encodeURIComponent(searchValue)}&limit=${limitValue}`
+          );
+
+          const data = await response.json();
+
+          if (data?.data?.length > 0) {
+
+            tableBody.innerHTML = data.data.map(customer => {
+
+              return `
+                <tr class="main-row" data-id="${customer.id}">
+
+                  <td>
+                    <a href="#"
+                       class="customer-action-icon edit-customer-btn"
+                       data-customer-id="${customer.id}"
+                       title="Modify Customer">
+                      <i class="fa fa-edit"></i>
+                    </a>
+                  </td>
+
+                  <td style="font-weight:600; color:#580db4;">
+                    ${escapeHtml(customer.customerName || '-')}
+                  </td>
+
+                  <td>
+                    ${escapeHtml(customer.phoneNumber || '-')}
+                  </td>
+
+                  <td>
+                    ${escapeHtml(customer.email || '-')}
+                  </td>
+
+                  <td>
+                    ${escapeHtml(customer.taxNumber || '-')}
+                  </td>
+
+                  <td style="max-width:250px; overflow:hidden; text-overflow:ellipsis;">
+                    ${escapeHtml(customer.billingAddress || '-')}
+                  </td>
+
+                  <td style="max-width:250px; overflow:hidden; text-overflow:ellipsis;">
+                    ${escapeHtml(customer.notes || '-')}
+                  </td>
+
+                  <td>
+                    <span class="badge ${customer.isActive ? 'badge-success' : 'badge-secondary'}">
+                      ${customer.isActive ? 'Active' : 'Inactive'}
+                    </span>
+                  </td>
+
+                  <td>
+                    ${escapeHtml(customer.createdBy || 'System')}
+                  </td>
+
+                  <td>
+                    ${
+                      customer.created_at
+                        ? new Date(customer.created_at).toLocaleDateString()
+                        : '-'
+                    }
+                  </td>
+
+                </tr>
+              `;
+
+            }).join('');
+
+            const totalRecords = Number(data.total || 0);
+            const startRecord = ((page - 1) * limitValue) + 1;
+            const endRecord = Math.min(
+              page * limitValue,
+              totalRecords
+            );
+
+            document
+              .getElementById('customerTitleFilter')
+              .textContent =
+                `Showing ${startRecord} to ${endRecord} of ${totalRecords} records`;
+
+          } else {
+
+            tableBody.innerHTML = `
+              <tr>
+                <td colspan="10"
+                    class="text-center"
+                    style="padding:3rem; color:#a0aec0;">
+                  No customer records found matching this criteria.
+                </td>
+              </tr>
+            `;
+
+            document
+              .getElementById('customerTitleFilter')
+              .textContent = 'No entries matching filters';
+          }
+
+          renderPagination(
+            Math.ceil(Number(data.total || 0) / limitValue),
+            page
+          );
+
+        } catch (error) {
+
+          console.error(
+            'Customer loading error:',
+            error
+          );
+
+          tableBody.innerHTML = `
+            <tr>
+              <td colspan="10"
+                  class="text-center"
+                  style="padding:3rem; color:#e53e3e;">
+                <i class="fa fa-exclamation-triangle"></i>
+                Error loading customer records.
+              </td>
+            </tr>
+          `;
+
+          document
+            .getElementById('customerTitleFilter')
+            .textContent = 'Error loading entries';
+
+          paginationContainer.innerHTML = '';
+        }
+      }
+
+      // ==========================================
+      // Pagination
+      // ==========================================
+      function renderPagination(totalPages, currentPage) {
+
+        paginationContainer.innerHTML = '';
+
+        if (!totalPages || totalPages <= 0) {
+          return;
+        }
+
+        const maxVisiblePages = 5;
+
+        function createPageLink(page, isActive = false) {
+
+          const pageItem = document.createElement('li');
+
+          if (isActive) {
+            pageItem.classList.add('active');
+          }
+
+          pageItem.innerHTML = `
+            <a href="#"
+               class="pagination-link"
+               data-page="${page}">
+              ${page}
+            </a>
+          `;
+
+          paginationContainer.appendChild(pageItem);
+        }
+
+        // Previous
+        if (currentPage > 1) {
+
+          const prevItem = document.createElement('li');
+
+          prevItem.innerHTML = `
+            <a href="#"
+               class="pagination-link"
+               data-page="${currentPage - 1}">
+              <i class="fa fa-chevron-left"
+                 style="font-size:0.8em; pointer-events:none;"></i>
+            </a>
+          `;
+
+          paginationContainer.appendChild(prevItem);
+        }
+
+        // Normal pagination
+        if (totalPages <= maxVisiblePages) {
+
+          for (let i = 1; i <= totalPages; i++) {
+            createPageLink(i, i === currentPage);
+          }
+
+        } else {
+
+          createPageLink(1, currentPage === 1);
+
+          let rangeStart = Math.max(
+            2,
+            currentPage - Math.floor(maxVisiblePages / 2)
+          );
+
+          let rangeEnd = Math.min(
+            totalPages - 1,
+            rangeStart + maxVisiblePages - 3
+          );
+
+          if (rangeEnd === totalPages - 1) {
+
+            rangeStart = Math.max(
+              2,
+              rangeEnd - maxVisiblePages + 3
+            );
+          }
+
+          if (rangeStart > 2) {
+
+            paginationContainer.innerHTML += `
+              <li>
+                <span style="pointer-events:none;">...</span>
+              </li>
+            `;
+          }
+
+          for (let i = rangeStart; i <= rangeEnd; i++) {
+            createPageLink(i, i === currentPage);
+          }
+
+          if (rangeEnd < totalPages - 1) {
+
+            paginationContainer.innerHTML += `
+              <li>
+                <span style="pointer-events:none;">...</span>
+              </li>
+            `;
+          }
+
+          if (totalPages > 1) {
+            createPageLink(
+              totalPages,
+              currentPage === totalPages
+            );
+          }
+        }
+
+        // Next
+        if (currentPage < totalPages) {
+
+          const nextItem = document.createElement('li');
+
+          nextItem.innerHTML = `
+            <a href="#"
+               class="pagination-link"
+               data-page="${currentPage + 1}">
+              <i class="fa fa-chevron-right"
+                 style="font-size:0.8em; pointer-events:none;"></i>
+            </a>
+          `;
+
+          paginationContainer.appendChild(nextItem);
+        }
+      }
+
+      // ==========================================
+      // Change Page
+      // ==========================================
+      function updatePage(page) {
+
+        currentPage = page;
+        currentSearch = search.value;
+
+        fetchCustomers(
+          currentPage,
+          currentSearch,
+          limit
+        );
+      }
+
+      // ==========================================
+      // Pagination Click
+      // ==========================================
+      paginationContainer.addEventListener(
+        'click',
+        function (event) {
+
+          const link = event.target.closest('.pagination-link');
+
+          if (!link) {
+            return;
+          }
+
+          event.preventDefault();
+
+          const page = parseInt(
+            link.getAttribute('data-page'),
+            10
+          );
+
+          if (!isNaN(page)) {
+            updatePage(page);
+          }
+        }
+      );
+
+      // ==========================================
+      // Search Enter
+      // ==========================================
+      search.addEventListener(
+        'keypress',
+        function (event) {
+
+          if (event.key === 'Enter') {
+
+            event.preventDefault();
+
+            searchBtn.click();
+          }
+        }
+      );
+
+      // ==========================================
+      // Search Button
+      // ==========================================
+      searchBtn.addEventListener(
+        'click',
+        function () {
+
+          currentSearch = search.value;
+
+          currentPage = 1;
+
+          fetchCustomers(
+            currentPage,
+            currentSearch,
+            limit
+          );
+        }
+      );
+
+      // ==========================================
+      // Limit Change
+      // ==========================================
+      limitSelect.addEventListener(
+        'change',
+        function () {
+
+          limit = Number(limitSelect.value);
+
+          currentSearch = search.value;
+
+          currentPage = 1;
+
+          fetchCustomers(
+            currentPage,
+            currentSearch,
+            limit
+          );
+        }
+      );
+
+      // ==========================================
+      // Export Customers
+      // ==========================================
+      if (exportExcelBtn) {
+
+        exportExcelBtn.addEventListener(
+          'click',
+          function () {
+
+            const searchValue =
+              search.value || '';
+
+            const params =
+              new URLSearchParams();
+
+            if (searchValue.trim()) {
+
+              params.append(
+                'search',
+                searchValue.trim()
+              );
+            }
+
+            window.location.href =
+              `/api/bluetech/bluetech-customers/export/excel?${params.toString()}`;
+          }
+        );
+      }
+
+      // ==========================================
+      // Initial Customer Load
+      // ==========================================
+      fetchCustomers(
+        currentPage,
+        search.value,
+        limit
+      );
+
+    });
+
+
+    // ==========================================================
+    // RESET CUSTOMER FORM
+    // ==========================================================
+    $(document).on(
+      'click',
+      '.btn-add-customer',
+      function () {
+
+        $('#customer-form')[0].reset();
+
+        $('#customer-form')
+          .removeAttr('data-customer-id');
+
+        $('#customerId').val('');
+
+        $('#customerIsActive').prop(
+          'checked',
+          true
+        );
+
+        $('#add-edit-customer-modal .modal-title')
+          .text('Add Customer');
+
+        $('#button-add-edit-customer')
+          .html('<i class="fa fa-save"></i> Create');
+      }
+    );
+
+
+    // ==========================================================
+    // CUSTOMER FORM SUBMISSION
+    // ==========================================================
+    $('#customer-form').on(
+      'submit',
+      function (e) {
+
+        e.preventDefault();
+
+        const id =
+          $(this).attr('data-customer-id');
+
+        const customerName =
+          $('#customerName').val().trim();
+
+        if (!customerName) {
+
+          swal(
+            'Validation Error',
+            'Customer name is required',
+            'error'
+          );
+
+          return;
+        }
+
+        const data = {
+
+          customerName:
+            customerName,
+
+          phoneNumber:
+            $('#customerPhone').val(),
+
+          email:
+            $('#customerEmail').val(),
+
+          taxNumber:
+            $('#customerTaxNumber').val(),
+
+          billingAddress:
+            $('#customerBillingAddress').val(),
+
+          notes:
+            $('#customerNotes').val(),
+
+          isActive:
+            $('#customerIsActive').is(':checked')
+        };
+
+        console.log(
+          'Sending customer data:',
+          data
+        );
+
+        if (id) {
+
+          updateCustomer(
+            id,
+            data
+          );
+
+        } else {
+
+          createCustomer(
+            data
+          );
+        }
+      }
+    );
+
+
+    // ==========================================================
+    // CREATE CUSTOMER
+    // ==========================================================
+    function createCustomer(data) {
+
+      $.ajax({
+
+        url: '/api/bluetech/bluetech-customers/create',
+
+        type: 'POST',
+
+        data: JSON.stringify(data),
+
+        contentType: 'application/json',
+
+        success: function (response) {
+
+          console.log(
+            'Create Customer response:',
+            response
+          );
+
+          if (response.status) {
+
+            swal({
+
+              title:
+                response.message ||
+                'Customer created successfully',
+
+              icon: 'success',
+
+              button: 'OK'
+
+            }).then(function () {
+
+              window.location.reload();
+
+            });
+
+          } else {
+
+            swal(
+              'Error',
+              response.message ||
+              'Failed to create customer',
+              'error'
+            );
+          }
+        },
+
+        error: function (xhr) {
+
+          console.error(
+            'Create Customer Error:',
+            xhr.responseText
+          );
+
+          swal(
+            'Error',
+            xhr.responseJSON?.message ||
+            'Something went wrong',
+            'error'
+          );
+        }
+      });
+    }
+
+
+    // ==========================================================
+    // UPDATE CUSTOMER
+    // ==========================================================
+    function updateCustomer(id, data) {
+
+      $.ajax({
+
+        url:
+          `/api/bluetech/bluetech-customers/update/${id}`,
+
+        type: 'PUT',
+
+        data:
+          JSON.stringify(data),
+
+        contentType:
+          'application/json',
+
+        success: function (response) {
+
+          if (response.status) {
+
+            swal({
+
+              title:
+                response.message ||
+                'Customer updated successfully',
+
+              icon: 'success',
+
+              button: 'OK'
+
+            }).then(function () {
+
+              window.location.reload();
+
+            });
+
+          } else {
+
+            swal(
+              'Error',
+              response.message ||
+              'Failed to update customer',
+              'error'
+            );
+          }
+        },
+
+        error: function (xhr) {
+
+          console.error(
+            'Update Customer Error:',
+            xhr.responseText
+          );
+
+          swal(
+            'Error',
+            xhr.responseJSON?.message ||
+            'Something went wrong',
+            'error'
+          );
+        }
+      });
+    }
+
+
+    // ==========================================================
+    // EDIT CUSTOMER BUTTON
+    // ==========================================================
+    $(document).on(
+      'click',
+      '.edit-customer-btn',
+      function (e) {
+
+        e.preventDefault();
+
+        const id =
+          $(this).attr('data-customer-id');
+
+        if (!id) {
+
+          swal(
+            'Error',
+            'Customer ID is missing',
+            'error'
+          );
+
+          return;
+        }
+
+        loadCustomerForEdit(id);
+      }
+    );
+
+
+    // ==========================================================
+    // LOAD CUSTOMER FOR EDIT
+    // ==========================================================
+    function loadCustomerForEdit(id) {
+
+      $.ajax({
+
+        url:
+          `/api/bluetech/bluetech-customers/edit/${id}`,
+
+        type: 'GET',
+
+        success: function (response) {
+
+          if (
+            response.status &&
+            response.data
+          ) {
+
+            const customer =
+              response.data;
+
+            $('#customer-form')
+              .attr(
+                'data-customer-id',
+                id
+              );
+
+            $('#customerId')
+              .val(id);
+
+            $('#customerName')
+              .val(
+                customer.customerName || ''
+              );
+
+            $('#customerPhone')
+              .val(
+                customer.phoneNumber || ''
+              );
+
+            $('#customerEmail')
+              .val(
+                customer.email || ''
+              );
+
+            $('#customerTaxNumber')
+              .val(
+                customer.taxNumber || ''
+              );
+
+            $('#customerBillingAddress')
+              .val(
+                customer.billingAddress || ''
+              );
+
+            $('#customerNotes')
+              .val(
+                customer.notes || ''
+              );
+
+            $('#customerIsActive')
+              .prop(
+                'checked',
+                customer.isActive !== false
+              );
+
+            $('#add-edit-customer-modal .modal-title')
+              .text('Update Customer');
+
+            $('#button-add-edit-customer')
+              .html('<i class="fa fa-save"></i> Update');
+
+            $('#add-edit-customer-modal')
+              .modal('show');
+
+          } else {
+
+            swal(
+              'Error',
+              response.message ||
+              'Failed to load customer data',
+              'error'
+            );
+          }
+        },
+
+        error: function (xhr) {
+
+          console.error(
+            'Load Customer Error:',
+            xhr.responseText
+          );
+
+          swal(
+            'Error',
+            xhr.responseJSON?.message ||
+            'Something went wrong',
+            'error'
+          );
+        }
+      });
+    }

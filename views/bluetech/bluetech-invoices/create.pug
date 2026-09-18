@@ -1,0 +1,656 @@
+#add-edit-invoice-modal.modal.fade(
+  data-backdrop='static'
+  data-keyboard='false'
+)
+
+  .modal-dialog.modal-dialog-centered.modal-xl
+
+    .modal-content(
+      style='border-radius:16px; border:none; overflow:hidden;'
+    )
+
+      //- ==========================================================
+      //- Modal Styles
+      //- ==========================================================
+      style.
+
+        .invoice-modal-header {
+          background-color: #ffffff;
+          border-bottom: 1px solid #edf2f7;
+          padding: 1.25rem 1.75rem;
+        }
+
+        .invoice-modal-title {
+          font-weight: 600;
+          color: #2d3748;
+          margin: 0;
+        }
+
+        .invoice-modal-body {
+          padding: 1.5rem 1.75rem;
+          background-color: #f8fafc;
+        }
+
+        .invoice-section-block {
+          background-color: #ffffff;
+          padding: 1.5rem;
+          border-radius: 12px;
+          border: 1px solid #edf2f7;
+          margin-bottom: 1.5rem;
+        }
+
+        .invoice-section-title {
+          font-size: 1rem;
+          font-weight: 600;
+          color: #580db4;
+          text-transform: uppercase;
+          letter-spacing: .3px;
+          border-bottom: 2px solid rgba(88, 13, 180, .08);
+          padding-bottom: .65rem;
+          margin-bottom: 1.5rem;
+        }
+
+        .invoice-form-group {
+          margin-bottom: 1.25rem;
+        }
+
+        .invoice-form-label {
+          font-weight: 500;
+          color: #718096;
+          font-size: .9rem;
+          margin-bottom: .4rem;
+          display: inline-block;
+        }
+
+        .invoice-required {
+          color: #e53e3e;
+          font-weight: 600;
+        }
+
+        .invoice-form-control {
+          border: 1px solid #cbd5e0;
+          border-radius: 8px;
+          padding: .65rem 1rem;
+          font-size: .95rem;
+          background-color: #fcfcfc;
+          color: #2d3748;
+          box-shadow: none;
+          transition: all .2s;
+        }
+
+        .invoice-form-control:focus {
+          border-color: #580db4;
+          box-shadow: 0 0 0 3px rgba(88, 13, 180, .1);
+          background-color: #ffffff;
+        }
+
+        .invoice-form-control:disabled,
+        .invoice-form-control[readonly] {
+          background-color: #f8fafc;
+        }
+
+        .invoice-item-table {
+          width: 100%;
+          margin-bottom: 0;
+        }
+
+        .invoice-item-table thead th {
+          background-color: #580db4;
+          color: #ffffff;
+          border-color: #580db4;
+          text-align: center;
+          vertical-align: middle;
+        }
+
+        .invoice-item-table tbody td {
+          vertical-align: middle;
+        }
+
+        .invoice-add-item-btn {
+          background-color: #580db4;
+          border-color: #580db4;
+          color: #ffffff;
+          border-radius: 8px;
+          padding: .55rem 1rem;
+        }
+
+        .invoice-add-item-btn:hover {
+          background-color: #480a96;
+          border-color: #480a96;
+          color: #ffffff;
+        }
+
+        .invoice-summary-label {
+          font-weight: 500;
+          color: #718096;
+          font-size: .9rem;
+          margin-bottom: .4rem;
+          display: block;
+        }
+
+        .invoice-total-control {
+          font-weight: 600;
+        }
+
+        .invoice-modal-footer {
+          background-color: #f8f9fa;
+          border-top: 1px solid #edf2f7;
+          padding: 1.25rem 1.75rem;
+        }
+
+        .invoice-modal-btn {
+          padding: .55rem 1.25rem;
+          font-weight: 500;
+          border-radius: 8px;
+          display: inline-flex;
+          align-items: center;
+          gap: .45rem;
+          border: none;
+          cursor: pointer;
+        }
+
+        .invoice-modal-btn-primary {
+          background-color: #580db4;
+          color: #ffffff;
+        }
+
+        .invoice-modal-btn-primary:hover {
+          background-color: #480a96;
+          color: #ffffff;
+        }
+
+        .invoice-modal-btn-secondary {
+          background-color: #e2e8f0;
+          color: #4a5568;
+        }
+
+        .invoice-modal-btn-secondary:hover {
+          background-color: #cbd5e0;
+          color: #2d3748;
+        }
+
+
+      //- ==========================================================
+      //- Invoice Form
+      //- ==========================================================
+      form#invoice-form(
+        role='form'
+        action='#'
+        method='POST'
+      )
+
+        //- ========================================================
+        //- Modal Header
+        //- ========================================================
+        .modal-header.invoice-modal-header
+
+          h5.modal-title.invoice-modal-title
+
+            i.fa.fa-file-invoice.mr-2
+
+            | Blue Tech Sales Invoice
+
+          button.close(
+            type='button'
+            data-dismiss='modal'
+            aria-label='Close'
+            style='outline:none; font-size:1.5rem;'
+          )
+
+            span(aria-hidden='true')
+              | &times;
+
+
+        //- ========================================================
+        //- Modal Body
+        //- ========================================================
+        .modal-body.invoice-modal-body(
+          style='max-height:75vh; overflow-y:auto;'
+        )
+
+          //- Hidden Invoice ID
+          input#invoiceId(
+            type='hidden'
+            name='invoiceId'
+          )
+
+
+          //- ======================================================
+          //- Invoice Information
+          //- ======================================================
+          .invoice-section-block
+
+            h6.invoice-section-title
+
+              i.fa.fa-file-invoice.mr-2
+
+              | Invoice Information
+
+            //- Row 1
+            .row
+
+              .col-md-3
+
+                .invoice-form-group
+
+                  label.invoice-form-label(
+                    for='invoiceNumber'
+                  )
+                    | Invoice Number
+
+                  input.form-control.invoice-form-control#invoiceNumber(
+                    type='text'
+                    name='invoiceNumber'
+                    readonly
+                    placeholder='Auto generated'
+                  )
+
+
+              .col-md-3
+
+                .invoice-form-group
+
+                  label.invoice-form-label(
+                    for='invoiceCustomerId'
+                  )
+
+                    | Customer
+
+                    span.invoice-required.ml-1
+                      | *
+
+                  select.form-control.invoice-form-control.select2#invoiceCustomerId(
+                    name='customerId'
+                    required
+                    data-placeholder='Search customer name or phone'
+                    style='width: 100%;'
+                  )
+
+                    option(
+                      value=''
+                      selected
+                      disabled
+                    )
+                      | Choose customer
+
+                    each customer in customers
+
+                      option(
+                        value=customer.id
+                        data-phone=customer.phoneNumber
+                        data-address=customer.billingAddress
+                      )= customer.label
+
+
+              .col-md-3
+
+                .invoice-form-group
+
+                  label.invoice-form-label(
+                    for='invoiceDate'
+                  )
+                    | Invoice Date
+
+                  input.form-control.invoice-form-control#invoiceDate(
+                    type='date'
+                    name='invoiceDate'
+                  )
+
+
+              .col-md-3
+
+                .invoice-form-group
+
+                  label.invoice-form-label(
+                    for='invoiceDueDate'
+                  )
+                    | Due Date
+
+                  input.form-control.invoice-form-control#invoiceDueDate(
+                    type='date'
+                    name='dueDate'
+                  )
+
+
+            //- Row 2
+            .row
+
+              .col-md-3
+
+                .invoice-form-group
+
+                  label.invoice-form-label(
+                    for='invoicePaymentMethodId'
+                  )
+                    | Payment Method
+
+                  select.form-control.invoice-form-control#invoicePaymentMethodId(
+                    name='paymentMethodId'
+                  )
+
+                    option(value='')
+                      | Choose payment method
+
+                    each method in paymentMethods
+
+                      option(
+                        value=method.id
+                      )= method.paymentMethodName
+
+
+              .col-md-3
+
+                .invoice-form-group
+
+                  label.invoice-form-label(
+                    for='invoiceAvailableAdvance'
+                  )
+                    | Available Customer Advance
+
+                  input.form-control.invoice-form-control#invoiceAvailableAdvance(
+                    type='text'
+                    readonly
+                    value='0.00'
+                  )
+
+
+              .col-md-3
+
+                .invoice-form-group
+
+                  label.invoice-form-label(
+                    for='invoiceAdvanceAmount'
+                  )
+                    | Apply Advance
+
+                  input.form-control.invoice-form-control#invoiceAdvanceAmount(
+                    type='number'
+                    name='advanceAmountApplied'
+                    min='0'
+                    step='0.01'
+                    value='0'
+                  )
+
+
+              .col-md-3
+
+                .invoice-form-group
+
+                  label.invoice-form-label(
+                    for='invoicePaidAmount'
+                  )
+                    | New Payment
+
+                  input.form-control.invoice-form-control#invoicePaidAmount(
+                    type='number'
+                    name='paidAmount'
+                    min='0'
+                    step='0.01'
+                    value='0'
+                  )
+
+
+          //- ======================================================
+          //- Item Assignment
+          //- ======================================================
+          .invoice-section-block
+
+            h6.invoice-section-title
+
+              i.fa.fa-boxes-stacked.mr-2
+
+              | Item Assignment Selection
+
+            .row.align-items-end
+
+              .col-md-3
+
+                .invoice-form-group
+
+                  label.invoice-form-label(
+                    for='invoiceItemId'
+                  )
+                    | Catalog Item
+
+                  select.form-control.invoice-form-control.select2#invoiceItemId(
+                    data-placeholder='Search item name, price, or IMEI'
+                    style='width: 100%;'
+                  )
+
+                    option(
+                      value=''
+                      selected
+                      disabled
+                    )
+                      | Choose item
+
+                    each item in items
+
+                      option(
+                        value=item.id
+                        data-purchase-item-id=item.purchaseItemId
+                        data-name=item.itemName
+                        data-price=item.itemPrice
+                        data-imei=item.imeiNumber
+                      )= `${item.itemName} | ${item.itemPrice || 0} | IMEI: ${item.imeiNumber || 'N/A'}`
+
+
+              .col-md-2
+
+                .invoice-form-group
+
+                  label.invoice-form-label(
+                    for='invoiceUnitPrice'
+                  )
+                    | Unit Price
+
+                  input.form-control.invoice-form-control#invoiceUnitPrice(
+                    type='number'
+                    min='0'
+                    step='0.01'
+                  )
+
+
+              .col-md-2 
+
+                .invoice-form-group
+
+                  label.invoice-form-label(
+                    for='invoiceQuantity'
+                  )
+                    | Quantity
+
+                  input.form-control.invoice-form-control#invoiceQuantity(
+                    type='number'
+                    readonly
+                    min='1'
+                    value='1'
+                  )
+
+
+              .col-md-2
+
+                .invoice-form-group
+
+                  label.invoice-form-label(
+                    for='invoiceItemImei'
+                  )
+                    | IMEI Number
+
+                  input.form-control.invoice-form-control#invoiceItemImei(
+                    type='text'
+                    readonly
+                    tabindex='-1'
+                    placeholder='Auto-filled from purchase'
+                  )
+
+              .col-md-3
+
+                .invoice-form-group
+
+                  label.invoice-form-label(
+                    for='invoiceItemNotes'
+                  )
+                    | Notes
+
+                  input.form-control.invoice-form-control#invoiceItemNotes(
+                    type='text'
+                    placeholder='Optional item notes'
+                  )
+
+
+              .col-md-12
+                .invoice-form-group
+                  button.btn.invoice-add-item-btn#addInvoiceItem(
+                    type='button',
+                    style='background-color: #580db4; color: white; border-radius: 8px; padding: 0.85rem 1.5rem; font-weight: 600; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; border: none; width: 100%; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(88, 13, 180, 0.2); cursor: pointer;',
+                    onmouseover="this.style.backgroundColor='#480a96'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 16px rgba(88, 13, 180, 0.3)'",
+                    onmouseout="this.style.backgroundColor='#580db4'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(88, 13, 180, 0.2)''"
+                  )
+                    i.fa.fa-plus(style='font-size: 1.1rem;')
+                    span Add
+
+
+            //- Invoice Items Table
+            .table-responsive
+
+              table.table.table-bordered.invoice-item-table#invoiceItemTable
+
+                thead
+
+                  tr
+
+                    th Item
+                    th IMEI Number
+                    th Notes
+                    th Qty
+                    th Unit Price
+                    th Total
+                    th Action
+
+                tbody
+
+                  tr#invoiceEmptyItems
+
+                    td.text-center(
+                      colspan='7'
+                    )
+                      | No items added.
+
+
+          //- ======================================================
+          //- Invoice Summary
+          //- ======================================================
+          .invoice-section-block
+
+            .row
+
+              .col-md-3
+
+                label.invoice-summary-label(
+                  for='invoiceDiscountAmount'
+                )
+                  | Discount / Amount
+
+                input.form-control.invoice-form-control#invoiceDiscountAmount(
+                  type='number'
+                  name='discountAmount'
+                  min='0'
+                  step='0.01'
+                  value='0'
+                )
+
+
+              .col-md-3
+
+                label.invoice-summary-label(
+                  for='invoiceTaxAmount'
+                )
+                  | Tax
+
+                input.form-control.invoice-form-control#invoiceTaxAmount(
+                  type='number'
+                  name='taxAmount'
+                  min='0'
+                  step='0.01'
+                  value='0'
+                )
+
+
+              .col-md-2
+
+                label.invoice-summary-label(
+                  for='invoiceSubtotal'
+                )
+                  | Subtotal
+
+                input.form-control.invoice-form-control.invoice-total-control#invoiceSubtotal(
+                  type='text'
+                  readonly
+                  value='0.00'
+                )
+
+
+              .col-md-2
+
+                label.invoice-summary-label(
+                  for='invoiceTotalAmount'
+                )
+                  | Total
+
+                input.form-control.invoice-form-control.invoice-total-control#invoiceTotalAmount(
+                  type='text'
+                  readonly
+                  value='0.00'
+                )
+
+
+              .col-md-2
+
+                label.invoice-summary-label(
+                  for='invoiceDueAmount'
+                )
+                  | Due
+
+                input.form-control.invoice-form-control.invoice-total-control#invoiceDueAmount(
+                  type='text'
+                  readonly
+                  value='0.00'
+                )
+
+
+            .form-group.mt-3
+
+              label.invoice-form-label(
+                for='invoiceNotes'
+              )
+                | Notes
+
+              textarea.form-control.invoice-form-control#invoiceNotes(
+                name='notes'
+                rows='3'
+                placeholder='Invoice notes or delivery instructions'
+              )
+
+
+        //- ========================================================
+        //- Modal Footer
+        //- ========================================================
+        .modal-footer.invoice-modal-footer
+
+          button.invoice-modal-btn.invoice-modal-btn-primary#saveInvoice(
+            type='submit'
+          )
+
+            i.fa.fa-save.mr-1
+
+            | Create Invoice
+
+          button.invoice-modal-btn.invoice-modal-btn-secondary(
+            type='button'
+            data-dismiss='modal'
+          )
+
+            i.fa.fa-times-circle
+
+            | Cancel
