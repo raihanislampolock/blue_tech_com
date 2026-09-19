@@ -24,6 +24,8 @@ import { BlueTechCustomerAdvanceModel } from "./modules/blue_tech/models/blue_te
 import { BlueTechCustomerAdvanceAllocationModel } from "./modules/blue_tech/models/blue_tech_customer_advance_allocation_model";
 import { BlueTechInvoiceReturnModel } from "./modules/blue_tech/models/blue_tech_invoice_return_model";
 import { BlueTechInvoiceReturnItemModel } from "./modules/blue_tech/models/blue_tech_invoice_return_item_model";
+import { BlueTechPurchaseReturnModel } from "./modules/blue_tech/models/blue_tech_purchase_return_model";
+import { BlueTechPurchaseReturnItemModel } from "./modules/blue_tech/models/blue_tech_purchase_return_item_model";
 
 
 const APP_CONFIG: Config = new Config(JSON.parse(fs.readFileSync("config.json").toString()));
@@ -39,8 +41,8 @@ export const AppDataSource = new DataSource({
     entities: [UserModel, RoleModel, ProviderModel, PermissionModel, EmailConfigModel, BlueTechItemsModel, BlueTechItemStockModel,
         BlueTechPurchaseItemModel, BlueTechPurchaseModel, BlueTechStockMovementModel, BlueTechSupplierModel, BlueTechPaymentMethodModel,
         BlueTechSupplierPaymentModel, BlueTechSupplierPaymentAllocationModel, BlueTechPurchaseOrderModel, BlueTechPurchaseOrderItemModel,
-        BlueTechCustomerModel, BlueTechInvoiceModel, BlueTechInvoiceItemModel, BlueTechCustomerAdvanceModel,
-        BlueTechCustomerAdvanceAllocationModel, BlueTechInvoiceReturnModel, BlueTechInvoiceReturnItemModel],
+        BlueTechCustomerModel, BlueTechInvoiceModel, BlueTechInvoiceItemModel, BlueTechCustomerAdvanceModel, BlueTechCustomerAdvanceAllocationModel,
+         BlueTechInvoiceReturnModel, BlueTechInvoiceReturnItemModel , BlueTechPurchaseReturnModel, BlueTechPurchaseReturnItemModel],
     synchronize: true, // Automatically sync entity schema (disable in production)
     logging: false,
 });

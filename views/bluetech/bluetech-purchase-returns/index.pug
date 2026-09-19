@@ -1,0 +1,530 @@
+extends ../../layout
+
+block style
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css')
+  style.
+    .return-card {
+      background:#fff;
+      border:1px solid #edf2f7;
+      border-radius:12px;
+      box-shadow:0 4px 20px rgba(0,0,0,.04);
+      overflow:hidden;
+    }
+    .return-toolbar {
+      padding:1.25rem 1.5rem;
+      border-bottom:1px solid #edf2f7;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:1rem;
+      flex-wrap:wrap;
+    }
+    .return-toolbar-group {
+      display:flex;
+      align-items:center;
+      gap:.75rem;
+      flex-wrap:wrap;
+    }
+    .return-control {
+      border:1px solid #cbd5e0;
+      border-radius:8px;
+      padding:.5rem .75rem;
+      outline:none;
+    }
+    .return-btn {
+      border:0;
+      border-radius:8px;
+      padding:.55rem 1rem;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:.4rem;
+    }
+    .return-btn-primary {
+      background:#580db4;
+      color:#fff;
+    }
+    .return-table-wrap {
+      overflow:auto;
+      max-height:65vh;
+    }
+    .return-table {
+      width:100%;
+      border-collapse:collapse;
+      white-space:nowrap;
+    }
+    .return-table th {
+      position:sticky;
+      top:0;
+      background:#580db4;
+      color:#fff;
+      padding:.85rem 1rem;
+      text-align:center;
+      z-index:2;
+    }
+    .return-table td {
+      padding:.85rem 1rem;
+      border-bottom:1px solid #edf2f7;
+      text-align:center;
+    }
+    .return-table tr:hover {
+      background:#fbf8ff;
+    }
+    .return-action-icon {
+      color:#580db4;
+      font-size:16px;
+      text-decoration:none;
+      margin:0 4px;
+      cursor:pointer;
+    }
+    .return-action-icon:hover {
+      color:#480a96;
+      text-decoration:none;
+    }
+    .return-footer {
+      padding:1rem 1.5rem;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .return-status {
+      display:inline-block;
+      padding:.3rem .65rem;
+      border-radius:20px;
+      font-size:.8rem;
+      font-weight:600;
+    }
+    .return-status-completed {
+      background:#dcfce7;
+      color:#166534;
+    }
+    .return-status-cancelled {
+      background:#fee2e2;
+      color:#991b1b;
+    }
+    .return-status-default {
+      background:#e2e8f0;
+      color:#475569;
+    }
+    .btn-view-return-items {
+      background:#ebf4ff;
+      color:#3182ce;
+      border:0;
+      border-radius:6px;
+      padding:.4rem .75rem;
+      font-weight:500;
+      font-size:.85rem;
+    }
+
+block content
+  section.content-header.mb-4
+    div(style='display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;')
+      h1(style='margin:0; font-weight:600; color:#2d3748;') Blue Tech Purchase Return Dashboard
+      ol.breadcrumb(style='margin:0;')
+        li
+          a(href='/dashboard' style='color:#580db4; text-decoration:none;')
+            i.fa.fa-home.mr-1
+            | Dashboard
+        li
+          span(style='color:#4a5568; margin-left:.5rem;') Purchase Returns
+
+  section.content
+    .return-card
+      .return-toolbar
+        .return-toolbar-group
+          input.return-control#returnSearch(type='text' placeholder='Search return, purchase, supplier...' autocomplete='off')
+          button.return-btn.return-btn-primary#returnSearchBtn(type='button')
+            i.fa.fa-search
+          button.return-btn.return-btn-primary.btn-add-purchase-return(type='button' data-toggle='modal' data-target='#add-edit-purchase-return-modal')
+            i.fa.fa-plus
+            | Create Return
+        .return-toolbar-group
+          label(for='returnLimit' style='margin:0;') Show:
+          select.return-control#returnLimit
+            option(value='10') 10
+            option(value='25') 25
+            option(value='50') 50
+            option(value='100') 100
+
+      .return-table-wrap
+        table.return-table
+          thead
+            tr
+              th Cancel
+              th Return Number
+              th Purchase Number
+              th Supplier
+              th Return Date
+              th Subtotal
+              th Credit Amount
+              th Credit Status
+              th Return Status
+              th Items
+              th Created By
+              th Updated By
+          tbody#returnTableBody
+            tr
+              td(colspan='12' style='padding:3rem; color:#a0aec0;') Loading purchase returns...
+
+      .return-footer
+        span#returnTitleFilter Showing no entries
+        ul.pagination#returnPagination(style='margin:0;')
+
+  include ./create
+
+block script
+  script.
+    (() => {
+      const body = document.getElementById('returnTableBody');
+      const pagination = document.getElementById('returnPagination');
+      const limit = document.getElementById('returnLimit');
+      const search = document.getElementById('returnSearch');
+      const purchaseItemsSelect = document.getElementById('returnPurchaseItemId');
+
+      let currentPage = 1;
+      let purchaseReturnItems = [];
+      let availablePurchaseItems = [];
+
+      const money = value => Number(value || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const today = () => new Date().toISOString().slice(0, 10);
+      const getElement = id => document.getElementById(id);
+      const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
+
+      function statusClass(status) {
+        const normalized = String(status || '').toUpperCase();
+        if (normalized === 'COMPLETED') return 'return-status return-status-completed';
+        if (normalized === 'CANCELLED') return 'return-status return-status-cancelled';
+        return 'return-status return-status-default';
+      }
+
+      function resetReturnForm() {
+        getElement('purchase-return-form').reset();
+        getElement('returnPurchaseId').value = '';
+        getElement('returnSupplierName').value = '';
+        getElement('returnDate').value = today();
+        getElement('returnSubtotal').value = '0.00';
+        getElement('creditAmount').value = '0.00';
+        purchaseReturnItems = [];
+        availablePurchaseItems = [];
+        purchaseItemsSelect.innerHTML = '<option value="" selected disabled>Load purchase items first</option>';
+        renderReturnItems();
+      }
+
+      async function generateReturnNumber() {
+        try {
+          const response = await fetch('/api/bluetech/purchase-returns/generate-number');
+          const result = await response.json();
+          if (result.returnNumber) getElement('returnNumber').value = result.returnNumber;
+        } catch (error) {
+          console.error('Return number generation error:', error);
+        }
+      }
+
+      function renderReturnItemOptions() {
+        purchaseItemsSelect.innerHTML = '<option value="" selected disabled>Choose purchase item</option>';
+        availablePurchaseItems
+          .filter(item => Number(item.remainingQuantity) > 0)
+          .forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.purchaseItemId;
+            option.dataset.itemId = item.itemId;
+            option.dataset.itemName = item.itemName || '';
+            option.dataset.unitPrice = item.unitPrice || 0;
+            option.dataset.imei = item.imeiNumber || '';
+            option.dataset.remainingQuantity = item.remainingQuantity || 0;
+            option.textContent = `${item.itemName || 'Item'} | Remaining: ${item.remainingQuantity} | Price: ${money(item.unitPrice)} | IMEI: ${item.imeiNumber || 'N/A'}`;
+            purchaseItemsSelect.appendChild(option);
+          });
+      }
+
+      function recalculateReturn() {
+        const subtotal = purchaseReturnItems.reduce((sum, item) => sum + Number(item.totalPrice || 0), 0);
+        getElement('returnSubtotal').value = money(subtotal);
+        getElement('creditAmount').value = subtotal.toFixed(2);
+      }
+
+      function renderReturnItems() {
+        const tbody = document.querySelector('#returnItemTable tbody');
+        if (!purchaseReturnItems.length) {
+          tbody.innerHTML = '<tr id="returnEmptyItems"><td class="text-center" colspan="7">No return items added.</td></tr>';
+          recalculateReturn();
+          return;
+        }
+
+        tbody.innerHTML = purchaseReturnItems.map((item, index) => `
+          <tr>
+            <td>${escapeHtml(item.itemName)}</td>
+            <td>${escapeHtml(item.imeiNumber || '-')}</td>
+            <td>${item.quantity}</td>
+            <td>${money(item.unitPrice)}</td>
+            <td>${money(item.totalPrice)}</td>
+            <td>${escapeHtml(item.itemCondition || '-')}</td>
+            <td>
+              <button type="button" class="btn btn-sm btn-danger" data-remove-return-item="${index}">
+                <i class="fa fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        `).join('');
+        recalculateReturn();
+      }
+
+      async function loadPurchaseForReturn() {
+        const purchaseNumber = getElement('returnPurchaseNumber').value.trim();
+        if (!purchaseNumber) {
+          alert('Purchase number is required.');
+          return;
+        }
+
+        try {
+          const purchaseResponse = await fetch(`/api/bluetech/purchase-returns/purchase/${encodeURIComponent(purchaseNumber)}`);
+          const purchaseResult = await purchaseResponse.json();
+          if (!purchaseResult.status || !purchaseResult.data) {
+            alert(purchaseResult.message || 'Purchase not found.');
+            return;
+          }
+
+          const purchase = purchaseResult.data;
+          getElement('returnPurchaseId').value = purchase.id;
+          getElement('returnSupplierName').value = purchase.supplierName || '';
+
+          const itemResponse = await fetch(`/api/bluetech/purchase-returns/purchase-items/${purchase.id}`);
+          const itemResult = await itemResponse.json();
+          availablePurchaseItems = itemResult.status ? itemResult.data || [] : [];
+          purchaseReturnItems = [];
+          renderReturnItemOptions();
+          renderReturnItems();
+        } catch (error) {
+          console.error('Purchase return loading error:', error);
+          alert('Failed to load purchase data.');
+        }
+      }
+
+      async function loadReturns(page = 1) {
+        currentPage = page;
+        body.innerHTML = '<tr><td colspan="12" style="padding:3rem;"><i class="fa fa-spinner fa-spin"></i> Loading...</td></tr>';
+
+        try {
+          const response = await fetch(`/api/bluetech/purchase-returns/all?page=${page}&limit=${limit.value}&search=${encodeURIComponent(search.value.trim())}`);
+          const result = await response.json();
+
+          if (!result.status || !result.data?.length) {
+            body.innerHTML = '<tr><td colspan="12" style="padding:3rem; color:#a0aec0;">No purchase returns found.</td></tr>';
+            getElement('returnTitleFilter').textContent = 'No entries matching filters';
+            pagination.innerHTML = '';
+            return;
+          }
+
+          const grouped = [];
+          const map = {};
+          result.data.forEach(row => {
+            if (!map[row.id]) {
+              map[row.id] = { ...row, items: [] };
+              grouped.push(map[row.id]);
+            }
+            if (row.returnItemId) {
+              map[row.id].items.push(row);
+            }
+          });
+
+          body.innerHTML = grouped.map(row => {
+            const canCancel = String(row.returnStatus || '').toUpperCase() !== 'CANCELLED';
+            const itemsHtml = row.items.map(item => `
+              <div style="text-align:left; padding:.2rem 0;">
+                <strong>${escapeHtml(item.itemName || '-')}</strong>
+                | Qty: ${item.quantity || 0}
+                | Price: ${money(item.unitPrice)}
+                | Condition: ${escapeHtml(item.itemCondition || '-')}
+              </div>
+            `).join('');
+
+            return `
+              <tr>
+                <td>
+                  ${canCancel ? `<a class="return-action-icon cancel-return-btn" data-id="${row.id}" title="Cancel return"><i class="fa fa-ban"></i></a>` : '<span style="color:#94a3b8;"><i class="fa fa-lock"></i></span>'}
+                </td>
+                <td style="font-weight:600; color:#580db4;">${escapeHtml(row.returnNumber || '-')}</td>
+                <td>${escapeHtml(row.purchaseNumber || '-')}</td>
+                <td>${escapeHtml(row.supplierName || '-')}</td>
+                <td>${row.returnDate ? new Date(row.returnDate).toLocaleDateString('en-GB') : '-'}</td>
+                <td>${money(row.subtotal)}</td>
+                <td>${money(row.creditAmount)}</td>
+                <td>${escapeHtml(row.creditStatus || '-')}</td>
+                <td><span class="${statusClass(row.returnStatus)}">${escapeHtml(row.returnStatus || '-')}</span></td>
+                <td>
+                  <button type="button" class="btn-view-return-items toggleReturnItems" data-id="${row.id}">
+                    View (${row.items.length})
+                  </button>
+                </td>
+                <td>${escapeHtml(row.createdBy || '-')}</td>
+                <td>${escapeHtml(row.updatedBy || '-')}</td>
+              </tr>
+              <tr id="return-items-${row.id}" style="display:none; background:#f8fafc;">
+                <td colspan="12">${itemsHtml || '<span style="color:#94a3b8;">No items</span>'}</td>
+              </tr>
+            `;
+          }).join('');
+
+          getElement('returnTitleFilter').textContent = `Showing ${grouped.length} of ${result.total} entries`;
+          renderPagination(result.currentPage, result.totalPages);
+        } catch (error) {
+          console.error('Return list loading error:', error);
+          body.innerHTML = '<tr><td colspan="12" style="padding:3rem; color:#e53e3e;">Failed to load purchase returns.</td></tr>';
+        }
+      }
+
+      function renderPagination(page, totalPages) {
+        pagination.innerHTML = '';
+        if (totalPages <= 1) return;
+        for (let index = 1; index <= totalPages; index++) {
+          pagination.innerHTML += `
+            <li class="page-item ${index === page ? 'active' : ''}">
+              <a class="page-link return-page-link" href="#" data-page="${index}">${index}</a>
+            </li>
+          `;
+        }
+      }
+
+      function createPurchaseReturn(formData) {
+        $.ajax({
+          url: '/api/bluetech/purchase-returns/create',
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function (response) {
+            if (response.status) {
+              swal({ title: response.message || 'Purchase return created successfully', icon: 'success', button: 'OK' })
+                .then(function () { window.location.reload(); });
+            } else {
+              swal('Error', response.message || 'Failed to create purchase return', 'error');
+            }
+          },
+          error: function (xhr) {
+            swal('Error', xhr.responseJSON?.message || 'Something went wrong', 'error');
+          }
+        });
+      }
+
+      $(document).ready(function () {
+        loadReturns();
+
+        $(document).on('click', '.btn-add-purchase-return', function () {
+          resetReturnForm();
+          setTimeout(generateReturnNumber, 100);
+        });
+
+        $(document).on('click', '#loadPurchaseForReturn', loadPurchaseForReturn);
+        $(document).on('click', '#returnSearchBtn', function () { loadReturns(1); });
+        $(document).on('change', '#returnLimit', function () { loadReturns(1); });
+        $(document).on('keyup', '#returnSearch', function (event) { if (event.key === 'Enter') loadReturns(1); });
+        $(document).on('click', '.toggleReturnItems', function () { $(`#return-items-${$(this).data('id')}`).toggle(); });
+        $(document).on('click', '.return-page-link', function (event) {
+          event.preventDefault();
+          loadReturns(Number($(this).data('page')));
+        });
+
+        $(document).on('change', '#returnPurchaseItemId', function () {
+          const option = this.selectedOptions[0];
+          getElement('returnUnitPrice').value = option?.dataset.unitPrice || '';
+          getElement('returnQuantity').value = '1';
+          getElement('returnQuantity').max = option?.dataset.remainingQuantity || '';
+        });
+
+        $(document).on('click', '#addReturnItem', function () {
+          const option = purchaseItemsSelect.selectedOptions[0];
+          const quantity = Number(getElement('returnQuantity').value);
+          const remainingQuantity = Number(option?.dataset.remainingQuantity || 0);
+          const unitPrice = Number(getElement('returnUnitPrice').value);
+
+          if (!option?.value || quantity <= 0) {
+            alert('Select an item and enter a valid quantity.');
+            return;
+          }
+          if (quantity > remainingQuantity) {
+            alert('Return quantity cannot exceed remaining quantity.');
+            return;
+          }
+          if (purchaseReturnItems.some(item => item.purchaseItemId === Number(option.value))) {
+            alert('This purchase item is already added.');
+            return;
+          }
+
+          purchaseReturnItems.push({
+            purchaseItemId: Number(option.value),
+            itemId: Number(option.dataset.itemId),
+            itemName: option.dataset.itemName || option.textContent,
+            itemNameSnapshot: option.dataset.itemName || '',
+            imeiNumber: option.dataset.imei || '',
+            quantity,
+            unitPrice,
+            totalPrice: quantity * unitPrice,
+            returnReason: getElement('returnItemReason').value || null,
+            itemCondition: getElement('returnItemCondition').value || null,
+            notes: getElement('returnItemNotes').value || null
+          });
+
+          renderReturnItems();
+          purchaseItemsSelect.value = '';
+          getElement('returnQuantity').value = '1';
+          getElement('returnUnitPrice').value = '';
+          getElement('returnItemReason').value = '';
+          getElement('returnItemNotes').value = '';
+        });
+
+        $(document).on('click', '[data-remove-return-item]', function () {
+          purchaseReturnItems.splice(Number($(this).attr('data-remove-return-item')), 1);
+          renderReturnItems();
+        });
+
+        $(document).on('submit', '#purchase-return-form', function (event) {
+          event.preventDefault();
+          if (!getElement('returnPurchaseId').value) {
+            alert('Load a purchase first.');
+            return;
+          }
+          if (!purchaseReturnItems.length) {
+            alert('At least one return item is required.');
+            return;
+          }
+
+          const formData = new FormData();
+          formData.append('returnNumber', getElement('returnNumber').value);
+          formData.append('purchaseId', getElement('returnPurchaseId').value);
+          formData.append('supplierName', getElement('returnSupplierName').value);
+          formData.append('returnDate', getElement('returnDate').value);
+          formData.append('reason', getElement('returnReason').value);
+          formData.append('subtotal', getElement('returnSubtotal').value.replace(/,/g, ''));
+          formData.append('creditAmount', getElement('creditAmount').value);
+          formData.append('creditStatus', getElement('creditStatus').value);
+          formData.append('creditMethod', getElement('creditMethod').value);
+          formData.append('notes', getElement('returnNotes').value);
+          formData.append('items', JSON.stringify(purchaseReturnItems));
+
+          getElement('savePurchaseReturn').disabled = true;
+          createPurchaseReturn(formData);
+          setTimeout(function () { getElement('savePurchaseReturn').disabled = false; }, 1500);
+        });
+
+        $(document).on('click', '.cancel-return-btn', function () {
+          const id = $(this).data('id');
+          if (!confirm('Cancel this purchase return? Stock will be restored.')) return;
+
+          $.ajax({
+            url: `/api/bluetech/purchase-returns/cancel/${id}`,
+            type: 'PUT',
+            success: function (response) {
+              if (response.status) {
+                swal({ title: response.message || 'Purchase return cancelled', icon: 'success', button: 'OK' })
+                  .then(function () { loadReturns(currentPage); });
+              } else {
+                swal('Error', response.message || 'Failed to cancel return', 'error');
+              }
+            },
+            error: function (xhr) {
+              swal('Error', xhr.responseJSON?.message || 'Failed to cancel return', 'error');
+            }
+          });
+        });
+      });
+    })();

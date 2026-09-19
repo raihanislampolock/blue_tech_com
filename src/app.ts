@@ -70,6 +70,9 @@ import { BlueTechInvoiceController } from "./modules/blue_tech/controllers/blue_
 import { BlueTechInvoiceReturnRepository } from "./modules/blue_tech/repositories/blue_tech_invoice_return_repository";
 import { BlueTechInvoiceReturnService } from "./modules/blue_tech/services/blue_tech_invoice_return_service";
 import { BlueTechInvoiceReturnController } from "./modules/blue_tech/controllers/blue_tech_invoice_return_controller";
+import { BlueTechPurchaseReturnRepository } from "./modules/blue_tech/repositories/blue_tech_purchase_return_repository";
+import { BlueTechPurchaseReturnService } from "./modules/blue_tech/services/blue_tech_purchase_return_service";
+import { BlueTechPurchaseReturnController } from "./modules/blue_tech/controllers/blue_tech_purchase_return_controller";
 
 // config
 const CONFIG_FILE = "config.json";
@@ -133,6 +136,7 @@ app.set("BlueTechPurchaseOrderRepository", new BlueTechPurchaseOrderRepository()
 app.set("BlueTechCustomerRepository", new BlueTechCustomerRepository());
 app.set("BlueTechInvoiceRepository", new BlueTechInvoiceRepository());
 app.set("BlueTechInvoiceReturnRepository", new BlueTechInvoiceReturnRepository());
+app.set("BlueTechPurchaseReturnRepository", new BlueTechPurchaseReturnRepository());
 
 
 
@@ -152,6 +156,7 @@ app.set("BlueTechPurchaseOrderService", new BlueTechPurchaseOrderService(app.get
 app.set("BlueTechCustomerService", new BlueTechCustomerService(app.get("BlueTechCustomerRepository")));
 app.set("BlueTechInvoiceService", new BlueTechInvoiceService(app.get("BlueTechInvoiceRepository")));
 app.set("BlueTechInvoiceReturnService", new BlueTechInvoiceReturnService(app.get("BlueTechInvoiceReturnRepository")));
+app.set("BlueTechPurchaseReturnService", new BlueTechPurchaseReturnService(app.get("BlueTechPurchaseReturnRepository")));
 
 
 // Initialize and set the mailer to use
@@ -174,21 +179,10 @@ app.registerController(new BlueTechPurchaseOrderController());
 app.registerController(new BlueTechCustomerController());
 app.registerController(new BlueTechInvoiceController());
 app.registerController(new BlueTechInvoiceReturnController());
+app.registerController(new BlueTechPurchaseReturnController());
 
 
-// Finally setup the cron jobs
-// cron.schedule("* * * * *", async () => {
-//     try {
-//         const labReportService = app.get<LabReportService>("LabReportService");
-//         const emailService = app.get<EmailService>("EmailService");
-//         await SendReportMail(AppDataSource, labReportService, emailService);
-//     } catch (error) {
-//         console.error("Error executing SendReportMail Cron:", error);
-//     }
-// });
 
-
-// app.setupHandlers();
 
 // Initialize database and then start the app
 initializeDatabase()
