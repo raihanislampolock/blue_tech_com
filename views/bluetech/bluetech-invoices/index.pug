@@ -234,7 +234,9 @@ block content
               th View PDF
               th Invoice Number
               th Customer
+              th Notes
               th Invoice Date
+              th Updated Invoice Date
               th Subtotal
               th Discount
               th Tax
@@ -244,6 +246,8 @@ block content
               th Due
               th Payment Status
               th Items
+              th Created By
+              th Updated By
 
           tbody#invoiceTableBody
 
@@ -538,9 +542,9 @@ block script
 
                 createdBy: row.createdBy,
                 updatedBy: row.updatedBy,
-
-                created_at: row.created_at,
-                updated_at: row.updated_at,
+                
+                createdAt: row.createdAt || row.created_at,
+                updatedAt: row.updatedAt || row.updated_at,
 
                 items: []
 
@@ -565,8 +569,11 @@ block script
                 row.itemConfigurations,
 
               quantity: row.quantity,
-              unitPrice: row.unitPrice,
+              purchasePrice: row.purchasePrice,
+              sellingPrice: row.sellingPrice,
+              purchaseAmount: row.purchaseAmount,
               totalPrice: row.totalPrice,
+              revenue: row.revenue,
 
               itemNotes: row.itemNotes
 
@@ -581,8 +588,8 @@ block script
 
           groupedArray.sort(
             (a, b) =>
-              new Date(b.created_at) -
-              new Date(a.created_at)
+              new Date(b.createdAt) -
+              new Date(a.createdAt)
           );
 
 
@@ -611,14 +618,27 @@ block script
                 0
               );
 
+            const totalPurchaseUnitPrice =
+              invoice.items.reduce(
+                (sum, item) =>
+                  sum + (Number(item.purchasePrice) || 0),
+                0
+              );  
+
 
             const totalUnitPrice =
               invoice.items.reduce(
                 (sum, item) =>
-                  sum + (Number(item.unitPrice) || 0),
+                  sum + (Number(item.sellingPrice) || 0),
                 0
               );
 
+            const totalItemPurchasePrice =
+              invoice.items.reduce(
+                (sum, item) =>
+                  sum + (Number(item.purchaseAmount) || 0),
+                0
+              );  
 
             const totalItemPrice =
               invoice.items.reduce(
@@ -626,6 +646,13 @@ block script
                   sum + (Number(item.totalPrice) || 0),
                 0
               );
+
+            const totalRevenuePrice =
+              invoice.items.reduce(
+                (sum, item) =>
+                  sum + (Number(item.revenue) || 0),
+                0
+              );  
 
 
             // ==========================================
@@ -742,19 +769,31 @@ block script
 
                 </td>
 
+                <td>
+
+                  ${escapeHtml(
+                    invoice.notes || '-'
+                  )}
+
+                </td>
+
 
                 <!-- Invoice Date -->
 
                 <td>
-
                   ${
-                    invoice.invoiceDate
-                      ? String(
-                          invoice.invoiceDate
-                        ).slice(0, 10)
+                    invoice.createdAt
+                      ? new Date(invoice.createdAt).toLocaleDateString('en-GB')
                       : '-'
                   }
+                </td>
 
+                <td>
+                  ${
+                    invoice.updatedAt
+                      ? new Date(invoice.updatedAt).toLocaleDateString('en-GB')
+                      : '-'
+                  }
                 </td>
 
 
@@ -873,6 +912,22 @@ block script
 
                 </td>
 
+                <!-- Created By -->
+
+                <td>
+                  ${escapeHtml(
+                    invoice.createdBy || '-'
+                  )}
+                </td>
+                
+                <!-- Updated By -->
+                
+                <td>
+                  ${escapeHtml(
+                    invoice.updatedBy || '-'
+                  )}
+                </td>
+
               </tr>
 
 
@@ -911,9 +966,15 @@ block script
 
                         <th>Qty</th>
 
-                        <th>Unit Price</th>
+                        <th>Purchase Unit Price</th>
 
-                        <th>Total Price</th>
+                        <th>Selling Unit Price</th>
+
+                        <th>Purchase Total Price</th>
+
+                        <th>Selling Total Price</th>
+
+                        <th>Total Revenue</th>
 
                       </tr>
 
@@ -988,6 +1049,19 @@ block script
 
                             </td>
 
+                            <td
+                              style="
+                                font-weight:700;
+                                color:#991b1b;
+                              "
+                            >
+
+                              ${money(
+                                item.purchasePrice
+                              )} BDT
+
+                            </td>
+
 
                             <td
                               style="
@@ -997,11 +1071,10 @@ block script
                             >
 
                               ${money(
-                                item.unitPrice
+                                item.sellingPrice
                               )} BDT
 
                             </td>
-
 
                             <td
                               style="
@@ -1011,7 +1084,34 @@ block script
                             >
 
                               ${money(
+                                item.purchaseAmount
+                              )} BDT
+
+                            </td>
+
+
+                            <td
+                              style="
+                                font-weight:700;
+                                color:#065f46;
+                              "
+                            >
+
+                              ${money(
                                 item.totalPrice
+                              )} BDT
+
+                            </td>
+
+                            <td
+                              style="
+                                font-weight:700;
+                                color:#065f46;
+                              "
+                            >
+
+                              ${money(
+                                item.revenue
                               )} BDT
 
                             </td>
@@ -1053,6 +1153,19 @@ block script
 
                         </td>
 
+                        <td
+                          style="
+                            font-weight:700;
+                            color:#991b1b;
+                          "
+                        >
+
+                          ${money(
+                            totalPurchaseUnitPrice
+                          )} BDT
+
+                        </td>
+
 
                         <td
                           style="
@@ -1067,7 +1180,6 @@ block script
 
                         </td>
 
-
                         <td
                           style="
                             font-weight:700;
@@ -1076,7 +1188,34 @@ block script
                         >
 
                           ${money(
+                            totalItemPurchasePrice
+                          )} BDT
+
+                        </td>
+
+
+                        <td
+                          style="
+                            font-weight:700;
+                            color:#065f46;
+                          "
+                        >
+
+                          ${money(
                             totalItemPrice
+                          )} BDT
+
+                        </td>
+
+                        <td
+                          style="
+                            font-weight:700;
+                            color:#065f46;
+                          "
+                        >
+
+                          ${money(
+                            totalRevenuePrice
                           )} BDT
 
                         </td>

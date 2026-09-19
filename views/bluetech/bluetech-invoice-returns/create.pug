@@ -1,0 +1,227 @@
+#add-edit-invoice-return-modal.modal.fade(
+  data-backdrop='static'
+  data-keyboard='false'
+)
+  .modal-dialog.modal-dialog-centered.modal-xl
+    .modal-content(style='border-radius:14px; border:none; overflow:hidden;')
+      style.
+        .return-modal-header {
+          background:#ffffff;
+          border-bottom:1px solid #edf2f7;
+          padding:1.25rem 1.5rem;
+        }
+        .return-modal-body {
+          background:#f8fafc;
+          padding:1.5rem;
+          max-height:75vh;
+          overflow-y:auto;
+        }
+        .return-section {
+          background:#ffffff;
+          border:1px solid #edf2f7;
+          border-radius:10px;
+          padding:1.25rem;
+          margin-bottom:1.25rem;
+        }
+        .return-section-title {
+          color:#580db4;
+          font-weight:600;
+          font-size:.95rem;
+          text-transform:uppercase;
+          margin-bottom:1rem;
+          padding-bottom:.6rem;
+          border-bottom:2px solid rgba(88, 13, 180, .08);
+        }
+        .return-form-label {
+          font-weight:500;
+          color:#718096;
+          font-size:.9rem;
+        }
+        .return-form-control {
+          border:1px solid #cbd5e0;
+          border-radius:8px;
+          padding:.6rem .85rem;
+        }
+        .return-form-control:focus {
+          border-color:#580db4;
+          box-shadow:0 0 0 3px rgba(88, 13, 180, .1);
+        }
+        .return-item-table thead th {
+          background:#580db4;
+          color:#ffffff;
+          text-align:center;
+          vertical-align:middle;
+        }
+        .return-item-table tbody td {
+          vertical-align:middle;
+        }
+        .return-modal-btn {
+          border:0;
+          border-radius:8px;
+          padding:.55rem 1.15rem;
+          display:inline-flex;
+          align-items:center;
+          gap:.45rem;
+          cursor:pointer;
+        }
+        .return-modal-btn-primary {
+          background:#580db4;
+          color:#ffffff;
+        }
+        .return-modal-btn-secondary {
+          background:#e2e8f0;
+          color:#4a5568;
+        }
+
+      form#invoice-return-form(role='form' action='#' method='POST')
+        .modal-header.return-modal-header
+          h5.modal-title(style='font-weight:600; color:#2d3748; margin:0;')
+            i.fa.fa-rotate-left.mr-2
+            | Blue Tech Return Invoice
+          button.close(type='button' data-dismiss='modal' aria-label='Close' style='outline:none;')
+            span(aria-hidden='true') &times;
+
+        .modal-body.return-modal-body
+          input#returnInvoiceId(type='hidden')
+          input#returnCustomerId(type='hidden')
+
+          .return-section
+            h6.return-section-title
+              i.fa.fa-file-invoice.mr-2
+              | Invoice Lookup
+
+            .row.align-items-end
+              .col-md-3
+                .form-group
+                  label.return-form-label(for='returnNumber') Return Number
+                  input.form-control.return-form-control#returnNumber(type='text' readonly placeholder='Auto generated')
+              .col-md-3
+                .form-group
+                  label.return-form-label(for='returnInvoiceNumber') Invoice Number
+                  input.form-control.return-form-control#returnInvoiceNumber(type='text' placeholder='INV/202609/GEN-001')
+              .col-md-2
+                .form-group
+                  button.btn.return-modal-btn.return-modal-btn-primary#loadInvoiceForReturn(type='button' style='width:100%; justify-content:center;')
+                    i.fa.fa-search
+                    | Load
+              .col-md-4
+                .form-group
+                  label.return-form-label Customer
+                  input.form-control.return-form-control#returnCustomerName(type='text' readonly placeholder='Load invoice first')
+
+            .row
+              .col-md-3
+                .form-group
+                  label.return-form-label(for='returnDate') Return Date
+                  input.form-control.return-form-control#returnDate(type='date')
+              .col-md-3
+                .form-group
+                  label.return-form-label(for='refundStatus') Refund Status
+                  select.form-control.return-form-control#refundStatus
+                    option(value='PENDING') PENDING
+                    option(value='REFUNDED') REFUNDED
+                    option(value='CREDITED') CREDITED
+                    option(value='NONE') NONE
+              .col-md-3
+                .form-group
+                  label.return-form-label(for='refundMethod') Refund Method
+                  select.form-control.return-form-control#refundMethod
+                    option(value='') Choose method
+                    option(value='CASH') CASH
+                    option(value='CARD') CARD
+                    option(value='BANK') BANK
+                    option(value='CUSTOMER_CREDIT') CUSTOMER_CREDIT
+                    option(value='ORIGINAL_PAYMENT') ORIGINAL_PAYMENT
+              .col-md-3
+                .form-group
+                  label.return-form-label(for='returnReason') Overall Reason
+                  input.form-control.return-form-control#returnReason(type='text' placeholder='Return reason')
+
+          .return-section
+            h6.return-section-title
+              i.fa.fa-box-open.mr-2
+              | Return Item Selection
+
+            .row.align-items-end
+              .col-md-4
+                .form-group
+                  label.return-form-label(for='returnInvoiceItemId') Invoice Item
+                  select.form-control.return-form-control#returnInvoiceItemId
+                    option(value='' selected disabled) Load invoice items first
+              .col-md-2
+                .form-group
+                  label.return-form-label(for='returnQuantity') Qty
+                  input.form-control.return-form-control#returnQuantity(type='number' min='1' value='1')
+              .col-md-2
+                .form-group
+                  label.return-form-label(for='returnUnitPrice') Unit Price
+                  input.form-control.return-form-control#returnUnitPrice(type='number' min='0' step='0.01' readonly)
+              .col-md-2
+                .form-group
+                  label.return-form-label(for='returnStockAction') Stock Action
+                  select.form-control.return-form-control#returnStockAction
+                    option(value='RESTOCK') RESTOCK
+                    option(value='DAMAGED') DAMAGED
+                    option(value='SCRAP') SCRAP
+              .col-md-2
+                .form-group
+                  button.btn.return-modal-btn.return-modal-btn-primary#addReturnItem(type='button' style='width:100%; justify-content:center;')
+                    i.fa.fa-plus
+                    | Add
+
+            .row
+              .col-md-3
+                .form-group
+                  label.return-form-label(for='returnItemCondition') Item Condition
+                  select.form-control.return-form-control#returnItemCondition
+                    option(value='GOOD') GOOD
+                    option(value='DAMAGED') DAMAGED
+                    option(value='DEFECTIVE') DEFECTIVE
+                    option(value='USED') USED
+              .col-md-3
+                .form-group
+                  label.return-form-label(for='returnItemReason') Item Reason
+                  input.form-control.return-form-control#returnItemReason(type='text' placeholder='Reason for this item')
+              .col-md-6
+                .form-group
+                  label.return-form-label(for='returnItemNotes') Item Notes
+                  input.form-control.return-form-control#returnItemNotes(type='text' placeholder='Optional notes')
+
+            .table-responsive
+              table.table.table-bordered.return-item-table#returnItemTable
+                thead
+                  tr
+                    th Item
+                    th IMEI
+                    th Qty
+                    th Unit Price
+                    th Total
+                    th Stock
+                    th Condition
+                    th Action
+                tbody
+                  tr#returnEmptyItems
+                    td.text-center(colspan='8') No return items added.
+
+          .return-section
+            .row
+              .col-md-3
+                .form-group
+                  label.return-form-label(for='returnSubtotal') Subtotal
+                  input.form-control.return-form-control#returnSubtotal(type='text' readonly value='0.00')
+              .col-md-3
+                .form-group
+                  label.return-form-label(for='refundAmount') Refund Amount
+                  input.form-control.return-form-control#refundAmount(type='number' min='0' step='0.01' value='0')
+              .col-md-6
+                .form-group
+                  label.return-form-label(for='returnNotes') Notes
+                  textarea.form-control.return-form-control#returnNotes(rows='2' placeholder='Return notes')
+
+        .modal-footer(style='background:#f8f9fa; border-top:1px solid #edf2f7; padding:1.1rem 1.5rem;')
+          button.return-modal-btn.return-modal-btn-primary#saveInvoiceReturn(type='submit')
+            i.fa.fa-save
+            | Create Return
+          button.return-modal-btn.return-modal-btn-secondary(type='button' data-dismiss='modal')
+            i.fa.fa-times-circle
+            | Cancel

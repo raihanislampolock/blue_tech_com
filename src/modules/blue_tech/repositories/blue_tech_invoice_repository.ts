@@ -162,52 +162,76 @@ export class BlueTechInvoiceRepository implements IBlueTechInvoiceRepository {
 
         const query = `
              SELECT
-                inv.id,
-                inv."invoiceNumber",
-                inv."customerId",
-                inv."invoiceDate",
-                inv."dueDate",
-                inv."invoiceStatus",
-                inv."paymentStatus",
-                inv."paymentMethodId",  
-                inv.subtotal,
-                inv."discountAmount",
-                inv."totalAmount",
-                inv."paidAmount",
-                inv."advanceAmountApplied",
-                inv."dueAmount",    
-                inv."customerNameSnapshot",
-                inv."customerPhoneSnapshot",
-                inv."billingAddressSnapshot",
-                inv.notes,  
-                c."customerName",
-                c."phoneNumber",    
-                ii.id AS "invoiceItemId",
-                ii."itemId",    
-                COALESCE(
-                    ii."itemNameSnapshot",
-                    i."itemName"
-                ) AS "itemName",    
-                i."itemType",
-                i."itemConfigurations",
-                i."manufactureOrigin",  
-                ii."imeiNumber",
-                ii.quantity,
-                ii."unitPrice",
-                ii."itemDiscountAmount",
-                ii."taxAmount",
-                ii."totalPrice",
-                ii.notes AS "itemNotes",    
-                u."empId" AS "createdBy",
-                u2."empId" AS "updatedBy",  
-                inv."createdAt",
-                inv."updatedAt" 
-            FROM public.blue_tech_invoices inv  
-            LEFT JOIN public.blue_tech_customers c ON c.id = inv."customerId"  
-            LEFT JOIN public.blue_tech_invoice_items ii ON inv.id = ii."invoiceId"  
-            LEFT JOIN public.blue_tech_items i ON ii."itemId" = i.id     
-            LEFT JOIN public.users u ON inv."createdBy" = u."userId" 
-            LEFT JOIN public.users u2 ON inv."updatedBy" = u2."userId"   
+            inv.id,
+            inv."invoiceNumber",
+            inv."customerId",
+            inv."invoiceDate",
+            inv."dueDate",
+            inv."invoiceStatus",
+            inv."paymentStatus",
+            inv."paymentMethodId",
+            inv.subtotal,
+            inv."discountAmount",
+            inv."totalAmount",
+            inv."paidAmount",
+            inv."advanceAmountApplied",
+            inv."dueAmount",
+            inv."customerNameSnapshot",
+            inv."customerPhoneSnapshot",
+            inv."billingAddressSnapshot",
+            inv.notes,
+            c."customerName",
+            c."phoneNumber",
+            ii.id AS "invoiceItemId",
+            ii."itemId",
+            COALESCE(
+                ii."itemNameSnapshot",
+                i."itemName"
+            ) AS "itemName",
+            i."itemType",
+            i."itemConfigurations",
+            i."manufactureOrigin",
+            ii."imeiNumber",
+            ii.quantity,
+            -- Selling information
+            ii."unitPrice" AS "sellingPrice",
+            ii."itemDiscountAmount",
+            ii."taxAmount",
+            ii."totalPrice",
+            -- Purchase information
+            purchase."purchasePrice",
+            (
+                ii.quantity * COALESCE(purchase."purchasePrice", 0)
+            ) AS "purchaseAmount",
+            -- Revenue / Gross Profit
+            (
+                ii."totalPrice"::numeric
+                -
+                (
+                    ii.quantity * COALESCE(purchase."purchasePrice", 0)
+                )
+            ) AS "revenue",
+            u."empId" AS "createdBy",
+            u2."empId" AS "updatedBy",
+            inv."createdAt",
+            inv."updatedAt"
+        FROM public.blue_tech_invoices inv
+        LEFT JOIN public.blue_tech_customers c ON c.id = inv."customerId"
+        LEFT JOIN public.blue_tech_invoice_items ii ON inv.id = ii."invoiceId"
+        LEFT JOIN public.blue_tech_items i ON ii."itemId" = i.id
+        LEFT JOIN LATERAL (
+            SELECT
+                pi."unitPrice"::numeric AS "purchasePrice"
+            FROM public.blue_tech_purchase_items pi
+            INNER JOIN public.blue_tech_purchases p
+                ON p.id = pi."purchaseId"
+            WHERE pi."itemId" = ii."itemId"
+            ORDER BY p.created_at DESC, pi.id DESC
+            LIMIT 1
+        ) purchase
+            ON TRUE
+        LEFT JOIN public.users u ON inv."createdBy" = u."userId"
+        LEFT JOIN public.users u2 ON inv."updatedBy" = u2."userId"   
             ${whereSQL} 
             ORDER BY inv."createdAt" DESC   
 
@@ -336,8 +360,22 @@ export class BlueTechInvoiceRepository implements IBlueTechInvoiceRepository {
             WHERE NOT EXISTS (
                 SELECT 1
                 FROM public.blue_tech_invoice_items ii
-                WHERE ii."purchaseItemId" = pi.id
-                   OR (ii."itemId" = pi."itemId" AND ii."imeiNumber" = pi."imeiNumber")
+                LEFT JOIN public.blue_tech_invoices inv
+                    ON inv.id = ii."invoiceId"
+                WHERE (
+                    ii."purchaseItemId" = pi.id
+                    OR (ii."itemId" = pi."itemId" AND ii."imeiNumber" = pi."imeiNumber")
+                )
+                  AND COALESCE(inv."invoiceStatus", '') <> 'CANCELLED'
+                  AND ii.quantity > COALESCE((
+                      SELECT SUM(ri.quantity)
+                      FROM public.blue_tech_invoice_return_items ri
+                      INNER JOIN public.blue_tech_invoice_returns r
+                          ON r.id = ri."returnId"
+                      WHERE ri."invoiceItemId" = ii.id
+                        AND r."returnStatus" <> 'CANCELLED'
+                        AND ri."stockAction" = 'RESTOCK'
+                  ), 0)
             )
             UNION ALL
             SELECT

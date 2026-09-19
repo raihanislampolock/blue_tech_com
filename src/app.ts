@@ -67,6 +67,9 @@ import { BlueTechCustomerController } from "./modules/blue_tech/controllers/blue
 import { BlueTechInvoiceRepository } from "./modules/blue_tech/repositories/blue_tech_invoice_repository";
 import { BlueTechInvoiceService } from "./modules/blue_tech/services/blue_tech_invoice_service";
 import { BlueTechInvoiceController } from "./modules/blue_tech/controllers/blue_tech_invoice_controller";
+import { BlueTechInvoiceReturnRepository } from "./modules/blue_tech/repositories/blue_tech_invoice_return_repository";
+import { BlueTechInvoiceReturnService } from "./modules/blue_tech/services/blue_tech_invoice_return_service";
+import { BlueTechInvoiceReturnController } from "./modules/blue_tech/controllers/blue_tech_invoice_return_controller";
 
 // config
 const CONFIG_FILE = "config.json";
@@ -129,6 +132,7 @@ app.set("BlueTechAdvancePaymentRepository", new BlueTechAdvancePaymentRepository
 app.set("BlueTechPurchaseOrderRepository", new BlueTechPurchaseOrderRepository());
 app.set("BlueTechCustomerRepository", new BlueTechCustomerRepository());
 app.set("BlueTechInvoiceRepository", new BlueTechInvoiceRepository());
+app.set("BlueTechInvoiceReturnRepository", new BlueTechInvoiceReturnRepository());
 
 
 
@@ -147,6 +151,7 @@ app.set("BlueTechAdvancePaymentService", new BlueTechAdvancePaymentService(app.g
 app.set("BlueTechPurchaseOrderService", new BlueTechPurchaseOrderService(app.get("BlueTechPurchaseOrderRepository")));
 app.set("BlueTechCustomerService", new BlueTechCustomerService(app.get("BlueTechCustomerRepository")));
 app.set("BlueTechInvoiceService", new BlueTechInvoiceService(app.get("BlueTechInvoiceRepository")));
+app.set("BlueTechInvoiceReturnService", new BlueTechInvoiceReturnService(app.get("BlueTechInvoiceReturnRepository")));
 
 
 // Initialize and set the mailer to use
@@ -168,6 +173,7 @@ app.registerController(new BlueTechAdvancePaymentController());
 app.registerController(new BlueTechPurchaseOrderController());
 app.registerController(new BlueTechCustomerController());
 app.registerController(new BlueTechInvoiceController());
+app.registerController(new BlueTechInvoiceReturnController());
 
 
 // Finally setup the cron jobs

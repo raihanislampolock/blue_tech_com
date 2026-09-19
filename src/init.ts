@@ -22,6 +22,8 @@ import { BlueTechInvoiceModel } from "./modules/blue_tech/models/blue_tech_invoi
 import { BlueTechInvoiceItemModel } from "./modules/blue_tech/models/blue_tech_invoice_item_modal";
 import { BlueTechCustomerAdvanceModel } from "./modules/blue_tech/models/blue_tech_customer_advance_model";
 import { BlueTechCustomerAdvanceAllocationModel } from "./modules/blue_tech/models/blue_tech_customer_advance_allocation_model";
+import { BlueTechInvoiceReturnModel } from "./modules/blue_tech/models/blue_tech_invoice_return_model";
+import { BlueTechInvoiceReturnItemModel } from "./modules/blue_tech/models/blue_tech_invoice_return_item_model";
 
 
 const APP_CONFIG: Config = new Config(JSON.parse(fs.readFileSync("config.json").toString()));
@@ -38,7 +40,7 @@ export const AppDataSource = new DataSource({
         BlueTechPurchaseItemModel, BlueTechPurchaseModel, BlueTechStockMovementModel, BlueTechSupplierModel, BlueTechPaymentMethodModel,
         BlueTechSupplierPaymentModel, BlueTechSupplierPaymentAllocationModel, BlueTechPurchaseOrderModel, BlueTechPurchaseOrderItemModel,
         BlueTechCustomerModel, BlueTechInvoiceModel, BlueTechInvoiceItemModel, BlueTechCustomerAdvanceModel,
-        BlueTechCustomerAdvanceAllocationModel],
+        BlueTechCustomerAdvanceAllocationModel, BlueTechInvoiceReturnModel, BlueTechInvoiceReturnItemModel],
     synchronize: true, // Automatically sync entity schema (disable in production)
     logging: false,
 });
@@ -96,6 +98,11 @@ const createSequences = async (): Promise<void> => {
 
         await AppDataSource.query(`
             CREATE SEQUENCE IF NOT EXISTS blue_tech_customer_advance_seq
+            START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
+        `);
+
+        await AppDataSource.query(`
+            CREATE SEQUENCE IF NOT EXISTS blue_tech_invoice_return_seq
             START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
         `);
 
