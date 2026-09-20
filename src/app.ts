@@ -73,6 +73,12 @@ import { BlueTechInvoiceReturnController } from "./modules/blue_tech/controllers
 import { BlueTechPurchaseReturnRepository } from "./modules/blue_tech/repositories/blue_tech_purchase_return_repository";
 import { BlueTechPurchaseReturnService } from "./modules/blue_tech/services/blue_tech_purchase_return_service";
 import { BlueTechPurchaseReturnController } from "./modules/blue_tech/controllers/blue_tech_purchase_return_controller";
+import { BlueTechCustomerAdvancePaymentController } from "./modules/blue_tech/controllers/blue_tech_customer_advance_payment_controller";
+import { BlueTechCustomerAdvancePaymentService } from "./modules/blue_tech/services/blue_tech_customer_advance_payment_service";
+import { BlueTechInventoryFlowReportController } from "./modules/blue_tech/controllers/blue_tech_inventory_flow_report_controller";
+import { BlueTechInventoryFlowReportService } from "./modules/blue_tech/services/blue_tech_inventory_flow_report_service";
+import { BlueTechInventoryFlowReportRepository } from "./modules/blue_tech/repositories/blue_tech_inventory_flow_report_repository";
+import { BlueTechCustomerAdvancePaymentRepository } from "./modules/blue_tech/repositories/blue_tech_customer_advance_payment_repository";
 
 // config
 const CONFIG_FILE = "config.json";
@@ -121,6 +127,8 @@ app.setMenu("main", {
 app.setFormatter("date", dateFormatter);
 
 
+// Register repositories
+
 app.set("UserRepository", new UserRepository());
 app.set("RoleRepository", new RoleRepository());
 app.set("DashboardRepository", new DashboardRepository());
@@ -137,8 +145,11 @@ app.set("BlueTechCustomerRepository", new BlueTechCustomerRepository());
 app.set("BlueTechInvoiceRepository", new BlueTechInvoiceRepository());
 app.set("BlueTechInvoiceReturnRepository", new BlueTechInvoiceReturnRepository());
 app.set("BlueTechPurchaseReturnRepository", new BlueTechPurchaseReturnRepository());
+app.set("BlueTechCustomerAdvancePaymentRepository", new BlueTechCustomerAdvancePaymentRepository());
+app.set("BlueTechInventoryFlowReportRepository", new BlueTechInventoryFlowReportRepository());
 
 
+// Register services
 
 app.set("SignUpService", new SignUpService(app.get("UserRepository"), AppDataSource));
 app.set("LoginService", new LoginService(app.get("UserRepository")));
@@ -157,11 +168,11 @@ app.set("BlueTechCustomerService", new BlueTechCustomerService(app.get("BlueTech
 app.set("BlueTechInvoiceService", new BlueTechInvoiceService(app.get("BlueTechInvoiceRepository")));
 app.set("BlueTechInvoiceReturnService", new BlueTechInvoiceReturnService(app.get("BlueTechInvoiceReturnRepository")));
 app.set("BlueTechPurchaseReturnService", new BlueTechPurchaseReturnService(app.get("BlueTechPurchaseReturnRepository")));
+app.set("BlueTechCustomerAdvancePaymentService", new BlueTechCustomerAdvancePaymentService(app.get("BlueTechCustomerAdvancePaymentRepository")));
+app.set("BlueTechInventoryFlowReportService", new BlueTechInventoryFlowReportService(app.get("BlueTechInventoryFlowReportRepository")));
 
 
-// Initialize and set the mailer to use
-// const Mailer = new SMTPMailer(APP_CONFIG.smtp);
-// app.set("Mailer", Mailer);
+// Register controllers
 
 app.registerController(new SignUpController());
 app.registerController(new LoginController());
@@ -180,6 +191,8 @@ app.registerController(new BlueTechCustomerController());
 app.registerController(new BlueTechInvoiceController());
 app.registerController(new BlueTechInvoiceReturnController());
 app.registerController(new BlueTechPurchaseReturnController());
+app.registerController(new BlueTechCustomerAdvancePaymentController());
+app.registerController(new BlueTechInventoryFlowReportController());
 
 
 
