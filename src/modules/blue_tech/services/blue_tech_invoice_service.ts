@@ -334,7 +334,7 @@ export class BlueTechInvoiceService {
 
 
             const HEADER_HEIGHT = 95;
-            const FOOTER_HEIGHT = 45;
+            const FOOTER_HEIGHT = 70;
 
             const TOP_CONTENT =
                 A4_HEIGHT -
@@ -698,7 +698,7 @@ export class BlueTechInvoiceService {
             const customerAddress =
                 cleanText(
                     invoice.customerAddressSnapshot ||
-                    invoice.customer?.address ||
+                    invoice.customer?.billingAddress ||
                     invoice.customerAddress ||
                     ""
                 );
@@ -2065,7 +2065,7 @@ export class BlueTechInvoiceService {
              * Fixed position near the bottom of the page.
              */
 
-            const signatureY = 150;
+            const signatureY = 170;
 
 
             // ====================================================
