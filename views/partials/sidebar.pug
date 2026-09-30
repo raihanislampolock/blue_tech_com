@@ -295,7 +295,7 @@ aside.main-sidebar
             li.treeview
               a(href='#')
                 img(src='/dist/img/items-logo.svg' style='width:14px; margin-right:8px;')
-                span Blue Tech Items
+                span Blue Tech Purchase Operations
                 span.pull-right-container
                   i.fa.fa-angle-left.pull-right
               ul.treeview-menu
@@ -304,46 +304,25 @@ aside.main-sidebar
                     img(src='/dist/img/list-logo.svg' style='width:12px; margin-right:8px;')
                     | Item List Dashboard
 
-            li.treeview
-              a(href='#')
-                img(src='/dist/img/items-logo.svg' style='width:14px; margin-right:8px;')
-                span Blue Tech Supplier
-                span.pull-right-container
-                  i.fa.fa-angle-left.pull-right
-              ul.treeview-menu
                 li
                   a(href='/bluetech/bluetech-suppliers')
                     img(src='/dist/img/list-logo.svg' style='width:12px; margin-right:8px;')
-                    | Supplier List Dashboard  
+                    | Supplier List Dashboard   
 
-            li.treeview
-              a(href='#')
-                img(src='/dist/img/items-logo.svg' style='width:14px; margin-right:8px;')
-                span Blue Tech Customer
-                span.pull-right-container
-                  i.fa.fa-angle-left.pull-right
-              ul.treeview-menu
                 li
                   a(href='/bluetech/bluetech-customers')
                     img(src='/dist/img/list-logo.svg' style='width:12px; margin-right:8px;')
-                    | Customer List Dashboard
+                    | Customer List Dashboard    
 
-            li.treeview
-              a(href='#')
-                img(src='/dist/img/items-logo.svg' style='width:14px; margin-right:8px;')
-                span Blue Tech Payment Method
-                span.pull-right-container
-                  i.fa.fa-angle-left.pull-right
-              ul.treeview-menu
                 li
                   a(href='/bluetech/bluetech-paymentmethod')
                     img(src='/dist/img/list-logo.svg' style='width:12px; margin-right:8px;')
-                    | Payment Method List Dashboard
+                    | Payment Method List Dashboard      
 
             li.treeview
               a(href='#')
                 img(src='/dist/img/items-logo.svg' style='width:14px; margin-right:8px;')
-                span Blue Tech Purchase Tool
+                span Blue Tech Purchase Billing Management
                 span.pull-right-container
                   i.fa.fa-angle-left.pull-right
               ul.treeview-menu
@@ -352,23 +331,15 @@ aside.main-sidebar
                     img(src='/dist/img/list-logo.svg' style='width:12px; margin-right:8px;')
                     | Purchase Order List Dashboard
 
-              ul.treeview-menu
                 li
                   a(href='/bluetech/bluetech-purchase')
                     img(src='/dist/img/list-logo.svg' style='width:12px; margin-right:8px;')
-                    | Purchase List Dashboard       
+                    | Purchase List Dashboard 
 
-            li.treeview
-              a(href='#')
-                img(src='/dist/img/items-logo.svg' style='width:14px; margin-right:8px;')
-                span Blue Tech Stock
-                span.pull-right-container
-                  i.fa.fa-angle-left.pull-right
-              ul.treeview-menu
                 li
-                  a(href='/bluetech/bluetech-stock')
+                  a(href='/bluetech/bluetech-purchase-returns')
                     img(src='/dist/img/list-logo.svg' style='width:12px; margin-right:8px;')
-                    | Stock Dashboard 
+                    | Purchase Returns List Dashboard      
 
             li.treeview
               a(href='#')
@@ -378,55 +349,7 @@ aside.main-sidebar
                 )
 
                 span(style='display:flex; flex-direction:column; line-height:1.4;')
-                  span Blue Tech Supplier
-                  span(style='margin-left:1px;') Advances Payments
-
-                span.pull-right-container
-                  i.fa.fa-angle-left.pull-right
-
-              ul.treeview-menu
-                li
-                  a(href='/bluetech/bluetech-advance-payment')
-                    img(
-                      src='/dist/img/list-logo.svg'
-                    )
-
-                    span.treeview-subtitle
-                      span Advances Payments Dashboard  
-
-            li.treeview
-              a(href='#')
-                img(
-                  src='/dist/img/items-logo.svg'
-                  style='width:14px; margin-right:10px; flex-shrink:0;'
-                )
-
-                span(style='display:flex; flex-direction:column; line-height:1.4;')
-                  span Blue Tech Coustomers
-                  span(style='margin-left:1px;') 
-
-                span.pull-right-container
-                  i.fa.fa-angle-left.pull-right
-
-              ul.treeview-menu
-                li
-                  a(href='/bluetech/bluetech-customers')
-                    img(
-                      src='/dist/img/list-logo.svg'
-                    )
-
-                    span.treeview-subtitle
-                      span Customers Dashboard
-
-            li.treeview
-              a(href='#')
-                img(
-                  src='/dist/img/items-logo.svg'
-                  style='width:14px; margin-right:10px; flex-shrink:0;'
-                )
-
-                span(style='display:flex; flex-direction:column; line-height:1.4;')
-                  span Blue Tech Invoice
+                  span Blue Tech Selling Billing Management
                   span(style='margin-left:1px;') 
 
                 span.pull-right-container
@@ -440,8 +363,55 @@ aside.main-sidebar
                     )
 
                     span.treeview-subtitle
-                      span Invoices Dashboard                                               
-           
+                      span Invoices Dashboard
+
+                li
+                  a(href='/bluetech/bluetech-invoice-returns')
+                    img(
+                      src='/dist/img/list-logo.svg'
+                    )
+
+                    span.treeview-subtitle
+                      span Invoices Returns Dashboard            
+
+            li.treeview
+              a(href='#')
+                img(src='/dist/img/items-logo.svg' style='width:14px; margin-right:8px;')
+                span Blue Tech Reports & Analytics
+                span.pull-right-container
+                  i.fa.fa-angle-left.pull-right
+              ul.treeview-menu
+                li
+                  a(href='/bluetech/bluetech-stock')
+                    img(src='/dist/img/list-logo.svg' style='width:12px; margin-right:8px;')
+                    | Stock Dashboard 
+
+                li
+                  a(href='/bluetech/bluetech-advance-payment')
+                    img(
+                      src='/dist/img/list-logo.svg'
+                    )
+
+                    span.treeview-subtitle
+                      span Advances Payments Dashboard
+
+                li
+                  a(href='/bluetech/bluetech-customer-advance-payment')
+                    img(
+                      src='/dist/img/list-logo.svg'
+                    )
+
+                    span.treeview-subtitle
+                      span Customer Advances Payments Dashboard
+
+                li
+                  a(href='/bluetech/bluetech-inventory-flow-report')
+                    img(
+                      src='/dist/img/list-logo.svg'
+                    )
+
+                    span.treeview-subtitle
+                      span Inventory Flow Report Monthly Performance Details
 
 
 script.

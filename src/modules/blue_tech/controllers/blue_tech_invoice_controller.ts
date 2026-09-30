@@ -89,10 +89,10 @@ export class BlueTechInvoiceController extends Controller {
     private async sendPdf(id: number, resp: HttpResponse, disposition: string) {
         try {
             if (!id || isNaN(id)) return resp.status(400).json({ status: false, message: "Invalid invoice ID" });
-            const buffer = await this.service.generatePdf(id);
+            const result = await this.service.generatePdf(id);
             resp.setHeader("Content-Type", "application/pdf");
             resp.setHeader("Content-Disposition", `${disposition}; filename=invoice-${id}.pdf`);
-            return resp.send(buffer);
+            return resp.send(result.pdfBuffer);
         } catch (error: any) { return resp.status(500).json({ status: false, message: error.message }); }
     }
 }
